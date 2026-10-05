@@ -130,9 +130,10 @@ a { color: inherit; text-underline-offset: 3px; }
   position: sticky;
   top: var(--stick, 0px);
 }
-/* The hero does not pin: the Work section scrolls in normally. Pinning starts
-   with Work, which stays put while the next section slides over it. */
-.js .field.hero {
+/* The hero and Work do not pin: they scroll normally. Pinning starts with
+   What we do, which stays put while the next section slides over it. */
+.js .field.hero,
+.js .field.work {
   position: relative;
   top: auto;
 }

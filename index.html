@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verisimilitude Studio</title>
+  <meta name="description" content="Verisimilitude Studio creates honest, thorough digital experiences for small businesses, mission-driven initiatives, craftsmen, and artists.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="wordmark" href="#top">Verisimilitude Studio</a>
+    <nav aria-label="Primary">
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="eyebrow">Digital experiences, honestly made</p>
+        <h1>How much a thing looks like the truth.</h1>
+        <p class="definition">
+          <span class="term">Verisimilitude</span>
+          <span class="pos">noun</span>
+          &mdash; how much a story, artwork, or idea looks like the truth. Synonym: truthlikeness.
+        </p>
+        <div class="cta">
+          <a class="button" href="#contact">Start a project</a>
+          <span class="dot" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <span class="art-pink"></span>
+        <span class="art-green"></span>
+      </div>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-heading">
+      <h2 id="about-heading">About</h2>
+      <p class="lead">
+        We work with small businesses, mission-driven initiatives, craftsmen, and artists to launch their online platforms.
+      </p>
+      <p>
+        Verisimilitude Studio creates digital experiences that are honest and thorough. Our process involves research and attention to detail to honor artistry, craftsmanship, and useful information.
+      </p>
+    </section>
+
+    <section class="section" id="services" aria-labelledby="services-heading">
+      <h2 id="services-heading">Services</h2>
+      <ol class="services">
+        <li>
+          <h3>Online portfolio site</h3>
+          <p>A static, fast site that shows your work well, with a simple contact form.</p>
+        </li>
+        <li>
+          <h3>Online store</h3>
+          <p>Your shop, launched on Shopify.</p>
+        </li>
+        <li>
+          <h3>Business strategy</h3>
+          <p>Social media, marketing, press, and more.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section" id="contact" aria-labelledby="contact-heading">
+      <h2 id="contact-heading">Contact</h2>
+      <p>Tell us a little about what you&rsquo;re making.</p>
+      <!-- TODO: set action to a form endpoint (e.g. Formspree) before publishing. -->
+      <form class="contact-form" action="#" method="post">
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" required></textarea>
+        </div>
+        <button class="button" type="submit">Send message</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year">2026</span> Verisimilitude Studio</p>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -18,8 +18,6 @@
     <a href="#top">Verisimilitude Studio</a>
     <nav aria-label="Primary">
       <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">Services</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -27,20 +25,78 @@
 
   <main>
     <section class="field field-paper hero" id="top">
-      <h1 class="display">Verisimilitude</h1>
-      <p class="definition"><i>noun</i> &mdash; how much a story, artwork, or idea looks like the truth. Synonym: truthlikeness.</p>
+      <div class="hero-copy">
+        <h1 class="display">Verisimilitude</h1>
+        <p class="definition"><i>noun</i> &mdash; how much a story, artwork, or idea looks like the truth. Synonym: truthlikeness.</p>
+      </div>
       <span class="cue" aria-hidden="true"></span>
     </section>
 
-    <section class="field field-rose" id="about" aria-labelledby="about-label">
-      <span class="link" aria-hidden="true"></span>
-      <h2 class="label reveal" id="about-label">About</h2>
+    <section class="field field-paper work" id="work" aria-labelledby="work-label">
+      <h2 class="sr-only" id="work-label">Selected work</h2>
+      <!-- TODO: replace the placeholder blocks with real project images, client names, titles, and years. -->
+      <div class="carousel reveal">
+        <ul class="track">
+          <li class="work-item">
+            <div class="work-img" style="--c: var(--sulphur)" aria-hidden="true"></div>
+            <p class="work-client">Client name</p>
+            <p class="work-title"><i>Project title</i></p>
+            <p class="work-year">2026</p>
+          </li>
+          <li class="work-item">
+            <div class="work-img" style="--c: var(--corinthian)" aria-hidden="true"></div>
+            <p class="work-client">Client name</p>
+            <p class="work-title"><i>Project title</i></p>
+            <p class="work-year">2026</p>
+          </li>
+          <li class="work-item">
+            <div class="work-img" style="--c: var(--fawn)" aria-hidden="true"></div>
+            <p class="work-client">Client name</p>
+            <p class="work-title"><i>Project title</i></p>
+            <p class="work-year">2026</p>
+          </li>
+          <li class="work-item">
+            <div class="work-img" style="--c: var(--rose)" aria-hidden="true"></div>
+            <p class="work-client">Client name</p>
+            <p class="work-title"><i>Project title</i></p>
+            <p class="work-year">2026</p>
+          </li>
+          <li class="work-item">
+            <div class="work-img" style="--c: var(--accent)" aria-hidden="true"></div>
+            <p class="work-client">Client name</p>
+            <p class="work-title"><i>Project title</i></p>
+            <p class="work-year">2026</p>
+          </li>
+          <li class="work-item">
+            <div class="work-img" style="--c: var(--green)" aria-hidden="true"></div>
+            <p class="work-client">Client name</p>
+            <p class="work-title"><i>Project title</i></p>
+            <p class="work-year">2026</p>
+          </li>
+          <li class="work-item">
+            <div class="work-img" style="--c: var(--sulphur)" aria-hidden="true"></div>
+            <p class="work-client">Client name</p>
+            <p class="work-title"><i>Project title</i></p>
+            <p class="work-year">2026</p>
+          </li>
+          <li class="work-item">
+            <div class="work-img" style="--c: var(--corinthian)" aria-hidden="true"></div>
+            <p class="work-client">Client name</p>
+            <p class="work-title"><i>Project title</i></p>
+            <p class="work-year">2026</p>
+          </li>
+        </ul>
+      </div>
+      <button class="carousel-toggle" type="button" aria-pressed="false">Pause</button>
+    </section>
+
+    <section class="field field-jade" data-header="light" id="about" aria-labelledby="about-label">
+      <h2 class="label reveal" id="about-label">What we do</h2>
       <p class="display statement" data-words>We create digital experiences that are <i>honest</i> and <i>thorough</i>, for the people who make things.</p>
       <p class="copy reveal">We work with small businesses, mission-driven initiatives, craftsmen, and artists to launch their online platforms, with research and attention to detail.</p>
     </section>
 
     <section class="field field-paper" id="services" aria-labelledby="services-label">
-      <span class="link" aria-hidden="true"></span>
       <h2 class="label reveal" id="services-label">Services</h2>
       <ol class="service-lines">
         <li class="reveal">
@@ -61,32 +117,83 @@
       </ol>
     </section>
 
-    <section class="field field-green" id="contact" aria-labelledby="contact-label">
-      <span class="link" aria-hidden="true"></span>
-      <h2 class="label reveal" id="contact-label">Contact</h2>
-      <p class="display statement" data-words>Tell us what you are <i>making</i>.</p>
-      <!-- TODO: set action to a form endpoint (e.g. Formspree) before publishing. -->
-      <form class="contact-form reveal" action="#" method="post">
-        <div class="form-field">
-          <label for="name">Name</label>
-          <input id="name" name="name" type="text" autocomplete="name" required>
+    <section class="field field-rose" id="studio" aria-labelledby="studio-label">
+      <h2 class="sr-only" id="studio-label">Behind the studio</h2>
+      <div class="studio-grid">
+        <p class="display statement studio-statement" data-words>Verisimilitude Studio is founded by <i>Michelle</i> and <i>Jenna</i>.</p>
+        <ul class="people">
+          <li class="person reveal">
+            <figure>
+              <img src="images/portrait-1-bw.png" width="674" height="856" loading="lazy"
+                   alt="Black and white portrait of Michelle Wang, looking down, her dark hair falling over one shoulder.">
+            </figure>
+            <span class="numeral display" aria-hidden="true">I.</span>
+            <h3 class="person-name">Michelle Wang</h3>
+            <!-- TODO: placeholder bio, replace with the real one. -->
+            <p>Placeholder bio. A short paragraph about Michelle will go here: her background, what she cares about, and how she works with clients.</p>
+          </li>
+          <li class="person reveal">
+            <figure>
+              <img class="crop-corners" src="images/portrait-2-bw.png" width="330" height="478" loading="lazy"
+                   alt="Black and white portrait of Jenna Ammerall in a white shirt, looking off to the side.">
+            </figure>
+            <span class="numeral display" aria-hidden="true">II.</span>
+            <h3 class="person-name">Jenna Ammerall</h3>
+            <!-- TODO: placeholder bio, replace with the real one. -->
+            <p>Placeholder bio. A short paragraph about Jenna will go here: her background, what she cares about, and how she works with clients.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="field field-paper" id="contact" aria-labelledby="contact-label">
+      <h2 class="sr-only" id="contact-label">Contact</h2>
+      <div class="contact-grid">
+        <p class="display statement contact-statement" data-words>Tell us what you<br>are <i>making</i>.</p>
+        <div class="contact-aside reveal">
+          <p>Choose the service closest to what you need, or tell us you&rsquo;re not sure yet. Add whatever you can about the project.</p>
+          <!-- TODO: add the studio email, location, and hours here once decided. -->
         </div>
-        <div class="form-field">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" autocomplete="email" required>
-        </div>
-        <div class="form-field">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="5" required></textarea>
-        </div>
-        <button class="button" type="submit">Send message</button>
-      </form>
+        <!-- TODO: set action to a form endpoint (e.g. Formspree) before publishing. -->
+        <form class="contact-form reveal" action="#" method="post">
+          <fieldset>
+            <legend>Name <span class="req">(required)</span></legend>
+            <div class="name-row">
+              <div class="form-field">
+                <label for="first-name">First name</label>
+                <input id="first-name" name="first-name" type="text" autocomplete="given-name" required>
+              </div>
+              <div class="form-field">
+                <label for="last-name">Last name</label>
+                <input id="last-name" name="last-name" type="text" autocomplete="family-name" required>
+              </div>
+            </div>
+          </fieldset>
+          <div class="form-field">
+            <label for="service">Service</label>
+            <select id="service" name="service">
+              <option value="">Choose one</option>
+              <option>Online portfolio</option>
+              <option>Online store</option>
+              <option>Business strategy</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="email">Email <span class="req">(required)</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="form-field">
+            <label for="message">Project description</label>
+            <textarea id="message" name="message" rows="4"></textarea>
+          </div>
+          <button class="button" type="submit">Submit</button>
+        </form>
+      </div>
+      <p class="legal">&copy; <span id="year">2026</span> Verisimilitude Studio</p>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <p>&copy; <span id="year">2026</span> Verisimilitude Studio</p>
-  </footer>
 
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
   <script src="script.js" defer></script>

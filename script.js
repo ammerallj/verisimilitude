@@ -60,6 +60,30 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(setStick);
   }
 
+  // The fixed header adapts to whatever section is visually under it. Sections
+  // stack (later ones paint over earlier pinned ones), so the one on top at the
+  // header's height is the LAST section whose box contains that point. Dark
+  // sections are marked data-header="light" and get Paper-colored nav text.
+  const header = document.querySelector('.site-header');
+  const allFields = [...document.querySelectorAll('.field')];
+  let headerTicking = false;
+  const updateHeader = () => {
+    headerTicking = false;
+    const y = Math.min(28, header.offsetHeight / 2);
+    let top = null;
+    allFields.forEach((f) => {
+      const r = f.getBoundingClientRect();
+      if (r.top <= y && r.bottom > y) top = f;
+    });
+    header.classList.toggle('light', !!top && top.dataset.header === 'light');
+  };
+  const requestHeader = () => {
+    if (!headerTicking) { headerTicking = true; requestAnimationFrame(updateHeader); }
+  };
+  window.addEventListener('scroll', requestHeader, { passive: true });
+  window.addEventListener('resize', requestHeader);
+  updateHeader();
+
   const hero = document.querySelector('.hero');
   const showHero = () => {
     hero.classList.add('is-in');
@@ -100,16 +124,6 @@
     toggle.setAttribute('aria-pressed', String(paused));
     toggle.textContent = paused ? 'Play' : 'Pause';
   });
-
-  // Header text turns light while a dark (data-header="light") section is
-  // under it. A thin band at the top of the viewport decides which one.
-  const header = document.querySelector('.site-header');
-  const darkIO = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      header.classList.toggle('light', e.isIntersecting);
-    });
-  }, { rootMargin: '0px 0px -95% 0px', threshold: 0 });
-  document.querySelectorAll('[data-header="light"]').forEach((el) => darkIO.observe(el));
 
   // When a section snaps into place (its top edge is within the upper 60% of
   // the screen), its content fades and blurs in on a timer. The reveal does

@@ -141,10 +141,9 @@ a { color: inherit; text-underline-offset: 3px; }
 .field-rose { background: var(--rose); }
 .field-green { background: var(--green); }
 /* Jade field: the primary green is the same Jade Deep used for buttons.
-   Text on it is Paper (6.2:1); body copy is a touch heavier so light-on-dark
-   type doesn't look thin. */
+   Text on it is Paper (6.2:1). Body copy stays at the same thin weight as
+   everywhere else, per the user. */
 .field-jade { background: var(--accent); color: var(--bg); }
-.field-jade .copy { font-weight: 400; }
 
 .field > * { margin-inline: auto; }
 

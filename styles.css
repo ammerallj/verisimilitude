@@ -46,17 +46,17 @@ em { font-style: italic; }
 .foot a:hover { text-decoration: underline; }
 
 /* Home / work */
-.work { position: relative; height: 1610px; background: #fff; }
+.work { position: relative; width: 100%; aspect-ratio: 1102 / 1610; background: #fff; }
 .work img {
   position: absolute;
   display: block;
   object-fit: cover;
   box-shadow: -60px 60px 70px rgba(67, 98, 124, .2);
 }
-.w1 { left: 242px; top: 0; width: 240px; height: 535px; }
-.w2 { left: 724px; top: 421px; width: 378px; height: 228px; object-position: top; }
-.w3 { left: 317px; top: 780px; width: 329px; height: 312px; }
-.w4 { left: 551px; top: 1310px; width: 477px; height: 265px; }
+.w1 { left: 21.960%; top: 0.000%; width: 21.779%; height: 33.230%; }
+.w2 { object-position: top; left: 65.699%; top: 26.149%; width: 34.301%; height: 14.161%; }
+.w3 { left: 28.766%; top: 48.447%; width: 29.855%; height: 19.379%; }
+.w4 { left: 50.000%; top: 81.366%; width: 43.285%; height: 16.460%; }
 
 /* About */
 .p-about .main { display: flex; flex-direction: column; align-items: center; gap: 50px; min-height: 863px; }
@@ -77,15 +77,12 @@ em { font-style: italic; }
 /* Smaller screens: collapse to a single column */
 @media (max-width: 1677px) {
   .main, .work { width: auto; flex: 1; }
-  .work { height: auto; display: grid; gap: 40px; padding-left: 40px; }
-  .work img { position: static; width: 100%; height: auto; max-width: 480px; aspect-ratio: 4 / 3; }
 }
 @media (max-width: 900px) {
   :root { --gutter: 24px; }
   .page { padding-top: 48px; }
   .cols { flex-direction: column; gap: 60px; }
   .side { width: 100%; gap: 48px; }
-  .work { padding-left: 0; width: 100%; }
   .main { width: 100%; min-height: 0 !important; }
   .p-about .copy, .p-services .copy, .services { width: 100%; }
   .foot { flex-direction: column; align-items: flex-start; font-size: 15px; }
@@ -96,9 +93,9 @@ em { font-style: italic; }
    then hands over to the studio intro as you scroll (see script.js). */
 .p-home .page { padding-top: 0; }
 .p-home .stage { margin-left: 376px; max-width: 1102px; }
-.p-home .work { width: auto; }
+.p-home .work { width: 100%; }
 .hero { position: relative; height: 100vh; margin: 0 calc(-1 * var(--gutter)); }
-.hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #fff; }
 .p-home .work { margin-top: 150px; }
 .rail { position: fixed; top: 0; bottom: 0; left: var(--gutter); width: 376px; z-index: 2; pointer-events: none; }
 .rail a { pointer-events: auto; }

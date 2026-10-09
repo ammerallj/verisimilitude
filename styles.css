@@ -75,7 +75,7 @@ em { font-style: italic; }
 .services em { text-align: right; }
 
 /* Smaller screens: collapse to a single column */
-@media (max-width: 1400px) {
+@media (max-width: 1677px) {
   .main, .work { width: auto; flex: 1; }
   .work { height: auto; display: grid; gap: 40px; padding-left: 40px; }
   .work img { position: static; width: 100%; height: auto; max-width: 480px; aspect-ratio: 4 / 3; }
@@ -96,7 +96,8 @@ em { font-style: italic; }
    then hands over to the studio intro as you scroll (see script.js). */
 .p-home .page { padding-top: 0; }
 .p-home .stage { margin-left: 376px; max-width: 1102px; }
-.hero { position: relative; height: 100vh; margin-right: calc(-1 * var(--gutter)); }
+.p-home .work { width: auto; }
+.hero { position: relative; height: 100vh; margin: 0 calc(-1 * var(--gutter)); }
 .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .p-home .work { margin-top: 150px; }
 .rail { position: fixed; top: 0; bottom: 0; left: var(--gutter); width: 376px; z-index: 2; pointer-events: none; }
@@ -118,6 +119,6 @@ em { font-style: italic; }
   .rail-b { margin-top: 48px; }
   .rail-b .nav a, .rail-b .name { pointer-events: auto; }
   .p-home .stage { margin-left: 0; }
-  .hero { height: 50vh; margin-right: 0; }
+  .hero { height: 50vh; }
   .p-home .work { margin-top: 0; }
 }

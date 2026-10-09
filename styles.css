@@ -105,5 +105,4 @@ em { font-style: italic; }
 .landing { position: relative; min-height: 70vh; overflow: hidden; }
 .landing > :not(video) { position: relative; z-index: 1; }
 .bg-loop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-.p-landing .foot a { margin-left: auto; }
 @media (prefers-reduced-motion: reduce) { .bg-loop { display: none; } }

@@ -100,3 +100,7 @@ em { font-style: italic; }
 .landing .definition { font-size: 24px; margin-top: 20px; }
 @media (max-width: 1400px) { .landing { padding-left: 40px; } }
 @media (max-width: 900px) { .landing { padding-left: 0; min-height: 0; } .landing > * { width: 100%; } }
+
+/* Landing: looping dandelion fills the page behind the content */
+.bg-loop { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .bg-loop { display: none; } }

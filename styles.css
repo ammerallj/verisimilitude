@@ -16,20 +16,6 @@ body {
 a { color: inherit; text-decoration: none; }
 em { font-style: italic; }
 
-/* Landing */
-.landing {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-  min-height: 100vh;
-  padding: var(--gutter);
-}
-.landing > * { width: 384px; max-width: 100%; }
-.landing h1 { font: 400 48px var(--display); }
-.landing .phonetic { font-style: italic; font-size: 24px; margin-top: 0; }
-.landing .definition { font-size: 24px; margin-top: 20px; }
-
 /* Shared page frame */
 .page {
   display: flex;
@@ -39,7 +25,7 @@ em { font-style: italic; }
   padding: 150px var(--gutter) 50px;
 }
 .cols { display: flex; justify-content: space-between; align-items: flex-start; }
-.side { display: flex; flex-direction: column; gap: 100px; width: 376px; flex: none; }
+.side { position: sticky; top: 50px; align-self: flex-start; display: flex; flex-direction: column; gap: 100px; width: 376px; flex: none; }
 .intro { display: flex; flex-direction: column; gap: 20px; }
 .name { font: 400 36px var(--display); }
 .desc { font-size: 18px; }
@@ -105,3 +91,12 @@ em { font-style: italic; }
   .foot { flex-direction: column; align-items: flex-start; font-size: 15px; }
   .landing > * { width: 100%; }
 }
+
+/* Landing: same rail, definition in the main column */
+.landing { display: flex; flex-direction: column; gap: 20px; align-self: stretch; justify-content: center; min-height: 560px; padding-left: 277.5px; }
+.landing > * { width: 384px; max-width: 100%; }
+.landing h1 { font: 400 48px var(--display); }
+.landing .phonetic { font-style: italic; font-size: 24px; }
+.landing .definition { font-size: 24px; margin-top: 20px; }
+@media (max-width: 1400px) { .landing { padding-left: 40px; } }
+@media (max-width: 900px) { .landing { padding-left: 0; min-height: 0; } .landing > * { width: 100%; } }

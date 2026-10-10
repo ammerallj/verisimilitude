@@ -54,12 +54,16 @@ const seedSVG = (size, rotate) => `
 const seedLayer = document.createElement("div");
 seedLayer.className = "seeds";
 seedLayer.setAttribute("aria-hidden", "true");
-const SEED_COUNT = 14;
+const SEED_COUNT = 16;
 for (let i = 0; i < SEED_COUNT; i++) {
   const seed = document.createElement("span");
   const size = 10 + Math.random() * 18;
   seed.style.left = `${Math.random() * 100}%`;
-  seed.style.top = `${Math.pow(Math.random(), 1.7) * 100}%`;
+  // A handful cluster near the top (just blown from the hero); the rest are spread evenly
+  // down the page so the bottom of the site has seeds too.
+  const frac = i < 5 ? Math.random() * 0.22 : 0.22 + ((i - 5 + Math.random()) / (SEED_COUNT - 5)) * 0.78;
+  seed.frac = frac;
+  seed.style.top = `${(frac * 100).toFixed(2)}%`;
   seed.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
   seed.innerHTML = `<i>${seedSVG(size.toFixed(0), Math.round(Math.random() * 360))}</i>`;
   // Per-seed drift: depth sets how far it floats with scroll; the rest is idle motion.
@@ -88,11 +92,15 @@ const drift = (now) => {
   requestAnimationFrame(drift);
   if (reduceMotion.matches) return;
   const y = window.scrollY;
+  const layerH = seedLayer.offsetHeight;
   for (const seed of seedLayer.children) {
     const { depth, phase, sway, spin, bob, speed } = seed.drift;
-    const dx = Math.sin(y * 0.004 + phase) * sway + Math.sin(now * speed + phase) * bob;
-    const dy = y * depth + Math.cos(now * speed * 1.3 + phase) * bob;
-    seed.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) rotate(${(y * spin).toFixed(1)}deg)`;
+    // Drift is measured from the scroll position where the seed sits mid-screen, so every
+    // seed floats around its own spot on the page and stays near it.
+    const home = seed.frac * layerH - window.innerHeight / 2;
+    const dx = Math.sin((y - home) * 0.004 + phase) * sway + Math.sin(now * speed + phase) * bob;
+    const dy = (y - home) * depth + Math.cos(now * speed * 1.3 + phase) * bob;
+    seed.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) rotate(${((y - home) * spin).toFixed(1)}deg)`;
   }
 };
 requestAnimationFrame(drift);

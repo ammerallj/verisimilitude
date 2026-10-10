@@ -59,6 +59,30 @@ for (let i = 0; i < SEED_COUNT; i++) {
   seed.style.top = `${Math.random() * 100}%`;
   seed.style.opacity = (0.35 + Math.random() * 0.65).toFixed(2);
   seed.innerHTML = seedSVG(size.toFixed(0), Math.round(Math.random() * 360));
+  // Per-seed drift: a depth that sets how far it floats, plus a sway phase and reach.
+  seed.drift = {
+    depth: 0.03 + Math.random() * 0.12,
+    phase: Math.random() * Math.PI * 2,
+    sway: 20 + Math.random() * 50,
+  };
   seedLayer.appendChild(seed);
 }
 document.body.prepend(seedLayer);
+
+// Seeds float slowly down and side to side as you scroll.
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+let driftQueued = false;
+const drift = () => {
+  driftQueued = false;
+  if (reduceMotion.matches) return;
+  const y = window.scrollY;
+  for (const seed of seedLayer.children) {
+    const { depth, phase, sway } = seed.drift;
+    const dx = Math.sin(y * 0.0025 + phase) * sway;
+    seed.style.transform = `translate3d(${dx.toFixed(1)}px, ${(y * depth).toFixed(1)}px, 0)`;
+  }
+};
+window.addEventListener("scroll", () => {
+  if (!driftQueued) { driftQueued = true; requestAnimationFrame(drift); }
+}, { passive: true });
+drift();

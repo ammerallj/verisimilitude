@@ -2,10 +2,14 @@
 // fades out first, then the studio intro blurs and fades in. They never overlap.
 const root = document.documentElement;
 const body = document.body;
+const work = document.querySelector(".work");
 const clamp = (n) => Math.min(1, Math.max(0, n));
 const update = () => {
   const vh = window.innerHeight;
-  const p = clamp((window.scrollY - vh * 0.05) / (vh * 0.55));
+  // Progress follows the work section: it starts as the first image enters the
+  // lower part of the view and finishes as that image nears the vertical centre.
+  const top = work.getBoundingClientRect().top;
+  const p = clamp((vh * 0.9 - top) / (vh * 0.5));
   const out = clamp(p / 0.45);
   const into = clamp((p - 0.55) / 0.45);
   root.style.setProperty("--out", out.toFixed(3));

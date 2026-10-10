@@ -70,7 +70,9 @@ em { font-style: italic; }
 .sec .copy { width: min(547px, 100%); }
 .sec-about .copy p + p { margin-top: 1lh; }
 .about-loop { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: contain; object-position: center; flex: none;
-  transform: translateX(-29%); /* the dandelion sits ~79% across the clip; this centres it on the paragraph */ }
+  /* The dandelion sits ~79% across the clip: shift it onto the paragraph's centre, then
+     scale up about the stem's base so it grows upward; margin-top reserves that room. */
+  transform-origin: 79% 100%; transform: translateX(-29%) scale(1.6); margin-top: 20%; }
 .copy a { text-decoration: underline; text-decoration-skip-ink: none; text-underline-position: from-font; }
 .services { list-style: none; display: flex; flex-direction: column; gap: 30px; width: min(547px, 100%); }
 .services li { display: flex; justify-content: space-between; align-items: center; }

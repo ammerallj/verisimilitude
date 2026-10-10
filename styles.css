@@ -143,3 +143,6 @@ html { scroll-behavior: smooth; }
 .seeds-on .seeds span { pointer-events: auto; }
 .seeds i { display: block; transition: transform 1.4s cubic-bezier(.2, .7, .3, 1), opacity 1.4s ease; }
 .seeds .blown i { transform: translate(180px, -120px) rotate(260deg); opacity: 0; }
+
+/* Scroll-driven blur and fade between sections (see script.js) */
+.fade-sec { opacity: var(--v, 1); filter: blur(calc((1 - var(--v, 1)) * 14px)); will-change: opacity, filter; }

@@ -112,3 +112,31 @@ if (heroVideo && !window.matchMedia("(prefers-reduced-motion: reduce)").matches 
   heroVideo.addEventListener("playing", () => setTimeout(showIntro, INTRO_DELAY), { once: true });
   setTimeout(showIntro, INTRO_DELAY + 2500); // fallback if the video never starts
 }
+
+// Each section blurs and fades out as the next one nears the middle of the view, then the
+// next blurs in, the same two-beat handover the landing uses.
+const fadeSections = [document.querySelector(".work"), ...document.querySelectorAll(".sec")];
+const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const contentTop = (el) => el.getBoundingClientRect().top + parseFloat(getComputedStyle(el).paddingTop);
+const sectionProgress = (el) => {
+  const vh = window.innerHeight;
+  const top = contentTop(el);
+  const maxScroll = document.documentElement.scrollHeight - vh;
+  const reachable = top + (maxScroll - window.scrollY); // where its top lands at the page end
+  const end = Math.max(vh * 0.35, reachable);
+  return clamp((vh * 0.85 - top) / Math.max(vh * 0.85 - end, 1));
+};
+const fadeUpdate = () => {
+  if (!motionOK) return;
+  const prog = fadeSections.map(sectionProgress);
+  fadeSections.forEach((el, i) => {
+    const into = clamp((prog[i] - 0.55) / 0.45);
+    const out = i + 1 < fadeSections.length ? clamp(prog[i + 1] / 0.45) : 0;
+    const v = into * (1 - out);
+    el.style.setProperty("--v", v.toFixed(3));
+  });
+};
+fadeSections.forEach((el) => el.classList.add("fade-sec"));
+window.addEventListener("scroll", fadeUpdate, { passive: true });
+window.addEventListener("resize", fadeUpdate);
+fadeUpdate();

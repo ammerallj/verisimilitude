@@ -68,6 +68,7 @@ em { font-style: italic; }
 /* About / Services sections (stacked below the work on the one long page) */
 .sec { min-height: 100vh; padding-top: 150px; display: flex; flex-direction: column; align-items: center; gap: 50px; }
 .sec .copy { width: min(547px, 100%); }
+.sec-services { min-height: 0; }
 .sec-about .copy p + p { margin-top: 1lh; }
 .about-loop { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: contain; object-position: center; flex: none;
   /* The dandelion sits ~79% across the clip: shift it onto the paragraph's centre, then

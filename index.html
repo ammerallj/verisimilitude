@@ -1,208 +1,91 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-lock">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Verisimilitude Studio</title>
-  <meta name="description" content="Verisimilitude Studio creates honest, thorough digital experiences for small businesses, mission-driven initiatives, craftsmen, and artists.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+  <script>
+    // Always open on the landing screen: no restored scroll position, no anchor jump.
+    history.scrollRestoration = "manual";
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    window.scrollTo(0, 0);
+    window.addEventListener("pageshow", function (e) { if (e.persisted) location.reload(); });
+  </script>
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
-  <script>document.documentElement.classList.add('js');</script>
+  <noscript><style>.intro-wait .rail-a > * { opacity: 1 !important; filter: none !important; } html.scroll-lock, html.scroll-lock body { overflow: auto; }</style></noscript>
 </head>
-<body>
-  <a class="skip-link" href="#about">Skip to content</a>
-
-  <header class="site-header label">
-    <a href="#top">Verisimilitude Studio</a>
-    <nav aria-label="Primary">
-      <ul>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <section class="field field-paper hero" id="top">
-      <div class="hero-copy">
-        <h1 class="display">Verisimilitude</h1>
-        <p class="definition"><i>noun</i> &mdash; how much a story, artwork, or idea looks like the truth. Synonym: truthlikeness.</p>
+<body class="p-home intro-wait" id="top">
+  <div class="rail" id="rail">
+    <div class="rail-a">
+      <h1><a class="title-link" href="#top"><span class="vmark">V</span>erisimilitude<span class="studio"> Studio</span></a></h1>
+      <p class="phonetic">/ˌverəsəˈmiləˌto͞od/</p>
+      <p class="definition"><em>noun</em> — How much a story, artwork, or idea looks like the truth.</p>
+    </div>
+    <aside class="side rail-b">
+      <div class="intro">
+        <span class="name" aria-hidden="true">Verisimilitude Studio</span>
+        <p class="desc">Design studio based in San Francisco and Seattle creating honest and simple digital experiences.</p>
+        <p class="note">*We're a private studio and most projects are in stealth mode</p>
       </div>
-      <span class="cue" aria-hidden="true"></span>
+      <nav class="nav">
+        <a href="#about" data-sec="about">About</a>
+        <a href="#services" data-sec="services">Services</a>
+      </nav>
+    </aside>
+  </div>
+  <main class="page">
+    <section class="hero" aria-hidden="true">
+      <video autoplay loop muted playsinline poster="images/dandelion.png">
+        <source src="images/dandelion.webm" type="video/webm">
+        <source src="images/dandelion.mp4" type="video/mp4">
+      </video>
     </section>
-
-    <section class="field field-paper work" id="work" aria-labelledby="work-label">
-      <h2 class="sr-only" id="work-label">Selected work</h2>
-      <!-- TODO: replace the placeholder blocks with real project images, client names, titles, and years. -->
-      <div class="carousel reveal">
-        <ul class="track">
-          <li class="work-item">
-            <div class="work-img" style="--c: var(--sulphur)" aria-hidden="true"></div>
-            <p class="work-client">Client name</p>
-            <p class="work-title"><i>Project title</i></p>
-            <p class="work-year">2026</p>
-          </li>
-          <li class="work-item">
-            <div class="work-img" style="--c: var(--corinthian)" aria-hidden="true"></div>
-            <p class="work-client">Client name</p>
-            <p class="work-title"><i>Project title</i></p>
-            <p class="work-year">2026</p>
-          </li>
-          <li class="work-item">
-            <div class="work-img" style="--c: var(--fawn)" aria-hidden="true"></div>
-            <p class="work-client">Client name</p>
-            <p class="work-title"><i>Project title</i></p>
-            <p class="work-year">2026</p>
-          </li>
-          <li class="work-item">
-            <div class="work-img" style="--c: var(--rose)" aria-hidden="true"></div>
-            <p class="work-client">Client name</p>
-            <p class="work-title"><i>Project title</i></p>
-            <p class="work-year">2026</p>
-          </li>
-          <li class="work-item">
-            <div class="work-img" style="--c: var(--accent)" aria-hidden="true"></div>
-            <p class="work-client">Client name</p>
-            <p class="work-title"><i>Project title</i></p>
-            <p class="work-year">2026</p>
-          </li>
-          <li class="work-item">
-            <div class="work-img" style="--c: var(--green)" aria-hidden="true"></div>
-            <p class="work-client">Client name</p>
-            <p class="work-title"><i>Project title</i></p>
-            <p class="work-year">2026</p>
-          </li>
-          <li class="work-item">
-            <div class="work-img" style="--c: var(--sulphur)" aria-hidden="true"></div>
-            <p class="work-client">Client name</p>
-            <p class="work-title"><i>Project title</i></p>
-            <p class="work-year">2026</p>
-          </li>
-          <li class="work-item">
-            <div class="work-img" style="--c: var(--corinthian)" aria-hidden="true"></div>
-            <p class="work-client">Client name</p>
-            <p class="work-title"><i>Project title</i></p>
-            <p class="work-year">2026</p>
-          </li>
-        </ul>
-      </div>
-      <button class="carousel-toggle" type="button" aria-pressed="false">Pause</button>
-    </section>
-
-    <section class="field field-jade" data-header="light" id="about" aria-labelledby="about-label">
-      <h2 class="label reveal" id="about-label">What we do</h2>
-      <p class="display statement" data-words>We create digital experiences that are <i>honest</i> and <i>thorough</i>, for the people who make things.</p>
-      <p class="copy reveal">We work with small businesses, mission-driven initiatives, craftsmen, and artists to launch their online platforms, with research and attention to detail.</p>
-      <p class="copy reveal">Every project we take on also helps mentor the next generation of creative talent.</p>
-    </section>
-
-    <section class="field field-paper" id="services" aria-labelledby="services-label">
-      <h2 class="label reveal" id="services-label">Services</h2>
-      <ol class="service-lines">
-        <li class="reveal">
-          <span class="num display" aria-hidden="true">01</span>
-          <span class="name display">An online <i>portfolio</i></span>
-          <span class="desc">A static site with a simple contact form.</span>
-        </li>
-        <li class="reveal">
-          <span class="num display" aria-hidden="true">02</span>
-          <span class="name display">An online <i>store</i></span>
-          <span class="desc">Your shop, launched on Shopify.</span>
-        </li>
-        <li class="reveal">
-          <span class="num display" aria-hidden="true">03</span>
-          <span class="name display">Business <i>strategy</i></span>
-          <span class="desc">Social media, marketing, press, and more.</span>
-        </li>
-        <li class="reveal">
-          <span class="num display" aria-hidden="true">04</span>
-          <span class="name display">Design <i>packages</i></span>
-          <span class="desc">Creative-directed design at an accessible tier.</span>
-        </li>
-      </ol>
-    </section>
-
-    <section class="field field-rose" id="studio" aria-labelledby="studio-label">
-      <h2 class="sr-only" id="studio-label">Behind the studio</h2>
-      <div class="studio-grid">
-        <p class="display statement studio-statement" data-words>Verisimilitude Studio is founded by <i>Michelle</i> and <i>Jenna</i>.</p>
-        <ul class="people">
-          <li class="person reveal">
-            <figure>
-              <img src="images/portrait-1-bw.png" width="674" height="856" loading="lazy"
-                   alt="Black and white portrait of Michelle Wang, looking down, her dark hair falling over one shoulder.">
-            </figure>
-            <span class="numeral display" aria-hidden="true">I.</span>
-            <h3 class="person-name">Michelle Wang</h3>
-            <!-- TODO: placeholder bio, replace with the real one. -->
-            <p>Placeholder bio. A short paragraph about Michelle will go here: her background, what she cares about, and how she works with clients.</p>
-          </li>
-          <li class="person reveal">
-            <figure>
-              <img class="crop-corners" src="images/portrait-2-bw.png" width="330" height="478" loading="lazy"
-                   alt="Black and white portrait of Jenna Ammerall in a white shirt, looking off to the side.">
-            </figure>
-            <span class="numeral display" aria-hidden="true">II.</span>
-            <h3 class="person-name">Jenna Ammerall</h3>
-            <!-- TODO: placeholder bio, replace with the real one. -->
-            <p>Placeholder bio. A short paragraph about Jenna will go here: her background, what she cares about, and how she works with clients.</p>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="field field-paper" id="contact" aria-labelledby="contact-label">
-      <h2 class="sr-only" id="contact-label">Contact</h2>
-      <div class="contact-grid">
-        <p class="display statement contact-statement" data-words>Tell us what you<br>are <i>making</i>.</p>
-        <div class="contact-aside reveal">
-          <p>Choose the service closest to what you need, or tell us you&rsquo;re not sure yet. Add whatever you can about the project.</p>
-          <!-- TODO: add the studio email, location, and hours here once decided. -->
+    <div class="stage">
+      <section class="work" aria-label="Selected work">
+        <figure class="w w1" tabindex="0">
+          <img src="images/work-1.png" alt="">
+          <figcaption><strong>Counting app</strong><span>A playful counting interface for early learners.</span></figcaption>
+        </figure>
+        <figure class="w w2" tabindex="0">
+          <img src="images/work-2.png" alt="">
+          <figcaption><strong>Fruit illustration</strong><span>Grainy, hand-made texture for a brand identity.</span></figcaption>
+        </figure>
+        <figure class="w w3" tabindex="0">
+          <img src="images/work-3.png" alt="">
+          <figcaption><strong>Glass study</strong><span>A study of form and light in cast glass.</span></figcaption>
+        </figure>
+        <figure class="w w4" tabindex="0">
+          <img src="images/work-4.png" alt="">
+          <figcaption><strong>Paysages</strong><span>An immersive website for a landscape studio.</span></figcaption>
+        </figure>
+      </section>
+      <section class="sec sec-about" id="about" data-sec="about">
+        <video class="about-loop" autoplay loop muted playsinline poster="images/solo-dand.png" aria-hidden="true">
+          <source src="images/solo-dand.webm" type="video/webm">
+          <source src="images/solo-dand.mp4" type="video/mp4">
+        </video>
+        <div class="copy">
+          <p>Verisimilitude Studio is founded by former Meta designers Michelle and Jenna. We are an independent practice built on a shared foundation of authenticity and intentionality. We exist to craft work that reflects our values and challenges the conventional.</p>
+          <p>Together, they bring 20 years of combined industry experience across startups and Big Tech. They work with founders and teams that value a human touch to build 0-1 or scale to a global audience.</p>
+          <p>Our design process centers on observing nature, making things by hand, and holding open conversations with collaborators. Then, we identify simple and effective design solutions for you. Ultimately, AI does not replace our judgement, as we use it to simply execute on human-centered ideas.</p>
         </div>
-        <!-- TODO: set action to a form endpoint (e.g. Formspree) before publishing. -->
-        <form class="contact-form reveal" action="#" method="post">
-          <fieldset>
-            <legend>Name <span class="req">(required)</span></legend>
-            <div class="name-row">
-              <div class="form-field">
-                <label for="first-name">First name</label>
-                <input id="first-name" name="first-name" type="text" autocomplete="given-name" required>
-              </div>
-              <div class="form-field">
-                <label for="last-name">Last name</label>
-                <input id="last-name" name="last-name" type="text" autocomplete="family-name" required>
-              </div>
-            </div>
-          </fieldset>
-          <div class="form-field">
-            <label for="service">Service</label>
-            <select id="service" name="service">
-              <option value="">Choose one</option>
-              <option>Online portfolio</option>
-              <option>Online store</option>
-              <option>Business strategy</option>
-              <option>Design package</option>
-              <option>Not sure yet</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label for="email">Email <span class="req">(required)</span></label>
-            <input id="email" name="email" type="email" autocomplete="email" required>
-          </div>
-          <div class="form-field">
-            <label for="message">Project description</label>
-            <textarea id="message" name="message" rows="4"></textarea>
-          </div>
-          <button class="button" type="submit">Submit</button>
-        </form>
-      </div>
-      <p class="legal">&copy; <span id="year">2026</span> Verisimilitude Studio</p>
-    </section>
+      </section>
+      <section class="sec sec-services" id="services" data-sec="services">
+        <p class="copy">Please contact us at <a href="mailto:hello@veris.studio">hello@veris.studio</a> to get things started.</p>
+        <ul class="services">
+          <li><span>0-1 Marketing Website</span><em>Inquire for pricing</em></li>
+          <li><span>Website Revamp</span><em>Inquire for pricing</em></li>
+          <li><span>Brand Identity</span><em>Inquire for pricing</em></li>
+        </ul>
+      </section>
+    </div>
+    <footer class="foot">
+      <p>Verisimilitude: <em>noun</em> — how much a story, artwork, or idea looks like the truth.</p>
+      <a href="mailto:hello@veris.studio">hello@veris.studio</a>
+    </footer>
   </main>
-
-
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
+  <script>setTimeout(function () { document.documentElement.classList.remove("scroll-lock"); document.body.classList.remove("intro-wait"); }, 9000); // failsafe: never leave the page locked or the text hidden</script>
 </body>
 </html>

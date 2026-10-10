@@ -1,9 +1,9 @@
 :root {
   --serif: "Times New Roman", Times, serif;
   --display: Palatino, "Palatino Linotype", "Book Antiqua", "URW Palladio L", serif;
-  /* 12-column grid, 24px gaps, full width: the side margin is two columns plus their gaps. */
-  --gap: 24px;
-  --gutter: calc(2 * (100vw - 11 * var(--gap)) / 12 + 2 * var(--gap));
+  /* 24-column grid, 16px gaps, full width: the side margin is two columns plus their gaps. */
+  --gap: 16px;
+  --gutter: calc(2 * (100vw - 23 * var(--gap)) / 24 + 2 * var(--gap));
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { background: #fff; }

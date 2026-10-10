@@ -122,7 +122,7 @@ const sectionProgress = (el) => {
   const vh = window.innerHeight;
   const top = contentTop(el);
   const maxScroll = document.documentElement.scrollHeight - vh;
-  const reachable = top + (maxScroll - window.scrollY); // where its top lands at the page end
+  const reachable = top - (maxScroll - window.scrollY); // where its top lands at the page end
   const end = Math.max(vh * 0.35, reachable);
   return clamp((vh * 0.85 - top) / Math.max(vh * 0.85 - end, 1));
 };

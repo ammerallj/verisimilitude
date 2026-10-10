@@ -43,6 +43,7 @@ em { font-style: italic; }
   align-items: center;
   gap: 24px;
   font: 400 17px var(--display);
+  color: #555;
   margin-top: 100px;
 }
 .foot em { font-family: var(--display); }

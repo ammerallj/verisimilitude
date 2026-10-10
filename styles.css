@@ -1,7 +1,9 @@
 :root {
   --serif: "Times New Roman", Times, serif;
   --display: Palatino, "Palatino Linotype", "Book Antiqua", "URW Palladio L", serif;
-  --gutter: 100px;
+  /* 12-column grid, 24px gaps, full width: the side margin is two columns plus their gaps. */
+  --gap: 24px;
+  --gutter: calc(2 * (100vw - 11 * var(--gap)) / 12 + 2 * var(--gap));
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { background: #fff; }
@@ -105,7 +107,7 @@ html { scroll-behavior: smooth; }
 /* Home: landing and work in one scroll. The rail starts as the definition,
    then hands over to the studio intro as you scroll (see script.js). */
 .p-home .page { padding-top: 0; }
-.p-home .stage { margin-left: 376px; max-width: 1102px; }
+.p-home .stage { margin-left: 376px; }
 .p-home .work { width: 100%; }
 .hero { position: relative; height: 100vh; margin: 0 calc(-1 * var(--gutter)); }
 .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; background: #fff;

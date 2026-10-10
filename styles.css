@@ -152,3 +152,14 @@ html { scroll-behavior: smooth; }
 
 /* Scroll-driven blur and fade between sections (see script.js) */
 .fade-sec { opacity: var(--v, 1); filter: blur(calc((1 - var(--v, 1)) * 14px)); will-change: opacity, filter; }
+
+/* Hover the V in Verisimilitude: the letter gives way to the seed icon */
+.vmark { position: relative; display: inline-block; transition: color .35s ease; }
+.vmark::after { content: ""; position: absolute; inset: .1em -.12em -.02em -.12em; background: currentColor;
+  -webkit-mask: url(images/favicon.svg) center / contain no-repeat; mask: url(images/favicon.svg) center / contain no-repeat;
+  opacity: 0; filter: blur(6px); transform: rotate(-12deg) scale(.8);
+  transition: opacity .35s ease, filter .35s ease, transform .5s cubic-bezier(.2, .7, .3, 1); pointer-events: none; }
+.vmark:hover { color: transparent; }
+.vmark:hover::after { opacity: 1; filter: none; transform: none; color: #000; }
+.rail-a .vmark { pointer-events: auto; }
+.rail-on .rail-a .vmark { pointer-events: none; }

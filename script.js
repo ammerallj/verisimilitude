@@ -106,8 +106,8 @@ const drift = (now) => {
 requestAnimationFrame(drift);
 
 // Opening beat: the animation plays on its own first; the definition blurs in once the
-// blowing has started. Change INTRO_DELAY to retime it (seconds after playback begins).
-const INTRO_DELAY = 3000;
+// blowing is under way. INTRO_AT is a position in the video, so buffering can't make it early.
+const INTRO_AT = 3.4; // seconds into the video: seeds first leave the dandelion at ~2.5s and are clearly in flight by ~3.4s
 const INTRO_LOCK_AFTER = 1200; // scrolling stays locked until the text is mostly in
 const heroVideo = document.querySelector(".hero video");
 let introShown = false;
@@ -123,8 +123,13 @@ const showIntro = () => {
 if (heroVideo && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && window.scrollY < 50) {
   body.classList.add("intro-wait");
   root.classList.add("scroll-lock"); // no scrolling until the definition has appeared
-  heroVideo.addEventListener("playing", () => setTimeout(showIntro, INTRO_DELAY), { once: true });
-  setTimeout(showIntro, INTRO_DELAY + 2500); // fallback if the video never starts
+  const watchBlow = () => {
+    if (introShown) return;
+    if (heroVideo.currentTime >= INTRO_AT) showIntro();
+    else requestAnimationFrame(watchBlow);
+  };
+  heroVideo.addEventListener("playing", watchBlow, { once: true });
+  setTimeout(showIntro, 10000); // fallback if the video never plays
 }
 
 // Each section blurs and fades out as the next one nears the middle of the view, then the

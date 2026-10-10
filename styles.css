@@ -119,25 +119,35 @@ html { scroll-behavior: smooth; }
 .rail { position: fixed; top: 0; bottom: 0; left: var(--gutter); width: 376px; z-index: 2; pointer-events: none; }
 .rail a { pointer-events: auto; }
 .rail-a, .rail-b { position: absolute; left: 0; width: 100%; will-change: opacity, filter; }
-.rail-a { top: 150px; width: 384px; display: flex; flex-direction: column; gap: 20px;
-  opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }
-.rail-a > * { transition: opacity 1.2s ease, filter 1.2s ease; }
-.rail-a > :nth-child(2) { transition-delay: .35s; }
-.rail-a > :nth-child(3) { transition-delay: .7s; }
-.intro-wait .rail-a > * { opacity: 0; filter: blur(14px); transition: none; }
-.rail-a h1 { font: 400 48px var(--display); }
+.rail-a { top: 150px; width: 384px; display: flex; flex-direction: column; gap: 20px; }
+/* Opening beat: lines blur in once, then scroll takes over (see script.js) */
+.intro-wait .rail-a > * { opacity: 0; filter: blur(14px); }
+.intro-play .rail-a > * { animation: intro-in 1.2s ease backwards; }
+.intro-play .rail-a > :nth-child(2) { animation-delay: .35s; }
+.intro-play .rail-a > :nth-child(3) { animation-delay: .7s; }
+@keyframes intro-in { from { opacity: 0; filter: blur(14px); } }
+/* "Verisimilitude" shrinks in place to the title size while " Studio" blurs in next to it,
+   in step with the intro text blurring in (--in); the definition lines blur out first (--out). */
+.rail-a h1 { font: 400 calc(48px - var(--in, 0) * 12px) var(--display); white-space: nowrap; }
+.rail-a h1 a { display: inline-block; }
+.studio { display: inline-block; white-space: pre; opacity: var(--in, 0); filter: blur(calc((1 - var(--in, 0)) * 14px)); }
+.rail-a .phonetic, .rail-a .definition { opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }
+.rail-b .name { visibility: hidden; }
 .rail-a .phonetic { font-style: italic; font-size: 24px; }
 .rail-a .definition { font-size: 24px; margin-top: 20px; }
 .rail-b { top: 150px; position: absolute; opacity: var(--in, 0); filter: blur(calc((1 - var(--in, 0)) * 14px)); }
-.rail-b .nav a, .rail-b .name { pointer-events: none; }
-.p-home.rail-on .rail-b .nav a, .p-home.rail-on .rail-b .name { pointer-events: auto; }
+.rail-b .nav a { pointer-events: none; }
+.p-home.rail-on .rail-b .nav a { pointer-events: auto; }
 @media (prefers-reduced-motion: reduce) { .hero video { display: none; } }
 @media (max-width: 900px) {
   .p-home .page { padding-top: 48px; }
   .rail { position: static; width: auto; margin: 48px var(--gutter) 0; pointer-events: auto; }
   .rail-a, .rail-b { position: static; width: 100%; opacity: 1 !important; transform: none !important; filter: none !important; }
   .rail-b { margin-top: 48px; }
-  .rail-b .nav a, .rail-b .name { pointer-events: auto; }
+  .rail-b .nav a { pointer-events: auto; }
+  .rail-a h1 { font-size: 36px; }
+  .studio, .rail-a .phonetic, .rail-a .definition { opacity: 1 !important; filter: none !important; }
+  .rail-b .name { display: none; }
   .p-home .stage { margin-left: 0; }
   .hero { height: 50vh; }
   .p-home .work { margin-top: 0; }
@@ -163,8 +173,6 @@ html { scroll-behavior: smooth; }
   transition: opacity .35s ease, filter .35s ease, transform .5s cubic-bezier(.2, .7, .3, 1); pointer-events: none; }
 .vmark:hover { color: transparent; }
 .vmark:hover::after { opacity: 1; filter: none; transform: none; color: #000; }
-.rail-a .vmark { pointer-events: auto; }
-.rail-on .rail-a .vmark { pointer-events: none; }
 
 /* The same swap, on its own and waving: the icon pivots on its point */
 .vmark.waving { color: transparent; }

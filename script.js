@@ -114,6 +114,8 @@ const showIntro = () => {
   if (introShown) return;
   introShown = true;
   body.classList.remove("intro-wait");
+  body.classList.add("intro-play");
+  setTimeout(() => body.classList.remove("intro-play"), 2600);
 };
 if (heroVideo && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && window.scrollY < 50) {
   body.classList.add("intro-wait");
@@ -150,11 +152,10 @@ window.addEventListener("resize", fadeUpdate);
 fadeUpdate();
 
 // Every so often the V in the visible "Verisimilitude" turns into the seed icon and waves.
-const railLeadV = () => document.querySelector(body.classList.contains("rail-on") ? ".rail-b .vmark" : ".rail-a .vmark");
+const railLeadV = () => document.querySelector(".rail-a .vmark");
 const waveV = () => {
   const v = railLeadV();
-  const hidden = document.hidden || body.classList.contains("intro-wait") ||
-    (!body.classList.contains("rail-on") && parseFloat(getComputedStyle(root).getPropertyValue("--out")) > 0.05);
+  const hidden = document.hidden || body.classList.contains("intro-wait");
   if (v && !hidden && !v.matches(":hover")) {
     v.classList.add("waving");
     setTimeout(() => v.classList.remove("waving"), 2800);

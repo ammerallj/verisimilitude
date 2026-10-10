@@ -35,3 +35,30 @@ const markCurrent = () => {
 window.addEventListener("scroll", markCurrent, { passive: true });
 window.addEventListener("resize", markCurrent);
 markCurrent();
+
+// Scatter dandelion seeds at random across the whole page, behind the content.
+const SEED_COLOR = "#B5CBDB";
+const seedSVG = (size, rotate) => `
+  <svg width="${size}" viewBox="0 0 33.3098 38.0437" fill="none"
+       style="overflow:visible;transform:rotate(${rotate}deg)" aria-hidden="true">
+    <g stroke="${SEED_COLOR}" stroke-width="2">
+      <path d="M32.4438 8.63243L16.2719 36.643"/>
+      <path d="M0.866026 8.63243L17.0379 36.643"/>
+      <path d="M13.0637 0.114624L17.2653 36.5284"/>
+    </g>
+    <circle cx="16.9721" cy="35.9428" r="2.10079" fill="${SEED_COLOR}"/>
+  </svg>`;
+const seedLayer = document.createElement("div");
+seedLayer.className = "seeds";
+seedLayer.setAttribute("aria-hidden", "true");
+const SEED_COUNT = 36;
+for (let i = 0; i < SEED_COUNT; i++) {
+  const seed = document.createElement("span");
+  const size = 18 + Math.random() * 52;
+  seed.style.left = `${Math.random() * 100}%`;
+  seed.style.top = `${Math.random() * 100}%`;
+  seed.style.opacity = (0.35 + Math.random() * 0.65).toFixed(2);
+  seed.innerHTML = seedSVG(size.toFixed(0), Math.round(Math.random() * 360));
+  seedLayer.appendChild(seed);
+}
+document.body.prepend(seedLayer);

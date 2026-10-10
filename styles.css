@@ -10,8 +10,9 @@ body {
   font-size: 20px;
   line-height: normal;
   color: #000;
-  background: #fff;
+  background: transparent;
   min-height: 100vh;
+  position: relative;
 }
 a { color: inherit; text-decoration: none; }
 em { font-style: italic; }
@@ -46,7 +47,7 @@ em { font-style: italic; }
 .foot a:hover { text-decoration: underline; }
 
 /* Home / work */
-.work { position: relative; width: 100%; aspect-ratio: 1102 / 1610; background: #fff; }
+.work { position: relative; width: 100%; aspect-ratio: 1102 / 1610; }
 .work .w { position: absolute; margin: 0; outline: none; transition: opacity .5s ease, filter .5s ease; }
 .work .w img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover;
   box-shadow: -60px 60px 70px rgba(67, 98, 124, .2); }
@@ -129,3 +130,7 @@ html { scroll-behavior: smooth; }
   .hero { height: 50vh; }
   .p-home .work { margin-top: 0; }
 }
+
+/* Scattered dandelion seeds (see script.js) sit behind everything */
+.seeds { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.seeds span { position: absolute; display: block; line-height: 0; }

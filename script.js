@@ -107,18 +107,22 @@ requestAnimationFrame(drift);
 
 // Opening beat: the animation plays on its own first; the definition blurs in once the
 // blowing has started. Change INTRO_DELAY to retime it (seconds after playback begins).
-const INTRO_DELAY = 4500;
+const INTRO_DELAY = 3000;
+const INTRO_LOCK_AFTER = 1200; // scrolling stays locked until the text is mostly in
 const heroVideo = document.querySelector(".hero video");
 let introShown = false;
+const unlockScroll = () => root.classList.remove("scroll-lock");
 const showIntro = () => {
   if (introShown) return;
   introShown = true;
   body.classList.remove("intro-wait");
   body.classList.add("intro-play");
+  setTimeout(unlockScroll, INTRO_LOCK_AFTER);
   setTimeout(() => body.classList.remove("intro-play"), 2600);
 };
 if (heroVideo && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && window.scrollY < 50) {
   body.classList.add("intro-wait");
+  root.classList.add("scroll-lock"); // no scrolling until the definition has appeared
   heroVideo.addEventListener("playing", () => setTimeout(showIntro, INTRO_DELAY), { once: true });
   setTimeout(showIntro, INTRO_DELAY + 2500); // fallback if the video never starts
 }

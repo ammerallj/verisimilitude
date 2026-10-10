@@ -187,3 +187,7 @@ html { scroll-behavior: smooth; }
   86% { opacity: 1; filter: none; transform: rotate(0); }
   100% { opacity: 0; filter: blur(6px); transform: rotate(0) scale(.9); }
 }
+
+/* Held during the opening beat so nothing scrolls until the definition appears */
+html { scrollbar-gutter: stable; }
+html.scroll-lock, html.scroll-lock body { overflow: hidden; }

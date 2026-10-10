@@ -131,6 +131,8 @@ html { scroll-behavior: smooth; }
   .p-home .work { margin-top: 0; }
 }
 
-/* Scattered dandelion seeds (see script.js) sit behind everything */
-.seeds { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-.seeds span { position: absolute; display: block; line-height: 0; }
+/* Dandelion seeds (see script.js) float over the whole page */
+.seeds { position: absolute; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; }
+.seeds span { position: absolute; display: block; line-height: 0; padding: 8px; margin: -8px; pointer-events: auto; }
+.seeds i { display: block; transition: transform 1.4s cubic-bezier(.2, .7, .3, 1), opacity 1.4s ease; }
+.seeds .blown i { transform: translate(180px, -120px) rotate(260deg); opacity: 0; }

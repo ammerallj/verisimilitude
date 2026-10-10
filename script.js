@@ -36,7 +36,9 @@ window.addEventListener("scroll", markCurrent, { passive: true });
 window.addEventListener("resize", markCurrent);
 markCurrent();
 
-// Scatter dandelion seeds at random across the whole page, behind the content.
+// The seeds blown out of the hero video keep floating around the whole site.
+// They start thick near the top (where they left the dandelion), thin out down the
+// page, and float on their own as well as with scroll. Touch one and it blows away.
 const SEED_COLOR = "#B5CBDB";
 const seedSVG = (size, rotate) => `
   <svg width="${size}" viewBox="0 0 33.3098 38.0437" fill="none"
@@ -56,34 +58,40 @@ for (let i = 0; i < SEED_COUNT; i++) {
   const seed = document.createElement("span");
   const size = 10 + Math.random() * 18;
   seed.style.left = `${Math.random() * 100}%`;
-  seed.style.top = `${Math.random() * 100}%`;
-  seed.style.opacity = (0.35 + Math.random() * 0.65).toFixed(2);
-  seed.innerHTML = seedSVG(size.toFixed(0), Math.round(Math.random() * 360));
-  // Per-seed drift: a depth that sets how far it floats, plus a sway phase and reach.
+  seed.style.top = `${Math.pow(Math.random(), 1.7) * 100}%`;
+  seed.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
+  seed.innerHTML = `<i>${seedSVG(size.toFixed(0), Math.round(Math.random() * 360))}</i>`;
+  // Per-seed drift: depth sets how far it floats with scroll; the rest is idle motion.
   seed.drift = {
     depth: (Math.random() < 0.5 ? -1 : 1) * (0.15 + Math.random() * 0.3),
     phase: Math.random() * Math.PI * 2,
     sway: 60 + Math.random() * 90,
     spin: (Math.random() - 0.5) * 0.12,
+    bob: 6 + Math.random() * 10,
+    speed: 0.0004 + Math.random() * 0.0005,
   };
+  // Easter egg: a seed blows away when touched, then drifts back in a few seconds later.
+  const blow = () => {
+    if (seed.classList.contains("blown")) return;
+    seed.classList.add("blown");
+    setTimeout(() => seed.classList.remove("blown"), 6000);
+  };
+  seed.addEventListener("pointerenter", blow);
+  seed.addEventListener("pointerdown", blow);
   seedLayer.appendChild(seed);
 }
 document.body.prepend(seedLayer);
 
-// Seeds float slowly down and side to side as you scroll.
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-let driftQueued = false;
-const drift = () => {
-  driftQueued = false;
+const drift = (now) => {
+  requestAnimationFrame(drift);
   if (reduceMotion.matches) return;
   const y = window.scrollY;
   for (const seed of seedLayer.children) {
-    const { depth, phase, sway, spin } = seed.drift;
-    const dx = Math.sin(y * 0.004 + phase) * sway;
-    seed.style.transform = `translate3d(${dx.toFixed(1)}px, ${(y * depth).toFixed(1)}px, 0) rotate(${(y * spin).toFixed(1)}deg)`;
+    const { depth, phase, sway, spin, bob, speed } = seed.drift;
+    const dx = Math.sin(y * 0.004 + phase) * sway + Math.sin(now * speed + phase) * bob;
+    const dy = y * depth + Math.cos(now * speed * 1.3 + phase) * bob;
+    seed.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) rotate(${(y * spin).toFixed(1)}deg)`;
   }
 };
-window.addEventListener("scroll", () => {
-  if (!driftQueued) { driftQueued = true; requestAnimationFrame(drift); }
-}, { passive: true });
-drift();
+requestAnimationFrame(drift);

@@ -99,7 +99,7 @@ requestAnimationFrame(drift);
 
 // Opening beat: the animation plays on its own first; the definition blurs in once the
 // blowing has started. Change INTRO_DELAY to retime it (seconds after playback begins).
-const INTRO_DELAY = 2000;
+const INTRO_DELAY = 4500;
 const heroVideo = document.querySelector(".hero video");
 let introShown = false;
 const showIntro = () => {

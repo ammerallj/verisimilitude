@@ -4,6 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Verisimilitude Studio</title>
+  <script>
+    // Always open on the landing screen: no restored scroll position, no anchor jump.
+    history.scrollRestoration = "manual";
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    window.scrollTo(0, 0);
+    window.addEventListener("pageshow", function (e) { if (e.persisted) location.reload(); });
+  </script>
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <noscript><style>.intro-wait .rail-a > * { opacity: 1 !important; filter: none !important; } html.scroll-lock, html.scroll-lock body { overflow: auto; }</style></noscript>

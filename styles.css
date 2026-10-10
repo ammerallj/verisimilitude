@@ -155,8 +155,10 @@ html { scroll-behavior: smooth; }
 
 /* Hover the V in Verisimilitude: the letter gives way to the seed icon */
 .vmark { position: relative; display: inline-block; transition: color .35s ease; }
-.vmark::after { content: ""; position: absolute; inset: .1em -.12em -.02em -.12em; background: currentColor;
-  -webkit-mask: url(images/favicon.svg) center / contain no-repeat; mask: url(images/favicon.svg) center / contain no-repeat;
+/* Sized so the icon's arm tips and point land on the V's top corners and baseline point
+   (Palatino: ink spans x .010-.705em, cap top .129em, point .823em from the box top). */
+.vmark::after { content: ""; position: absolute; left: -.0825em; top: -.1096em; width: .8796em; height: .9912em; background: currentColor;
+  -webkit-mask: url(images/favicon.svg) 0 0 / 100% 100% no-repeat; mask: url(images/favicon.svg) 0 0 / 100% 100% no-repeat;
   opacity: 0; filter: blur(6px); transform: rotate(-12deg) scale(.8);
   transition: opacity .35s ease, filter .35s ease, transform .5s cubic-bezier(.2, .7, .3, 1); pointer-events: none; }
 .vmark:hover { color: transparent; }

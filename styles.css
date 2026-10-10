@@ -132,7 +132,8 @@ html { scroll-behavior: smooth; }
 }
 
 /* Dandelion seeds (see script.js) float over the whole page */
-.seeds { position: absolute; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; }
-.seeds span { position: absolute; display: block; line-height: 0; padding: 8px; margin: -8px; pointer-events: auto; }
+.seeds { position: absolute; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; opacity: var(--out, 0); }
+.seeds span { position: absolute; display: block; line-height: 0; padding: 8px; margin: -8px; pointer-events: none; }
+.seeds-on .seeds span { pointer-events: auto; }
 .seeds i { display: block; transition: transform 1.4s cubic-bezier(.2, .7, .3, 1), opacity 1.4s ease; }
 .seeds .blown i { transform: translate(180px, -120px) rotate(260deg); opacity: 0; }

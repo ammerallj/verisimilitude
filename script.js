@@ -15,6 +15,7 @@ const update = () => {
   root.style.setProperty("--out", out.toFixed(3));
   root.style.setProperty("--in", into.toFixed(3));
   body.classList.toggle("rail-on", into > 0.5);
+  body.classList.toggle("seeds-on", out > 0.3);
 };
 window.addEventListener("scroll", update, { passive: true });
 window.addEventListener("resize", update);

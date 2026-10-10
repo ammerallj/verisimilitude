@@ -100,8 +100,8 @@ em { font-style: italic; }
 .rail { position: fixed; top: 0; bottom: 0; left: var(--gutter); width: 376px; z-index: 2; pointer-events: none; }
 .rail a { pointer-events: auto; }
 .rail-a, .rail-b { position: absolute; left: 0; width: 100%; will-change: opacity, filter; }
-.rail-a { top: 50%; width: 384px; display: flex; flex-direction: column; gap: 20px;
-  transform: translateY(-50%); opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }
+.rail-a { top: 150px; width: 384px; display: flex; flex-direction: column; gap: 20px;
+  opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }
 .rail-a h1 { font: 400 48px var(--display); }
 .rail-a .phonetic { font-style: italic; font-size: 24px; }
 .rail-a .definition { font-size: 24px; margin-top: 20px; }

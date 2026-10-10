@@ -78,8 +78,8 @@ em { font-style: italic; }
      scale up about the stem's base so it grows upward; margin-top reserves that room. */
   transform-origin: 79% 100%; transform: translateX(-29%) scale(1.6); margin-top: 20%; }
 .copy a { text-decoration: underline; text-decoration-skip-ink: none; text-underline-position: from-font; }
-.services { list-style: none; display: flex; flex-direction: column; gap: 30px; width: min(547px, 100%); }
-.services li { display: flex; justify-content: space-between; align-items: center; }
+.services { list-style: none; display: flex; flex-direction: column; gap: 15px; width: min(547px, 100%); }
+.services li { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(0, 0, 0, .25); }
 .services li > * { flex: 1; min-width: 0; }
 .services em { text-align: right; }
 html { scroll-behavior: smooth; }

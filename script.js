@@ -61,9 +61,10 @@ for (let i = 0; i < SEED_COUNT; i++) {
   seed.innerHTML = seedSVG(size.toFixed(0), Math.round(Math.random() * 360));
   // Per-seed drift: a depth that sets how far it floats, plus a sway phase and reach.
   seed.drift = {
-    depth: 0.03 + Math.random() * 0.12,
+    depth: (Math.random() < 0.5 ? -1 : 1) * (0.15 + Math.random() * 0.3),
     phase: Math.random() * Math.PI * 2,
-    sway: 20 + Math.random() * 50,
+    sway: 60 + Math.random() * 90,
+    spin: (Math.random() - 0.5) * 0.12,
   };
   seedLayer.appendChild(seed);
 }
@@ -77,9 +78,9 @@ const drift = () => {
   if (reduceMotion.matches) return;
   const y = window.scrollY;
   for (const seed of seedLayer.children) {
-    const { depth, phase, sway } = seed.drift;
-    const dx = Math.sin(y * 0.0025 + phase) * sway;
-    seed.style.transform = `translate3d(${dx.toFixed(1)}px, ${(y * depth).toFixed(1)}px, 0)`;
+    const { depth, phase, sway, spin } = seed.drift;
+    const dx = Math.sin(y * 0.004 + phase) * sway;
+    seed.style.transform = `translate3d(${dx.toFixed(1)}px, ${(y * depth).toFixed(1)}px, 0) rotate(${(y * spin).toFixed(1)}deg)`;
   }
 };
 window.addEventListener("scroll", () => {

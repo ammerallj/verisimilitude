@@ -30,7 +30,7 @@ em { font-style: italic; }
 .intro { display: flex; flex-direction: column; gap: 20px; }
 .name { font: 400 36px var(--display); }
 .desc { font-size: 18px; }
-.note { font-style: italic; font-size: 15px; }
+.note { font-style: italic; font-size: 15px; color: #555; }
 .nav { display: flex; flex-direction: column; gap: 10px; }
 .nav a:hover { text-decoration: underline; }
 .nav .current { font-style: italic; text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }

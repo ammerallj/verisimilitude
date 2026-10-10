@@ -3,8 +3,7 @@
   --display: Palatino, "Palatino Linotype", "Book Antiqua", "URW Palladio L", serif;
   --gutter: 80px; /* left and right page margin */
   --rail: 376px; /* left rail width */
-  --about-w: 547px; /* About text measure */
-  --rail-gap: 80px; /* space between the rail and the content column */
+  --grid-gap: 24px; /* 12-column grid inside the page margins */
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { background: #fff; }
@@ -72,7 +71,7 @@ em { font-style: italic; }
 
 /* About / Services sections (stacked below the work on the one long page) */
 .sec { min-height: 100vh; padding-top: 150px; display: flex; flex-direction: column; align-items: center; gap: 50px; }
-.sec .copy { width: min(var(--about-w), 100%); }
+.sec .copy { width: 100%; }
 .sec-about .copy { align-self: flex-end; } /* block sits on the right margin; its text stays left-aligned */
 .sec-services .copy { width: 100%; }
 /* Last screen: Services plus the footer fill exactly one viewport, footer on the bottom edge. */
@@ -82,7 +81,7 @@ em { font-style: italic; }
 .about-loop { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: contain; object-position: center; flex: none;
   /* The dandelion sits ~79% across the clip: shift it onto the paragraph's centre, then
      scale up about the stem's base so it grows upward; margin-top reserves that room. */
-  transform-origin: 79% 100%; transform: translateX(calc(21% - var(--about-w) / 2)) scale(1.6); margin-top: 20%; }
+  transform-origin: 79% 100%; transform: translateX(-29%) scale(1.6); margin-top: 20%; }
 .copy a { text-decoration: underline; text-decoration-skip-ink: none; text-underline-position: from-font; }
 .services { list-style: none; display: flex; flex-direction: column; gap: 15px; width: 100%; }
 .services li { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(0, 0, 0, .25); }
@@ -102,7 +101,6 @@ html { scroll-behavior: smooth; }
   .side { width: 100%; gap: 48px; }
   .main { width: 100%; min-height: 0 !important; }
   .sec, .sec-services { min-height: 0; padding-top: 80px; }
-  .about-loop { transform: translateX(-29%) scale(1.6); }
   .p-home .foot { margin-top: 80px; }
   .work figcaption, .work .w2 figcaption, .work .w4 figcaption { top: 100%; left: 0; right: auto; width: 240px; margin-top: 16px; text-align: left; }
   .foot { flex-direction: column; align-items: flex-start; font-size: 15px; }
@@ -112,7 +110,8 @@ html { scroll-behavior: smooth; }
 /* Home: landing and work in one scroll. The rail starts as the definition,
    then hands over to the studio intro as you scroll (see script.js). */
 .p-home .page { padding-top: 0; }
-.p-home .stage { margin-left: calc(var(--rail) + var(--rail-gap)); }
+/* Right rail: columns 7-12 of the 12-column grid, i.e. half the content width minus half a gap. */
+.p-home .stage { margin-left: auto; width: calc((100% - var(--grid-gap)) / 2); }
 .p-home .work { width: 100%; }
 .hero { position: relative; height: 100vh; margin: 0 calc(-1 * var(--gutter)); }
 .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; background: #fff;
@@ -153,7 +152,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   body:not(.intro-play):not(.intro-wait) :is(.rail-a .phonetic, .rail-a .definition) { opacity: 1 !important; filter: none !important; }
   .studio { opacity: 1 !important; filter: none !important; }
   .rail-b .name { display: none; }
-  .p-home .stage { margin-left: 0; }
+  .p-home .stage { margin-left: 0; width: 100%; }
   .hero { height: 50vh; }
   .p-home .work { margin-top: 0; }
 }

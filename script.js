@@ -51,10 +51,10 @@ const seedSVG = (size, rotate) => `
 const seedLayer = document.createElement("div");
 seedLayer.className = "seeds";
 seedLayer.setAttribute("aria-hidden", "true");
-const SEED_COUNT = 36;
+const SEED_COUNT = 14;
 for (let i = 0; i < SEED_COUNT; i++) {
   const seed = document.createElement("span");
-  const size = 18 + Math.random() * 52;
+  const size = 10 + Math.random() * 18;
   seed.style.left = `${Math.random() * 100}%`;
   seed.style.top = `${Math.random() * 100}%`;
   seed.style.opacity = (0.35 + Math.random() * 0.65).toFixed(2);

@@ -148,3 +148,19 @@ fadeSections.forEach((el) => el.classList.add("fade-sec"));
 window.addEventListener("scroll", fadeUpdate, { passive: true });
 window.addEventListener("resize", fadeUpdate);
 fadeUpdate();
+
+// Every so often the V in the visible "Verisimilitude" turns into the seed icon and waves.
+const railLeadV = () => document.querySelector(body.classList.contains("rail-on") ? ".rail-b .vmark" : ".rail-a .vmark");
+const waveV = () => {
+  const v = railLeadV();
+  const hidden = document.hidden || body.classList.contains("intro-wait") ||
+    (!body.classList.contains("rail-on") && parseFloat(getComputedStyle(root).getPropertyValue("--out")) > 0.05);
+  if (v && !hidden && !v.matches(":hover")) {
+    v.classList.add("waving");
+    setTimeout(() => v.classList.remove("waving"), 2800);
+  }
+  setTimeout(waveV, 6000 + Math.random() * 8000);
+};
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  setTimeout(waveV, 7000 + Math.random() * 5000);
+}

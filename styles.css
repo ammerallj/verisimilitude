@@ -165,3 +165,17 @@ html { scroll-behavior: smooth; }
 .vmark:hover::after { opacity: 1; filter: none; transform: none; color: #000; }
 .rail-a .vmark { pointer-events: auto; }
 .rail-on .rail-a .vmark { pointer-events: none; }
+
+/* The same swap, on its own and waving: the icon pivots on its point */
+.vmark.waving { color: transparent; }
+.vmark.waving::after { opacity: 1; filter: none; color: #000; transform-origin: 50% 94%; animation: seed-wave 2.8s ease-in-out both; }
+@keyframes seed-wave {
+  0% { opacity: 0; filter: blur(6px); transform: rotate(-12deg) scale(.8); }
+  12% { opacity: 1; filter: none; transform: rotate(0) scale(1); }
+  26% { transform: rotate(-18deg); }
+  42% { transform: rotate(16deg); }
+  58% { transform: rotate(-13deg); }
+  72% { transform: rotate(9deg); }
+  86% { opacity: 1; filter: none; transform: rotate(0); }
+  100% { opacity: 0; filter: blur(6px); transform: rotate(0) scale(.9); }
+}

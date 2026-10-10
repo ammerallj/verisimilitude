@@ -69,7 +69,9 @@ em { font-style: italic; }
 /* About / Services sections (stacked below the work on the one long page) */
 .sec { min-height: 100vh; padding-top: 150px; display: flex; flex-direction: column; align-items: center; gap: 50px; }
 .sec .copy { width: min(547px, 100%); }
-.sec-services { min-height: 0; }
+/* Last screen: Services plus the footer fill exactly one viewport, footer on the bottom edge. */
+.sec-services { min-height: calc(100vh - 72px); }
+.p-home .foot { margin-top: 0; }
 .sec-about .copy p + p { margin-top: 1lh; }
 .about-loop { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: contain; object-position: center; flex: none;
   /* The dandelion sits ~79% across the clip: shift it onto the paragraph's centre, then
@@ -93,7 +95,8 @@ html { scroll-behavior: smooth; }
   .cols { flex-direction: column; gap: 60px; }
   .side { width: 100%; gap: 48px; }
   .main { width: 100%; min-height: 0 !important; }
-  .sec { min-height: 0; padding-top: 80px; }
+  .sec, .sec-services { min-height: 0; padding-top: 80px; }
+  .p-home .foot { margin-top: 80px; }
   .work figcaption, .work .w2 figcaption, .work .w4 figcaption { top: 100%; left: 0; right: auto; width: 240px; margin-top: 16px; text-align: left; }
   .foot { flex-direction: column; align-items: flex-start; font-size: 15px; }
   .landing > * { width: 100%; }

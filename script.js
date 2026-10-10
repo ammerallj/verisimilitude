@@ -107,7 +107,7 @@ requestAnimationFrame(drift);
 
 // Opening beat: the animation plays on its own first; the definition blurs in once the
 // blowing is under way. INTRO_AT is a position in the video, so buffering can't make it early.
-const INTRO_AT = 3.4; // seconds into the video: seeds first leave the dandelion at ~2.5s and are clearly in flight by ~3.4s
+const INTRO_AT = 1.5; // seconds into the video; the seeds start to leave the dandelion shortly after (~2.5s)
 const INTRO_LOCK_AFTER = 1200; // scrolling stays locked until the text is mostly in
 const heroVideo = document.querySelector(".hero video");
 let introShown = false;
@@ -120,16 +120,19 @@ const showIntro = () => {
   setTimeout(unlockScroll, INTRO_LOCK_AFTER);
   setTimeout(() => body.classList.remove("intro-play"), 2600);
 };
-if (heroVideo && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && window.scrollY < 50) {
-  body.classList.add("intro-wait");
-  root.classList.add("scroll-lock"); // no scrolling until the definition has appeared
+// The page ships with the text hidden and scroll locked (no flash). Skip the beat when the
+// page opens scrolled down or the person prefers reduced motion.
+if (!heroVideo || window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.scrollY >= 50) {
+  body.classList.remove("intro-wait");
+  unlockScroll();
+} else {
   const watchBlow = () => {
     if (introShown) return;
     if (heroVideo.currentTime >= INTRO_AT) showIntro();
     else requestAnimationFrame(watchBlow);
   };
   heroVideo.addEventListener("playing", watchBlow, { once: true });
-  setTimeout(showIntro, 10000); // fallback if the video never plays
+  setTimeout(showIntro, 6000); // fallback if the video never plays
 }
 
 // Each section blurs and fades out as the next one nears the middle of the view, then the

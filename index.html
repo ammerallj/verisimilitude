@@ -1,13 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-lock">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Verisimilitude Studio</title>
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <noscript><style>.intro-wait .rail-a > * { opacity: 1 !important; filter: none !important; } html.scroll-lock, html.scroll-lock body { overflow: auto; }</style></noscript>
 </head>
-<body class="p-home" id="top">
+<body class="p-home intro-wait" id="top">
   <div class="rail" id="rail">
     <div class="rail-a">
       <h1><a class="title-link" href="#top"><span class="vmark">V</span>erisimilitude<span class="studio"> Studio</span></a></h1>
@@ -78,5 +79,6 @@
     </footer>
   </main>
   <script src="script.js"></script>
+  <script>setTimeout(function () { document.documentElement.classList.remove("scroll-lock"); document.body.classList.remove("intro-wait"); }, 9000); // failsafe: never leave the page locked or the text hidden</script>
 </body>
 </html>

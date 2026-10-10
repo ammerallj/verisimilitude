@@ -1,9 +1,7 @@
 :root {
   --serif: "Times New Roman", Times, serif;
   --display: Palatino, "Palatino Linotype", "Book Antiqua", "URW Palladio L", serif;
-  /* 32-column grid, 12px gaps: the side margin is two columns plus their gaps, capped at 96px. */
-  --gap: 12px;
-  --gutter: min(96px, calc(2 * (100vw - 31 * var(--gap)) / 32 + 2 * var(--gap)));
+  --gutter: 80px; /* left and right page margin */
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { background: #fff; }

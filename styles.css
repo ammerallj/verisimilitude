@@ -113,6 +113,10 @@ html { scroll-behavior: smooth; }
 .rail-a, .rail-b { position: absolute; left: 0; width: 100%; will-change: opacity, filter; }
 .rail-a { top: 150px; width: 384px; display: flex; flex-direction: column; gap: 20px;
   opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }
+.rail-a > * { transition: opacity 1.2s ease, filter 1.2s ease; }
+.rail-a > :nth-child(2) { transition-delay: .35s; }
+.rail-a > :nth-child(3) { transition-delay: .7s; }
+.intro-wait .rail-a > * { opacity: 0; filter: blur(14px); transition: none; }
 .rail-a h1 { font: 400 48px var(--display); }
 .rail-a .phonetic { font-style: italic; font-size: 24px; }
 .rail-a .definition { font-size: 24px; margin-top: 20px; }

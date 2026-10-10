@@ -6,7 +6,7 @@
   <title>Verisimilitude Studio</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="p-home">
+<body class="p-home" id="top">
   <div class="rail" id="rail">
     <div class="rail-a">
       <h1>Verisimilitude</h1>
@@ -15,13 +15,13 @@
     </div>
     <aside class="side rail-b">
       <div class="intro">
-        <a class="name" href="index.html">Verisimilitude Studio</a>
+        <a class="name" href="#top">Verisimilitude Studio</a>
         <p class="desc">Design studio based in San Francisco and Seattle creating honest and simple digital experiences.</p>
         <p class="note">*We're a private studio and most projects are in stealth mode</p>
       </div>
       <nav class="nav">
-        <a href="about.html">About</a>
-        <a href="services.html">Services</a>
+        <a href="#about" data-sec="about">About</a>
+        <a href="#services" data-sec="services">Services</a>
       </nav>
     </aside>
   </div>
@@ -36,10 +36,26 @@
         <img class="w3" src="images/work-3.png" alt="">
         <img class="w4" src="images/work-4.png" alt="">
       </section>
+      <section class="sec sec-about" id="about" data-sec="about">
+        <div class="flower"><img src="images/about-flower.svg" alt=""></div>
+        <div class="copy">
+          <p>Verisimilitude Studio is founded by former Meta designers Michelle and Jenna. We are an independent practice built on a shared foundation of authenticity and intentionality. We exist to craft work that reflects our values and challenges the conventional.</p>
+          <p>Together, they bring 20 years of combined industry experience across startups and Big Tech. They work with founders and teams that value a human touch to build 0-1 or scale to a global audience.</p>
+          <p>Our design process centers on observing nature, making things by hand, and holding open conversations with collaborators. Then, we identify simple and effective design solutions for you. Ultimately, AI does not replace our judgement, as we use it to simply execute on human-centered ideas.</p>
+        </div>
+      </section>
+      <section class="sec sec-services" id="services" data-sec="services">
+        <p class="copy">Please contact us at <a href="mailto:hello@veris.studio">hello@veris.studio</a> to get things started.</p>
+        <ul class="services">
+          <li><span>0-1 Marketing Website</span><em>Inquire for pricing</em></li>
+          <li><span>Website Revamp</span><em>Inquire for pricing</em></li>
+          <li><span>Brand Identity</span><em>Inquire for pricing</em></li>
+        </ul>
+      </section>
     </div>
     <footer class="foot">
       <p>Verisimilitude: <em>noun</em> — how much a story, artwork, or idea looks like the truth.</p>
-      <a href="mailto:contact@verisimilitudestudio.com">contact@verisimilitudestudio.com</a>
+      <a href="mailto:hello@veris.studio">hello@veris.studio</a>
     </footer>
   </main>
   <script src="script.js"></script>

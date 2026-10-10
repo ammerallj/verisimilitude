@@ -58,21 +58,19 @@ em { font-style: italic; }
 .w3 { left: 28.766%; top: 48.447%; width: 29.855%; height: 19.379%; }
 .w4 { left: 50.000%; top: 81.366%; width: 43.285%; height: 16.460%; }
 
-/* About */
-.p-about .main { display: flex; flex-direction: column; align-items: center; gap: 50px; min-height: 863px; }
+/* About / Services sections (stacked below the work on the one long page) */
+.sec { min-height: 100vh; padding-top: 150px; display: flex; flex-direction: column; align-items: center; gap: 50px; }
+.sec .copy { width: min(547px, 100%); }
+.sec-about .copy p + p { margin-top: 1lh; }
 .flower { position: relative; width: 282.86px; height: 303.5px; flex: none; }
 .flower img { position: absolute; display: block; inset: -29.59% -31.85% 0 0; width: auto; height: auto; max-width: none; }
-.p-about .copy { width: 547px; }
-.p-about .copy p + p { margin-top: 1lh; }
-
-/* Services */
-.p-services .main { display: flex; flex-direction: column; align-items: center; gap: 50px; min-height: 863px; }
-.p-services .copy, .services { width: 547px; }
 .copy a { text-decoration: underline; text-decoration-skip-ink: none; text-underline-position: from-font; }
-.services { list-style: none; display: flex; flex-direction: column; gap: 30px; }
+.services { list-style: none; display: flex; flex-direction: column; gap: 30px; width: min(547px, 100%); }
 .services li { display: flex; justify-content: space-between; align-items: center; }
 .services li > * { flex: 1; min-width: 0; }
 .services em { text-align: right; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 /* Smaller screens: collapse to a single column */
 @media (max-width: 1677px) {
@@ -84,7 +82,7 @@ em { font-style: italic; }
   .cols { flex-direction: column; gap: 60px; }
   .side { width: 100%; gap: 48px; }
   .main { width: 100%; min-height: 0 !important; }
-  .p-about .copy, .p-services .copy, .services { width: 100%; }
+  .sec { min-height: 0; padding-top: 80px; }
   .foot { flex-direction: column; align-items: flex-start; font-size: 15px; }
   .landing > * { width: 100%; }
 }

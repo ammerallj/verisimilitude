@@ -15,3 +15,19 @@ const update = () => {
 window.addEventListener("scroll", update, { passive: true });
 window.addEventListener("resize", update);
 update();
+
+// Mark the nav link for the section currently on screen.
+const links = [...document.querySelectorAll(".nav a[data-sec]")];
+const sections = [...document.querySelectorAll(".sec")];
+const markCurrent = () => {
+  const mid = window.innerHeight * 0.5;
+  const current = sections.filter((s) => s.getBoundingClientRect().top <= mid).pop();
+  links.forEach((a) => {
+    const on = current && a.dataset.sec === current.dataset.sec;
+    a.classList.toggle("current", !!on);
+    on ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current");
+  });
+};
+window.addEventListener("scroll", markCurrent, { passive: true });
+window.addEventListener("resize", markCurrent);
+markCurrent();

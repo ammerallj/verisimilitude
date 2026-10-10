@@ -73,7 +73,7 @@ em { font-style: italic; }
 /* About / Services sections (stacked below the work on the one long page) */
 .sec { min-height: 100vh; padding-top: 150px; display: flex; flex-direction: column; align-items: center; gap: 50px; }
 .sec .copy { width: min(var(--about-w), 100%); }
-.sec-about .copy { align-self: flex-start; } /* flush to the column edge, not centred */
+.sec-about .copy { align-self: flex-end; } /* block sits on the right margin; its text stays left-aligned */
 .sec-services .copy { width: 100%; }
 /* Last screen: Services plus the footer fill exactly one viewport, footer on the bottom edge. */
 .sec-services { min-height: calc(100vh - 72px); }
@@ -82,7 +82,7 @@ em { font-style: italic; }
 .about-loop { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: contain; object-position: center; flex: none;
   /* The dandelion sits ~79% across the clip: shift it onto the paragraph's centre, then
      scale up about the stem's base so it grows upward; margin-top reserves that room. */
-  transform-origin: 79% 100%; transform: translateX(calc(-79% + var(--about-w) / 2)) scale(1.6); margin-top: 20%; }
+  transform-origin: 79% 100%; transform: translateX(calc(21% - var(--about-w) / 2)) scale(1.6); margin-top: 20%; }
 .copy a { text-decoration: underline; text-decoration-skip-ink: none; text-underline-position: from-font; }
 .services { list-style: none; display: flex; flex-direction: column; gap: 15px; width: 100%; }
 .services li { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(0, 0, 0, .25); }

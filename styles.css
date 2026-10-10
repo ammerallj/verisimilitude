@@ -69,8 +69,7 @@ em { font-style: italic; }
 .sec { min-height: 100vh; padding-top: 150px; display: flex; flex-direction: column; align-items: center; gap: 50px; }
 .sec .copy { width: min(547px, 100%); }
 .sec-about .copy p + p { margin-top: 1lh; }
-.flower { position: relative; width: 282.86px; height: 303.5px; flex: none; }
-.flower img { position: absolute; display: block; inset: -29.59% -31.85% 0 0; width: auto; height: auto; max-width: none; }
+.about-loop { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: contain; object-position: right center; flex: none; }
 .copy a { text-decoration: underline; text-decoration-skip-ink: none; text-underline-position: from-font; }
 .services { list-style: none; display: flex; flex-direction: column; gap: 30px; width: min(547px, 100%); }
 .services li { display: flex; justify-content: space-between; align-items: center; }

@@ -146,7 +146,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .rail-b { margin-top: 48px; }
   .rail-b .nav a { pointer-events: auto; }
   .rail-a h1 { font-size: 36px; }
-  .studio, .rail-a .phonetic, .rail-a .definition { opacity: 1 !important; filter: none !important; }
+  body:not(.intro-play):not(.intro-wait) :is(.studio, .rail-a .phonetic, .rail-a .definition) { opacity: 1 !important; filter: none !important; }
   .rail-b .name { display: none; }
   .p-home .stage { margin-left: 0; }
   .hero { height: 50vh; }

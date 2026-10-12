@@ -68,7 +68,8 @@ em { font-style: italic; }
 .w:hover figcaption, .w:focus-visible figcaption { opacity: 1; filter: none; transform: none; }
 .w1 { left: 21.960%; top: 0.000%; width: 21.779%; height: 33.230%; }
 .w2 { left: 65.699%; top: 26.149%; width: 34.301%; height: 14.161%; }
-.w3 { left: 28.766%; top: 52.4%; width: 29.855%; height: 11.5%; }
+/* Optimly mockup: big enough to read, 16:9 (height = width x 0.385 in this container) */
+.w3 { left: 12%; top: 45%; width: 58%; height: 22.33%; }
 .w4 { left: 50.000%; top: 81.366%; width: 43.285%; height: 16.460%; }
 
 /* About / Services sections (stacked below the work on the one long page) */

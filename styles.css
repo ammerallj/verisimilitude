@@ -55,7 +55,7 @@ em { font-style: italic; }
 .work .w img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover;
   box-shadow: -60px 60px 70px rgba(67, 98, 124, .2); }
 .work .w2 img { object-position: top; }
-.work figcaption { position: absolute; top: 0; left: calc(100% + 48px); width: 260px; display: flex; flex-direction: column; gap: 8px;
+.work figcaption { position: absolute; top: 0; left: calc(100% + 48px); width: 280px; display: flex; flex-direction: column; gap: 8px;
   font-size: 18px; opacity: 0; filter: blur(8px); transform: translateY(8px); pointer-events: none;
   transition: opacity .5s ease, filter .5s ease, transform .5s ease; }
 .work .w2 figcaption, .work .w4 figcaption { left: auto; right: calc(100% + 48px); text-align: right; }
@@ -63,10 +63,12 @@ em { font-style: italic; }
 .work figcaption span { font-style: italic; }
 /* Hover or focus one image: the others blur back and its caption comes forward */
 .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: .35; filter: blur(10px); }
+/* The Optimly caption is long and the image sits mid-column, so it opens below the image */
+.work .w3 figcaption { top: 100%; left: 0; right: auto; margin-top: 18px; text-align: left; }
 .w:hover figcaption, .w:focus-visible figcaption { opacity: 1; filter: none; transform: none; }
 .w1 { left: 21.960%; top: 0.000%; width: 21.779%; height: 33.230%; }
 .w2 { left: 65.699%; top: 26.149%; width: 34.301%; height: 14.161%; }
-.w3 { left: 28.766%; top: 48.447%; width: 29.855%; height: 19.379%; }
+.w3 { left: 28.766%; top: 52.4%; width: 29.855%; height: 11.5%; }
 .w4 { left: 50.000%; top: 81.366%; width: 43.285%; height: 16.460%; }
 
 /* About / Services sections (stacked below the work on the one long page) */

@@ -199,3 +199,26 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 /* Held during the opening beat so nothing scrolls until the definition appears */
 html { scrollbar-gutter: stable; }
 html.scroll-lock, html.scroll-lock body { overflow: hidden; }
+
+/* Phones and small tablets: stack the work in one column so the images read at full width,
+   and show each caption under its image (there is no hover on touch screens). */
+@media (max-width: 900px) {
+  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 48px; }
+  .work .w { position: static; width: 100%; height: auto; }
+  .work .w1 { width: 62%; }
+  .work .w4 { width: 88%; align-self: flex-end; }
+  .work .w img { position: static; height: auto; box-shadow: -24px 24px 40px rgba(67, 98, 124, .2); }
+  .work .w1 img { aspect-ratio: 240 / 535; }
+  .work .w2 img { aspect-ratio: 378 / 228; }
+  .work .w3 img { aspect-ratio: 639 / 359; }
+  .work .w4 img { aspect-ratio: 477 / 265; }
+  .work figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
+    position: static; width: auto; margin-top: 14px; font-size: 16px; text-align: left;
+    opacity: 1; filter: none; transform: none; }
+  .work figcaption strong { font-size: 20px; }
+  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: 1; filter: none; }
+  /* Comfortable tap targets for the text links */
+  .nav { gap: 0; }
+  .nav a { display: block; padding: 10px 0; }
+  .foot a { display: inline-block; padding: 10px 0; }
+}

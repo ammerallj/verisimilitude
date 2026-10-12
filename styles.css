@@ -61,6 +61,7 @@ em { font-style: italic; }
 .work .w2 figcaption, .work .w4 figcaption { left: auto; right: calc(100% + 48px); text-align: right; }
 .work figcaption strong { font-weight: 400; font-size: 24px; }
 .work figcaption span { font-style: italic; }
+.work figcaption small { font-size: 15px; color: #555; }
 /* Hover or focus one image: the others blur back and its caption comes forward */
 .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: .35; filter: blur(10px); }
 /* The Optimly caption is long and the image sits mid-column, so it opens below the image */

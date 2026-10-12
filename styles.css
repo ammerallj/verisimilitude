@@ -65,7 +65,7 @@ em { font-style: italic; }
 /* Hover or focus one image: the others blur back and its caption comes forward */
 .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: .35; filter: blur(10px); }
 /* The Optimly caption is long and the image sits mid-column, so it opens below the image */
-.work .w3 figcaption { top: 100%; left: 0; right: auto; width: 340px; margin-top: 18px; text-align: left; }
+.work .w3 figcaption { top: 100%; left: 0; right: auto; width: min(420px, 38vw); margin-top: 18px; text-align: left; }
 .w:hover figcaption, .w:focus-visible figcaption { opacity: 1; filter: none; transform: none; }
 .w1 { left: 21.960%; top: 0.000%; width: 21.779%; height: 33.230%; }
 .w2 { left: 65.699%; top: 26.149%; width: 34.301%; height: 14.161%; }

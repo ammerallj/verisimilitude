@@ -252,7 +252,8 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .work .w img { position: static; display: block; width: 100%; height: auto; box-shadow: none;
     transition: filter .5s ease, transform .6s ease; }
   .work .w1 img { aspect-ratio: 4 / 5; object-fit: cover; }
-  .work .w2 img, .work .w4 img { aspect-ratio: 4 / 3; object-fit: cover; }
+  .work .w2 img { aspect-ratio: 378 / 228; object-fit: cover; object-position: top; } /* keep the designed crop */
+  .work .w4 img { aspect-ratio: 4 / 3; object-fit: cover; }
   .work .w3 img { aspect-ratio: 4 / 3; object-fit: contain; background: #efece6; } /* shows the whole mockup */
   .work .w.open img { filter: blur(18px); transform: scale(1.08); }
   .work figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {

@@ -190,7 +190,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .scroll-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) { .scroll-cue span:last-child { animation: none; } }
   .intro-play .scroll-cue { animation: intro-in 1.2s ease .9s backwards; }
-  .rail-b { order: 2; position: relative; z-index: 1; width: auto; margin: 0; padding: 56px var(--gutter) 56px; background: #fff;
+  .rail-b { order: 2; position: relative; top: auto; z-index: 1; width: auto; margin: 0; padding: 56px var(--gutter) 56px; background: #fff;
     border-radius: 26px 26px 0 0; box-shadow: 0 -14px 40px rgba(20, 30, 50, .07);
     opacity: 1 !important; transform: none !important; filter: none !important; }
   /* Studio intro: no repeated title; the description is the centred hero statement */

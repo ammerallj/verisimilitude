@@ -251,12 +251,12 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
     transform: scale(var(--s, 1)); opacity: var(--o, 1); transition: none; }
   /* Product-zoom crops: each image is enlarged from its own anchor point so the UI bleeds off the
      card edges, and drifts a little as the card scrolls (--pan, set in script.js). */
-  .work .w1 { --zoom: 1.7; --zo: 0% 40%; }
-  .work .w2 { --zoom: 1.45; --zo: 0% 0%; }
-  .work .w3 { --zoom: 1.5; --zo: 100% 100%; }
-  .work .w4 { --zoom: 1.6; --zo: 100% 30%; }
+  .work .w1 { --zoom: 1.7; --zo: 0% 40%; --pk: -18px; --po: 0px; }
+  .work .w2 { --zoom: 1.45; --zo: 0% 0%; --pk: 9px; --po: -9px; }  /* anchored top: only drift upward */
+  .work .w3 { --zoom: 1.5; --zo: 100% 100%; --pk: 9px; --po: 9px; }  /* anchored bottom: only drift downward */
+  .work .w4 { --zoom: 1.6; --zo: 100% 30%; --pk: -18px; --po: 0px; }
   .work .w img { position: static; display: block; width: 100%; height: auto; box-shadow: none;
-    transform-origin: var(--zo, 50% 50%); scale: var(--zoom, 1); translate: 0 calc(var(--pan, 0) * -18px);
+    transform-origin: var(--zo, 50% 50%); scale: var(--zoom, 1); translate: 0 calc(var(--pan, 0) * var(--pk, -18px) + var(--po, 0px));
     transition: filter .5s ease, scale .6s ease; }
   .work .w1 img { aspect-ratio: 4 / 5; object-fit: cover; }
   .work .w2 img { aspect-ratio: 378 / 228; object-fit: cover; object-position: top; } /* keep the designed crop */

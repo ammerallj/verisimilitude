@@ -191,7 +191,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .rail-b { order: 2; position: static; width: auto; margin: 56px var(--gutter) 0;
     opacity: 1 !important; transform: none !important; filter: none !important; }
   /* Studio intro: no repeated title; the description is the centred hero statement */
-  .rail-b { text-align: center; margin-top: 88px; }
+  .rail-b { text-align: center; margin-top: 88px; margin-bottom: 20px; }  /* gap before the first work card */
   .rail-b .name { display: none; }
   .rail-b .intro { align-items: center; gap: 24px; }
   .rail-b .desc { font: 400 30px/1.25 var(--display); text-wrap: pretty; }  /* centred, natural line lengths */

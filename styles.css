@@ -156,8 +156,11 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   body.p-home { display: flex; flex-direction: column; }
   .rail, .page { display: contents; }
   .hero { order: 1; height: 100vh; height: 100svh; margin: 0; overflow: hidden; }
-  .hero video { object-position: center center; transform-origin: 100% 50%; transform: scale(1.8); }
-  .rail-a { position: absolute; z-index: 3; top: 0; left: 48px; right: 48px; width: auto; padding-top: 20svh; gap: 4px; }
+  /* Blown up as far as keeps both the dandelion and the girl in frame (they span the right ~40% of
+     the clip), anchored to the right edge and lifted into the upper part of the screen. */
+  .hero video { object-position: center center; transform-origin: 100% 50%; transform: translateY(-12svh) scale(2.4); }
+  /* Text lockup sits at the bottom of the hero, just above the scroll cue */
+  .rail-a { position: absolute; z-index: 3; top: calc(100svh - 108px - env(safe-area-inset-bottom, 0px)); transform: translateY(-100%); left: 48px; right: 48px; width: auto; gap: 4px; }
   .rail-a h1 { font-size: 28px; }
   .rail-a .phonetic, .rail-a .definition { font-size: 17px; margin-top: 0; }
   .rail-a .studio { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

@@ -156,11 +156,14 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   body.p-home { display: flex; flex-direction: column; }
   .rail, .page { display: contents; }
   .hero { order: 1; height: 100vh; height: 100svh; margin: 0; overflow: hidden; }
-  /* Blown up as far as keeps both the dandelion and the girl in frame (they span the right ~40% of
-     the clip), anchored to the right edge and lifted into the upper part of the screen. */
-  .hero video { object-position: center center; transform-origin: 100% 50%; transform: translateY(-12svh) scale(2.4); }
-  /* Text lockup sits just under the animation (the stem ends at about 38svh + 42vw), above the scroll cue */
-  .rail-a { position: absolute; z-index: 3; top: calc(38svh + 42vw + 28px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
+  /* One group, centred vertically above the scroll cue: the visible animation, a 20px gap, then the
+     text lockup. Geometry: the clip is shown at 2.4x from its top-right corner; the girl's top is at
+     29.5% of the frame and the stem's end at 81%, so the visible art is 69.6vw tall. --lh is the
+     lockup's height (script.js keeps it current); --group-top is where the art starts. */
+  :root { --lh: 116px; --group-top: max(24px, calc((100svh - 120px - (69.6vw + 20px + var(--lh))) / 2)); }
+  .hero video { inset: auto; right: 0; top: calc(var(--group-top) - 39.8vw); width: 100vw; height: 56.25vw;
+    object-fit: fill; transform-origin: 100% 0; transform: scale(2.4); }
+  .rail-a { position: absolute; z-index: 3; top: calc(var(--group-top) + 69.6vw + 20px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
   .rail-a h1 { font-size: 34px; }
   .rail-a .phonetic, .rail-a .definition { font-size: 20px; margin-top: 0; }
   .rail-a .studio { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

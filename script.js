@@ -178,3 +178,10 @@ const waveV = () => {
 if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   setTimeout(waveV, 7000 + Math.random() * 5000);
 }
+
+// Phone hero: tell the CSS how tall the text lockup is so the animation + lockup group can be centred.
+const lockupEl = document.querySelector(".rail-a");
+const setLockupHeight = () => root.style.setProperty("--lh", `${lockupEl.offsetHeight}px`);
+setLockupHeight();
+window.addEventListener("resize", setLockupHeight);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(setLockupHeight);

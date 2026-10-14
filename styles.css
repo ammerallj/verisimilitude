@@ -156,7 +156,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   body.p-home { display: flex; flex-direction: column; }
   .rail, .page { display: contents; }
   /* Closing the gap: the hero is one screen tall at first, then its empty lower part shrinks away as you
-     scroll (--hero-p goes 0..1 in script.js), so the Design studio block rises to meet the text lockup
+     scroll (--hero-p eases from 0 to 1 over a screen of scrolling in script.js), so the Design studio block rises to meet the text lockup
      faster than the page scrolls. overflow-anchor is off so the browser doesn't undo the shift. */
   body.p-home { overflow-anchor: none; }
   .hero { order: 1; height: 100vh; height: calc(100svh - var(--hero-p, 0) * (100svh - var(--hero-min))); margin: 0; overflow: hidden; }

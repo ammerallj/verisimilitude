@@ -17,8 +17,9 @@ const update = () => {
   root.style.setProperty("--in", into.toFixed(3));
   body.classList.toggle("rail-on", into > 0.5);
   body.classList.toggle("seeds-on", out > 0.3);
-  // Phone hero: how far the hero's empty lower part has shrunk (0 at the top, 1 after about half a screen).
-  root.style.setProperty("--hero-p", clamp(window.scrollY / (vh * 0.55)).toFixed(3));
+  // Phone hero: how far the hero's empty lower part has shrunk (0 at the top, 1 after a full screen of scrolling, eased).
+  const heroT = clamp(window.scrollY / vh);               // closes over a full screen of scrolling
+  root.style.setProperty("--hero-p", (heroT * heroT * (3 - 2 * heroT)).toFixed(3));  // eased: gentle start, gentle finish
   // Phone page-end wash: it starts a little above the big contact email (its top blends in from the plain background) and runs to the bottom of the site.
   const contactEl = document.querySelector(".sec-services .copy");
   if (contactEl) root.style.setProperty("--wash-top", `${Math.max(0, Math.round(contactEl.getBoundingClientRect().top + window.scrollY - 110))}px`);

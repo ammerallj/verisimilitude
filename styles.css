@@ -182,7 +182,6 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .rail-b .name { display: none; }
   .rail-b .intro { align-items: center; gap: 24px; }
   .rail-b .desc { font: 400 30px/1.25 var(--display); text-wrap: pretty; }  /* centred, natural line lengths */
-  .rail-b .desc .lead { display: block; }   /* "Design studio" is its own line, the rest balances below it */
   .rail-b .note { max-width: 30ch; text-wrap: pretty; }
   .rail-b .nav { display: none; }            /* the top bar carries About and Services */
   .rail-b .nav a { pointer-events: auto; }

@@ -258,11 +258,12 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   /* Mobile product: phone frame, centred, running off the bottom edge */
   .work .w1 img { left: 23%; top: 9%; width: 54%; height: auto; aspect-ratio: 412 / 917; object-fit: cover; object-position: top;
     border: 3px solid #17181a; border-radius: 28px; box-shadow: 0 22px 44px rgba(20, 30, 50, .24); }
-  /* Web products: browser window, offset from the top left and cropped off the right and bottom */
-  .work .w3 img, .work .w4 img { left: 7%; top: 13%; width: 126%; height: auto; border: 1px solid rgba(20, 30, 50, .12);
-    border-radius: 12px 0 0 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
-  .work .w3 img { aspect-ratio: 639 / 359; object-fit: cover; }
-  .work .w4 img { aspect-ratio: 477 / 265; object-fit: cover; }
+  /* Web products, each cropped differently so the cards don't repeat: Optimly is a close zoom on its
+     product panel (left side off the card, running off the bottom); Paysages is the mirror, a
+     window bleeding off the left and bottom. */
+  .work .w3 img, .work .w4 img { height: auto; object-fit: cover; border: 1px solid rgba(20, 30, 50, .12); box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
+  .work .w3 img { left: -66%; top: 15%; width: 172%; aspect-ratio: 639 / 359; border-radius: 0 14px 0 0; }
+  .work .w4 img { left: -16%; top: 30%; width: 120%; aspect-ratio: 477 / 265; border-radius: 0 14px 0 0; }
   /* Illustration: plain corner crop, no device */
   .work .w2 img { inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; transform-origin: 0 0; scale: 1.3; }
   /* Soft fade where a device runs off the bottom of the card */

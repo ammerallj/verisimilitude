@@ -146,18 +146,30 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 .rail-b .nav a { pointer-events: none; }
 .p-home.rail-on .rail-b .nav a { pointer-events: auto; }
 @media (prefers-reduced-motion: reduce) { .hero video { display: none; } }
+/* Phones: the hero is one screen, text at the top, the animation in the middle and a
+   "Scroll down" cue at the bottom; the studio intro follows below it. The rail and page
+   wrappers dissolve (display: contents) so their children can be ordered in one column. */
+.scroll-cue { display: none; }
 @media (max-width: 900px) {
-  .p-home .page { padding-top: 48px; }
-  .rail { position: static; width: auto; margin: 48px var(--gutter) 0; pointer-events: auto; }
-  .rail-a, .rail-b { position: static; width: 100%; opacity: 1 !important; transform: none !important; filter: none !important; }
-  .rail-b { margin-top: 48px; }
-  .rail-b .nav a { pointer-events: auto; }
-  .rail-a h1 { font-size: 36px; }
+  body.p-home { display: flex; flex-direction: column; }
+  .rail, .page { display: contents; }
+  .hero { order: 1; height: 100vh; height: 100svh; margin: 0; overflow: hidden; }
+  .hero video { object-position: center center; transform-origin: 100% 50%; transform: scale(1.8); }
+  .rail-a { position: absolute; z-index: 3; top: 0; left: 48px; right: 48px; width: auto; padding-top: 20svh; gap: 4px; }
+  .rail-a h1 { font-size: 28px; }
+  .rail-a .phonetic, .rail-a .definition { font-size: 17px; margin-top: 0; }
+  .rail-a .studio { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   body:not(.intro-play):not(.intro-wait) :is(.rail-a .phonetic, .rail-a .definition) { opacity: 1 !important; filter: none !important; }
-  .studio { opacity: 1 !important; filter: none !important; }
-  .rail-b .name { display: none; }
-  .p-home .stage { margin-left: 0; width: 100%; }
-  .hero { height: 50vh; }
+  .scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 0; right: 0; bottom: 14svh;
+    font-style: italic; font-size: 18px; color: #8b9096; pointer-events: none; opacity: calc(1 - var(--out, 0) * 3); }
+  body.intro-wait .scroll-cue { opacity: 0; }
+  .intro-play .scroll-cue { animation: intro-in 1.2s ease .9s backwards; }
+  .rail-b { order: 2; position: static; width: auto; margin: 56px var(--gutter) 0;
+    opacity: 1 !important; transform: none !important; filter: none !important; }
+  .rail-b .name { display: block; visibility: visible; font: 400 30px var(--display); }
+  .rail-b .nav a { pointer-events: auto; }
+  .p-home .stage { order: 3; margin: 0 var(--gutter); width: auto; }
+  .p-home .foot { order: 4; margin: 80px var(--gutter) 50px; }
   .p-home .work { margin-top: 0; }
 }
 

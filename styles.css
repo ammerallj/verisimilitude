@@ -259,12 +259,14 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
    each card's top right blurs the shot and reveals the description, and turns into a close button.
    Cards ease in and out of scale and opacity as they pass the middle of the screen (script.js sets
    --s, --o and --pan). */
+@property --arrive { syntax: "<number>"; inherits: false; initial-value: 1; }
 .work-toggle { display: none; }
 @media (max-width: 900px) {
   .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 28px; }
   .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 5 / 4; overflow: hidden;
     border-radius: 22px; background: linear-gradient(145deg, #f8f9fa 0%, #e5e9ed 100%);
-    transform: scale(var(--s, 1)); opacity: var(--o, 1); filter: blur(var(--bl, 0px)); transition: none; }
+    transform: scale(var(--s, 1)); opacity: calc(var(--o, 1) * var(--arrive, 1)); translate: 0 calc((1 - var(--arrive, 1)) * 56px);
+    filter: blur(var(--bl, 0px)); transition: none; }
   .work .w img { position: absolute; display: block; max-width: none; box-shadow: none; translate: 0 calc(var(--pan, 0) * var(--pk, -12px));
     transition: filter .5s ease, scale .6s ease; }
   /* Mobile product: phone frame, centred, running off the bottom edge */
@@ -281,12 +283,12 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   /* Soft fade where a device runs off the bottom of the card */
   .work .w1::after, .work .w3::after, .work .w4::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 30%;
     background: linear-gradient(to bottom, rgba(229, 233, 237, 0), #e5e9ed); pointer-events: none; }
-  /* Reveal: as the work section scrolls in, the cards uncover from the top downward (a clip wipe with
-     a soft blur-in), one after another. script.js adds .reveal-ready to <html> once it is watching, and
-     .revealed to each card in turn (--d is its stagger delay). Without script the cards just show. */
-  .reveal-ready .work .w:not(.revealed) { clip-path: inset(0 0 100% 0 round 22px); }
-  .reveal-ready .work .w.revealed { clip-path: inset(0 0 0 0 round 22px);
-    transition: clip-path 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s); }
+  /* Arrival: as the work section scrolls in, each card slides up into place from 56px below while it
+     fades in, one after another from the top card down (--d is its stagger delay). script.js adds
+     .reveal-ready to <html> once it is watching, and .revealed to each card in turn. Without script
+     the cards just show. */
+  .reveal-ready .work .w:not(.revealed) { --arrive: 0; }
+  .reveal-ready .work .w.revealed { --arrive: 1; transition: --arrive 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s); }
   .work .w.open img { filter: blur(18px); }
   .work figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
     position: absolute; z-index: 2; inset: 0; top: 0; left: 0; right: 0; width: auto; margin: 0; padding: 20px 72px 20px 20px;
@@ -302,8 +304,8 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .work-toggle .ic-close { opacity: 0; transform: rotate(-90deg); }
   .work .w.open .ic-arrow { opacity: 0; transform: rotate(90deg); }
   .work .w.open .ic-close { opacity: 1; transform: none; }
-  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: var(--o, 1); filter: blur(var(--bl, 0px)); }
-  @media (prefers-reduced-motion: reduce) { .work .w, .work .w img, .work figcaption, .work-toggle svg { transition: none; } .work .w img { translate: none; } .reveal-ready .work .w:not(.revealed) { clip-path: none; filter: none; } }
+  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: calc(var(--o, 1) * var(--arrive, 1)); filter: blur(var(--bl, 0px)); }
+  @media (prefers-reduced-motion: reduce) { .work .w, .work .w img, .work figcaption, .work-toggle svg { transition: none; } .work .w img { translate: none; } .reveal-ready .work .w:not(.revealed) { --arrive: 1; } }
   /* Comfortable tap targets for the text links */
   .nav { gap: 0; }
   .nav a { display: block; padding: 10px 0; }

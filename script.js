@@ -259,8 +259,9 @@ window.addEventListener("scroll", cardMotion, { passive: true });
 window.addEventListener("resize", () => { if (!mobileMQ.matches) closeCards(); cardMotion(); });
 cardMotion();
 
-// Phone work cards: reveal downward, staggered, as the section scrolls into view. Cards that come into
-// view together uncover from the top one after another (0.18s apart); each reveals once.
+// Phone work cards: they slide in and fade up one after another down the page as the section scrolls
+// into view. Cards that come into view together arrive from the top card down (0.18s apart); each
+// arrives once.
 if (workCards.length && "IntersectionObserver" in window && motionOK) {
   root.classList.add("reveal-ready");
   const revealer = new IntersectionObserver((entries) => {

@@ -305,3 +305,17 @@ if (staggerItems.length && "IntersectionObserver" in window && motionOK) {
   armStagger();
   mobileMQ.addEventListener("change", armStagger);
 }
+
+// Phone contact line: size the email so it fills the column on a single line, however wide the screen.
+const bigEmail = document.querySelector(".big-email");
+const fitEmail = () => {
+  if (!bigEmail) return;
+  if (!mobileMQ.matches) { bigEmail.style.removeProperty("font-size"); return; }
+  bigEmail.style.fontSize = "100px";                 // measure at a known size, then scale to the column
+  const natural = bigEmail.scrollWidth;
+  const room = bigEmail.parentElement.clientWidth;
+  bigEmail.style.fontSize = `${Math.floor((100 * room / natural) * 0.995 * 10) / 10}px`;
+};
+fitEmail();
+window.addEventListener("resize", fitEmail);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitEmail);

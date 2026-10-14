@@ -163,10 +163,10 @@ const fadeUpdate = () => {
   if (!motionOK) return;
   if (window.matchMedia("(max-width: 900px)").matches) {
     // Phones: the cards fade and blur on their own near the top of the screen, so the work section is
-    // never faded as a whole; About and Services start revealing as soon as they come into view.
+    // never faded as a whole, and About and Services come in piece by piece (see the stagger code below).
     const vh = window.innerHeight;
     fadeSections.forEach((el) => {
-      const v = el === work ? 1 : clamp((vh * 0.95 - contentTop(el)) / (vh * 0.4));
+      const v = 1;
       el.style.setProperty("--v", v.toFixed(3));
     });
     return;
@@ -248,10 +248,11 @@ const cardMotion = () => {
     // Sharp and full size through the middle of the screen; cards still below ease up from 95%.
     const below = Math.max(0, Math.min(0.5, (centre - vh / 2) / vh));
     card.style.setProperty("--s", (1 - below * 0.1).toFixed(3));
-    // Blur and fade only as the card nears the top: from 28% down the screen to the top edge.
-    const near = clamp((vh * 0.28 - centre) / (vh * 0.28));
-    card.style.setProperty("--bl", `${(near * 10).toFixed(1)}px`);
-    card.style.setProperty("--o", (1 - near * 0.55).toFixed(3));
+    // Blur and fade only once the card starts sliding under the top bar (its top edge passes 64px down
+    // the screen), in proportion to how much of it has gone, so a card stays sharp while it is readable.
+    const gone = clamp((64 - r.top) / r.height);
+    card.style.setProperty("--bl", `${(gone * 10).toFixed(1)}px`);
+    card.style.setProperty("--o", (1 - gone * 0.55).toFixed(3));
     card.style.setProperty("--pan", Math.max(-1, Math.min(1, (centre - vh / 2) / vh)).toFixed(3));
   });
 };
@@ -277,4 +278,30 @@ if (workCards.length && "IntersectionObserver" in window && motionOK) {
   workCards.forEach((card) => revealer.observe(card));
   // On wider screens the cards are not reveal-animated; make sure none is left hidden.
   mobileMQ.addEventListener("change", () => { if (!mobileMQ.matches) workCards.forEach((c) => c.classList.add("revealed")); });
+}
+
+// Phone About and Services: the pieces blur and fade in one after another as they enter the view, the
+// animation first and then each text block, 0.22s apart when several arrive together.
+const staggerItems = [...document.querySelectorAll(
+  ".sec-about .about-loop, .sec-about .copy p, .sec-services .copy, .sec-services .services li")];
+staggerItems.forEach((el) => el.classList.add("stagger"));
+if (staggerItems.length && "IntersectionObserver" in window && motionOK) {
+  const staggerer = new IntersectionObserver((entries) => {
+    const entering = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    entering.forEach((e, i) => {
+      e.target.style.setProperty("--d", `${(i * 0.22).toFixed(2)}s`);
+      e.target.classList.add("in");
+      staggerer.unobserve(e.target);
+    });
+  }, { threshold: 0, rootMargin: "0px 0px -10% 0px" });
+  const armStagger = () => {
+    if (mobileMQ.matches) {
+      root.classList.add("stagger-ready");
+      staggerItems.forEach((el) => { if (!el.classList.contains("in")) staggerer.observe(el); });
+    } else {
+      root.classList.remove("stagger-ready");
+    }
+  };
+  armStagger();
+  mobileMQ.addEventListener("change", armStagger);
 }

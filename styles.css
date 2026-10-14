@@ -314,4 +314,9 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
      it to a taller box and slide the clip so the bulb sits in the middle */
   .sec-about { overflow-x: clip; }
   .about-loop { aspect-ratio: 13 / 10; object-fit: cover; object-position: 101% 50%; transform: none; margin-top: 0; }
+  /* Staggered blur-in for About and Services (script.js adds .stagger-ready, then .in piece by piece) */
+  .stagger-ready .stagger:not(.in) { opacity: 0; filter: blur(14px); translate: 0 16px; }
+  .stagger-ready .stagger.in { opacity: 1; filter: none; translate: none;
+    transition: opacity 1s ease var(--d, 0s), filter 1s ease var(--d, 0s), translate 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s); }
+  @media (prefers-reduced-motion: reduce) { .stagger-ready .stagger:not(.in) { opacity: 1; filter: none; translate: none; } }
 }

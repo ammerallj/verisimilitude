@@ -177,7 +177,13 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .intro-play .scroll-cue { animation: intro-in 1.2s ease .9s backwards; }
   .rail-b { order: 2; position: static; width: auto; margin: 56px var(--gutter) 0;
     opacity: 1 !important; transform: none !important; filter: none !important; }
-  .rail-b .name { display: block; visibility: visible; font: 400 30px var(--display); }
+  /* Studio intro: no repeated title; the description is the centred hero statement */
+  .rail-b { text-align: center; margin-top: 88px; }
+  .rail-b .name { display: none; }
+  .rail-b .intro { align-items: center; gap: 24px; }
+  .rail-b .desc { font: 400 30px/1.25 var(--display); }
+  .rail-b .note { max-width: 30ch; }
+  .rail-b .nav { flex-direction: row; justify-content: center; gap: 32px; }
   .rail-b .nav a { pointer-events: auto; }
   .p-home .stage { order: 3; margin: 0 var(--gutter); width: auto; }
   .p-home .foot { order: 4; margin: 80px var(--gutter) 50px; }

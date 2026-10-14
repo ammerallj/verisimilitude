@@ -19,9 +19,9 @@ const update = () => {
   body.classList.toggle("seeds-on", out > 0.3);
   // Phone hero: how far the hero's empty lower part has shrunk (0 at the top, 1 after about half a screen).
   root.style.setProperty("--hero-p", clamp(window.scrollY / (vh * 0.55)).toFixed(3));
-  // Phone wash: it starts a little above the About section (whose position moves as the hero shrinks).
-  const aboutEl = document.querySelector(".sec-about");
-  if (aboutEl) root.style.setProperty("--wash-top", `${Math.max(0, Math.round(aboutEl.getBoundingClientRect().top + window.scrollY - 30))}px`);
+  // Phone page-end wash: it starts just above the big contact email and runs to the bottom of the site.
+  const contactEl = document.querySelector(".sec-services .copy");
+  if (contactEl) root.style.setProperty("--wash-top", `${Math.max(0, Math.round(contactEl.getBoundingClientRect().top + window.scrollY - 48))}px`);
   // Phone watercolour wash: the stroke is drawn up past the "Design studio" block, its tip leading the
   // top of the block by about a third of the screen, and stops near the top of the screen. It ends with
   // the section: it fades as the bottom of the block leaves, so it never reaches the work cards.

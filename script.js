@@ -16,6 +16,10 @@ const update = () => {
   root.style.setProperty("--in", into.toFixed(3));
   body.classList.toggle("rail-on", into > 0.5);
   body.classList.toggle("seeds-on", out > 0.3);
+  // Phone watercolour wash: stretches up over the first screen of scrolling, then fades.
+  const wp = Math.min(1.5, window.scrollY / (vh * 1.2));
+  root.style.setProperty("--wash", Math.min(1, wp).toFixed(3));
+  root.style.setProperty("--wash-o", (1 - clamp((wp - 1) / 0.5)).toFixed(3));
   body.classList.toggle("topbar-on", window.scrollY > vh * 0.7); // phone top bar
 };
 window.addEventListener("scroll", update, { passive: true });

@@ -240,37 +240,47 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 html { scrollbar-gutter: stable; }
 html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 
-/* Phones and small tablets: the work is a vertical carousel of full-width cards. Each card has a
-   round arrow button at the top right: it blurs the image and reveals the description, and turns
-   into a close button. Cards ease in and out of scale and opacity as they pass the middle of the
-   screen (script.js sets --s and --o). */
+/* Phones and small tablets: the work is a vertical carousel of rounded product-shot cards on a light
+   gradient. The mobile product sits in a phone frame, the web products in a browser window, both
+   cropped off the card edge; the peach illustration is a plain corner crop. A round arrow button at
+   each card's top right blurs the shot and reveals the description, and turns into a close button.
+   Cards ease in and out of scale and opacity as they pass the middle of the screen (script.js sets
+   --s, --o and --pan). */
 .work-toggle { display: none; }
 @media (max-width: 900px) {
-  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 40px; }
-  .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; overflow: hidden; background: #f1f1ee;
+  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 28px; }
+  .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 5 / 4; overflow: hidden;
+    border-radius: 22px; background: linear-gradient(145deg, #f8f9fa 0%, #e5e9ed 100%);
     transform: scale(var(--s, 1)); opacity: var(--o, 1); transition: none; }
-  /* Product-zoom crops: each image is enlarged from its own anchor point so the UI bleeds off the
-     card edges, and drifts a little as the card scrolls (--pan, set in script.js). */
-  .work .w1 { --zoom: 1.7; --zo: 0% 40%; --pk: -18px; --po: 0px; }
-  .work .w2 { --zoom: 1.45; --zo: 0% 0%; --pk: 9px; --po: -9px; }  /* anchored top: only drift upward */
-  .work .w3 { --zoom: 1.5; --zo: 100% 100%; --pk: 9px; --po: 9px; }  /* anchored bottom: only drift downward */
-  .work .w4 { --zoom: 1.6; --zo: 100% 30%; --pk: -18px; --po: 0px; }
-  .work .w img { position: static; display: block; width: 100%; height: auto; box-shadow: none;
-    transform-origin: var(--zo, 50% 50%); scale: var(--zoom, 1); translate: 0 calc(var(--pan, 0) * var(--pk, -18px) + var(--po, 0px));
+  .work .w img { position: absolute; display: block; max-width: none; box-shadow: none; translate: 0 calc(var(--pan, 0) * var(--pk, -12px));
     transition: filter .5s ease, scale .6s ease; }
-  .work .w1 img { aspect-ratio: 4 / 5; object-fit: cover; }
-  .work .w2 img { aspect-ratio: 378 / 228; object-fit: cover; object-position: top; } /* keep the designed crop */
-  .work .w4 img { aspect-ratio: 4 / 3; object-fit: cover; }
-  .work .w3 img { aspect-ratio: 4 / 3; object-fit: cover; object-position: right center; }
-  .work .w.open img { filter: blur(18px); scale: calc(var(--zoom, 1) * 1.06); }
+  /* Mobile product: phone frame, centred, running off the bottom edge */
+  .work .w1 img { left: 23%; top: 9%; width: 54%; height: auto; aspect-ratio: 412 / 917; object-fit: cover; object-position: top;
+    border: 7px solid #121212; border-radius: 30px; box-shadow: 0 22px 44px rgba(20, 30, 50, .28); }
+  .work .w1::before { content: ""; position: absolute; z-index: 1; left: 50%; top: calc(9% + 12px); width: 46px; height: 12px;
+    margin-left: -23px; border-radius: 8px; background: #121212; }
+  /* Web products: browser window, offset from the top left and cropped off the right and bottom */
+  .work .w3 img, .work .w4 img { left: 7%; top: 13%; width: 126%; height: auto; border: 1px solid rgba(20, 30, 50, .1);
+    border-top: 22px solid #eceef0; border-radius: 10px 0 0 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .22); }
+  .work .w3 img { aspect-ratio: 639 / 359; object-fit: cover; }
+  .work .w4 img { aspect-ratio: 477 / 265; object-fit: cover; }
+  .work .w3::before, .work .w4::before { content: ""; position: absolute; z-index: 1; left: calc(7% + 10px); top: calc(13% + 8px);
+    width: 6px; height: 6px; border-radius: 50%; background: #ff5f57; box-shadow: 11px 0 #febc2e, 22px 0 #28c840; }
+  /* Illustration: plain corner crop, no device */
+  .work .w2 img { inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; transform-origin: 0 0; scale: 1.3; }
+  /* Soft fade where a device runs off the bottom of the card */
+  .work .w1::after, .work .w3::after, .work .w4::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 30%;
+    background: linear-gradient(to bottom, rgba(229, 233, 237, 0), #e5e9ed); pointer-events: none; }
+  .work .w.open img { filter: blur(18px); }
+  .work .w.open::before { opacity: 0; }
   .work figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
-    position: absolute; inset: 0; top: 0; left: 0; right: 0; width: auto; margin: 0; padding: 20px 72px 20px 20px;
+    position: absolute; z-index: 2; inset: 0; top: 0; left: 0; right: 0; width: auto; margin: 0; padding: 20px 72px 20px 20px;
     display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; overflow: auto;
-    background: rgba(244, 244, 241, .55); font-size: 17px; text-align: left;
+    background: rgba(244, 245, 246, .6); font-size: 17px; text-align: left;
     opacity: 0; filter: none; transform: none; pointer-events: none; transition: opacity .45s ease; }
   .work .w.open figcaption { opacity: 1; pointer-events: auto; }
   .work figcaption strong { font-size: 24px; }
-  .work-toggle { display: grid; place-items: center; position: absolute; z-index: 2; top: 12px; right: 12px; width: 44px; height: 44px;
+  .work-toggle { display: grid; place-items: center; position: absolute; z-index: 3; top: 12px; right: 12px; width: 44px; height: 44px;
     padding: 0; border: 0; border-radius: 50%; background: #fff; color: #000; cursor: pointer; box-shadow: 0 1px 8px rgba(0, 0, 0, .18); }
   .work-toggle svg { grid-area: 1 / 1; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
     transition: opacity .3s ease, transform .4s cubic-bezier(.2, .7, .3, 1); }

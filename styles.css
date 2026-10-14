@@ -318,7 +318,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
      with the sentence below it */
   .c-desk { display: none; }
   .c-mob { display: block; margin-top: 14px; }
-  .big-email { display: block; white-space: nowrap; font-family: var(--display); line-height: 1.1; letter-spacing: -.01em;
+  .copy .big-email { display: block; white-space: nowrap; font-family: var(--display); line-height: 1.1; letter-spacing: -.01em;
     text-decoration-thickness: 1.5px; text-underline-offset: .14em; }
   /* Staggered blur-in for About and Services (script.js adds .stagger-ready, then .in piece by piece) */
   .stagger-ready .stagger:not(.in) { opacity: 0; filter: blur(14px); translate: 0 16px; }

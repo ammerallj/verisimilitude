@@ -207,7 +207,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .rail-b .nav { display: none; }            /* the top bar carries About and Services */
   .rail-b .nav a { pointer-events: auto; }
   .p-home .stage { order: 3; margin: 0 var(--gutter); width: auto; }
-  .p-home .foot { order: 4; margin: 80px var(--gutter) 50px; }
+  .p-home .foot { order: 4; margin: 0 var(--gutter) 50px; }
   .p-home .work { margin-top: 0; }
   /* Top bar: slides in once you scroll past the hero, title top left, section links right */
   .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; position: fixed; z-index: 10; top: 0; left: 0; right: 0;
@@ -337,10 +337,11 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
     /* eased feather: the plain page background melts into the wash over ~260px */
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, .06) 50px, rgba(0, 0, 0, .22) 110px, rgba(0, 0, 0, .5) 180px, rgba(0, 0, 0, .8) 230px, #000 280px);
     mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, .06) 50px, rgba(0, 0, 0, .22) 110px, rgba(0, 0, 0, .5) 180px, rgba(0, 0, 0, .8) 230px, #000 280px); }
-  /* Services/contact stands as its own section: a hairline across the top and clear space either side,
-     so it doesn't read as the end of About */
-  .sec-services { position: relative; margin-top: 72px; padding-top: 56px; }
-  .sec-services::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: rgba(20, 30, 50, .16); }
+  /* Services/contact is its own full-height screen: the section fills the viewport above the footer
+     (script.js sets --foot-h), its content centred with generous space around it, and the footer
+     sitting on the bottom edge. */
+  .sec-services { min-height: calc(100vh - var(--foot-h, 180px)); min-height: calc(100svh - var(--foot-h, 180px));
+    justify-content: center; padding: 0; margin-top: 0; }
   /* Contact: the email is the big line, as wide as the column allows on one line (script.js sizes it),
      with the sentence below it */
   .c-desk { display: none; }

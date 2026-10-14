@@ -347,3 +347,15 @@ const fitEmail = () => {
 fitEmail();
 window.addEventListener("resize", fitEmail);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitEmail);
+
+// Phone Services screen: the section is sized to the viewport minus the footer, so tell the CSS how tall
+// the footer (with its bottom margin) is.
+const footEl = document.querySelector(".foot");
+const setFootHeight = () => {
+  if (!footEl) return;
+  const cs = getComputedStyle(footEl);
+  root.style.setProperty("--foot-h", `${Math.round(footEl.offsetHeight + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom))}px`);
+};
+setFootHeight();
+window.addEventListener("resize", setFootHeight);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(setFootHeight);

@@ -259,7 +259,7 @@ if (workCards.length && "IntersectionObserver" in window && motionOK) {
       e.target.classList.add("revealed");
       revealer.unobserve(e.target);
     });
-  }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+  }, { threshold: 0, rootMargin: "0px 0px -12% 0px" }); // fires as a card's top edge enters (its own clip-path would zero any ratio)
   workCards.forEach((card) => revealer.observe(card));
   // On wider screens the cards are not reveal-animated; make sure none is left hidden.
   mobileMQ.addEventListener("change", () => { if (!mobileMQ.matches) workCards.forEach((c) => c.classList.add("revealed")); });

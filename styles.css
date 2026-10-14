@@ -171,7 +171,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   body:not(.intro-play):not(.intro-wait) :is(.rail-a .phonetic, .rail-a .definition) { opacity: 1 !important; filter: none !important; }
   /* Watercolour wash behind the scroll cue: pale yellow-green into stem green into dandelion blue-grey,
      drawn from the animation's palette. It sits faint at the bottom and, as you scroll, stretches
-     upward like a brush stroke whose tip is drawn up to the "Design studio" block and stops there
+     upward like a brush stroke whose tip is drawn up past the "Design studio" block and ends with that section
      (--wash-s is the stretch, --wash its 0..1 strength, --wash-o the fade; all set in script.js). */
   .wash { display: block; position: fixed; z-index: -1; left: 50%; bottom: -4svh; width: 54vw; height: 20svh; margin-left: -27vw;
     border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;

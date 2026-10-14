@@ -17,14 +17,14 @@ const update = () => {
   root.style.setProperty("--in", into.toFixed(3));
   body.classList.toggle("rail-on", into > 0.5);
   body.classList.toggle("seeds-on", out > 0.3);
-  // Phone watercolour wash: the top of the stroke is drawn up to the top of the "Design studio" block
-  // as that block scrolls up, and stops there once the block reaches a reading position (22% down the
-  // screen). It fades as the block's bottom leaves the screen, so it never reaches the work cards.
+  // Phone watercolour wash: the stroke is drawn up past the "Design studio" block, its tip leading the
+  // top of the block by about a third of the screen, and stops near the top of the screen. It ends with
+  // the section: it fades as the bottom of the block leaves, so it never reaches the work cards.
   const blk = railBEl.getBoundingClientRect();
-  const tipY = Math.max(blk.top, vh * 0.22);
+  const tipY = Math.max(blk.top - vh * 0.32, vh * 0.08);
   const scaleY = Math.max(1, (vh * 1.04 - tipY) / (vh * 0.2)); // the wash is 20svh tall and sits 4svh below the screen
   root.style.setProperty("--wash-s", scaleY.toFixed(3));
-  root.style.setProperty("--wash", clamp((scaleY - 1) / 3.1).toFixed(3));
+  root.style.setProperty("--wash", clamp((scaleY - 1) / 3.7).toFixed(3));
   root.style.setProperty("--wash-o", (1 - clamp((vh * 0.5 - blk.bottom) / (vh * 0.4))).toFixed(3));
   body.classList.toggle("topbar-on", window.scrollY > vh * 0.7); // phone top bar
 };

@@ -249,13 +249,20 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 40px; }
   .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; overflow: hidden; background: #f1f1ee;
     transform: scale(var(--s, 1)); opacity: var(--o, 1); transition: none; }
+  /* Product-zoom crops: each image is enlarged from its own anchor point so the UI bleeds off the
+     card edges, and drifts a little as the card scrolls (--pan, set in script.js). */
+  .work .w1 { --zoom: 1.7; --zo: 0% 40%; }
+  .work .w2 { --zoom: 1.45; --zo: 0% 0%; }
+  .work .w3 { --zoom: 1.5; --zo: 100% 100%; }
+  .work .w4 { --zoom: 1.6; --zo: 100% 30%; }
   .work .w img { position: static; display: block; width: 100%; height: auto; box-shadow: none;
-    transition: filter .5s ease, transform .6s ease; }
+    transform-origin: var(--zo, 50% 50%); scale: var(--zoom, 1); translate: 0 calc(var(--pan, 0) * -18px);
+    transition: filter .5s ease, scale .6s ease; }
   .work .w1 img { aspect-ratio: 4 / 5; object-fit: cover; }
   .work .w2 img { aspect-ratio: 378 / 228; object-fit: cover; object-position: top; } /* keep the designed crop */
   .work .w4 img { aspect-ratio: 4 / 3; object-fit: cover; }
-  .work .w3 img { aspect-ratio: 4 / 3; object-fit: contain; background: #efece6; } /* shows the whole mockup */
-  .work .w.open img { filter: blur(18px); transform: scale(1.08); }
+  .work .w3 img { aspect-ratio: 4 / 3; object-fit: cover; object-position: right center; }
+  .work .w.open img { filter: blur(18px); scale: calc(var(--zoom, 1) * 1.06); }
   .work figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
     position: absolute; inset: 0; top: 0; left: 0; right: 0; width: auto; margin: 0; padding: 20px 72px 20px 20px;
     display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; overflow: auto;
@@ -271,7 +278,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .work .w.open .ic-arrow { opacity: 0; transform: rotate(90deg); }
   .work .w.open .ic-close { opacity: 1; transform: none; }
   .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: var(--o, 1); filter: none; }
-  @media (prefers-reduced-motion: reduce) { .work .w, .work .w img, .work figcaption, .work-toggle svg { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .work .w, .work .w img, .work figcaption, .work-toggle svg { transition: none; } .work .w img { translate: none; } }
   /* Comfortable tap targets for the text links */
   .nav { gap: 0; }
   .nav a { display: block; padding: 10px 0; }

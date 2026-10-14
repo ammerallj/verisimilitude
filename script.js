@@ -222,12 +222,14 @@ const cardMotion = () => {
     if (!mobileMQ.matches || !motionOK) {
       card.style.removeProperty("--s");
       card.style.removeProperty("--o");
+      card.style.removeProperty("--pan");
       return;
     }
     const r = card.getBoundingClientRect();
     const d = Math.min(Math.abs(r.top + r.height / 2 - vh / 2) / vh, 0.6);
     card.style.setProperty("--s", (1 - d * 0.14).toFixed(3));
     card.style.setProperty("--o", (1 - d * 0.7).toFixed(3));
+    card.style.setProperty("--pan", Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / vh)).toFixed(3));
   });
 };
 window.addEventListener("scroll", cardMotion, { passive: true });

@@ -245,3 +245,22 @@ const cardMotion = () => {
 window.addEventListener("scroll", cardMotion, { passive: true });
 window.addEventListener("resize", () => { if (!mobileMQ.matches) closeCards(); cardMotion(); });
 cardMotion();
+
+// Phone work cards: reveal downward, staggered, as the section scrolls into view. Cards that come into
+// view together uncover from the top one after another (0.18s apart); each reveals once.
+if (workCards.length && "IntersectionObserver" in window && motionOK) {
+  root.classList.add("reveal-ready");
+  const revealer = new IntersectionObserver((entries) => {
+    const entering = entries
+      .filter((e) => e.isIntersecting && mobileMQ.matches)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    entering.forEach((e, i) => {
+      e.target.style.setProperty("--d", `${(i * 0.18).toFixed(2)}s`);
+      e.target.classList.add("revealed");
+      revealer.unobserve(e.target);
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+  workCards.forEach((card) => revealer.observe(card));
+  // On wider screens the cards are not reveal-animated; make sure none is left hidden.
+  mobileMQ.addEventListener("change", () => { if (!mobileMQ.matches) workCards.forEach((c) => c.classList.add("revealed")); });
+}

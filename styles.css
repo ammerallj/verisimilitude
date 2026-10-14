@@ -173,10 +173,11 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
      drawn from the animation's palette. It sits faint at the bottom and, as you scroll, stretches
      upward like a brush stroke whose tip is drawn up to the "Design studio" block and stops there
      (--wash-s is the stretch, --wash its 0..1 strength, --wash-o the fade; all set in script.js). */
-  .wash { display: block; position: fixed; z-index: -1; left: 50%; bottom: -4svh; width: 34vw; height: 20svh; margin-left: -17vw;
+  .wash { display: block; position: fixed; z-index: -1; left: 50%; bottom: -4svh; width: 54vw; height: 20svh; margin-left: -27vw;
     border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
-    background: linear-gradient(to top, #6f8fa0 0%, #86a47e 30%, #bfd29a 62%, #efeec6 100%);
-    filter: blur(26px); opacity: calc(.5 * var(--wash-o, 1) + var(--wash, 0) * .1);
+    /* heaviest at the bottom edge and thinning toward the top, so the eye is pulled down the page */
+    background: linear-gradient(to top, rgba(86, 114, 132, .95) 0%, rgba(118, 152, 118, .8) 28%, rgba(190, 208, 150, .5) 60%, rgba(240, 238, 200, .12) 100%);
+    filter: blur(28px); opacity: calc(.78 * var(--wash-o, 1) + var(--wash, 0) * .08);
     transform-origin: 50% 100%; transform: scaleY(var(--wash-s, 1)); will-change: transform, opacity; }
   body.intro-wait .wash { opacity: 0; }
   .intro-play .wash { animation: intro-in 1.4s ease .9s backwards; }

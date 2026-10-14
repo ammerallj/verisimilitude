@@ -161,6 +161,16 @@ const sectionProgress = (el) => {
 };
 const fadeUpdate = () => {
   if (!motionOK) return;
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    // Phones: the cards fade and blur on their own near the top of the screen, so the work section is
+    // never faded as a whole; About and Services start revealing as soon as they come into view.
+    const vh = window.innerHeight;
+    fadeSections.forEach((el) => {
+      const v = el === work ? 1 : clamp((vh * 0.95 - contentTop(el)) / (vh * 0.4));
+      el.style.setProperty("--v", v.toFixed(3));
+    });
+    return;
+  }
   const prog = fadeSections.map(sectionProgress);
   fadeSections.forEach((el, i) => {
     const into = clamp((prog[i] - 0.55) / 0.45);
@@ -230,16 +240,19 @@ const cardMotion = () => {
   const vh = window.innerHeight;
   workCards.forEach((card) => {
     if (!mobileMQ.matches || !motionOK) {
-      card.style.removeProperty("--s");
-      card.style.removeProperty("--o");
-      card.style.removeProperty("--pan");
+      ["--s", "--o", "--bl", "--pan"].forEach((p) => card.style.removeProperty(p));
       return;
     }
     const r = card.getBoundingClientRect();
-    const d = Math.min(Math.abs(r.top + r.height / 2 - vh / 2) / vh, 0.6);
-    card.style.setProperty("--s", (1 - d * 0.14).toFixed(3));
-    card.style.setProperty("--o", (1 - d * 0.7).toFixed(3));
-    card.style.setProperty("--pan", Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / vh)).toFixed(3));
+    const centre = r.top + r.height / 2;
+    // Sharp and full size through the middle of the screen; cards still below ease up from 95%.
+    const below = Math.max(0, Math.min(0.5, (centre - vh / 2) / vh));
+    card.style.setProperty("--s", (1 - below * 0.1).toFixed(3));
+    // Blur and fade only as the card nears the top: from 28% down the screen to the top edge.
+    const near = clamp((vh * 0.28 - centre) / (vh * 0.28));
+    card.style.setProperty("--bl", `${(near * 10).toFixed(1)}px`);
+    card.style.setProperty("--o", (1 - near * 0.55).toFixed(3));
+    card.style.setProperty("--pan", Math.max(-1, Math.min(1, (centre - vh / 2) / vh)).toFixed(3));
   });
 };
 window.addEventListener("scroll", cardMotion, { passive: true });

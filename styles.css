@@ -104,7 +104,7 @@ html { scroll-behavior: smooth; }
   .cols { flex-direction: column; gap: 60px; }
   .side { width: 100%; gap: 48px; }
   .main { width: 100%; min-height: 0 !important; }
-  .sec, .sec-services { min-height: 0; padding-top: 80px; }
+  .sec, .sec-services { min-height: 0; padding-top: 44px; }
   .p-home .foot { margin-top: 80px; }
   .work figcaption, .work .w2 figcaption, .work .w4 figcaption { top: 100%; left: 0; right: auto; width: 240px; margin-top: 16px; text-align: left; }
   .foot { flex-direction: column; align-items: flex-start; font-size: 15px; }
@@ -264,7 +264,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 28px; }
   .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 5 / 4; overflow: hidden;
     border-radius: 22px; background: linear-gradient(145deg, #f8f9fa 0%, #e5e9ed 100%);
-    transform: scale(var(--s, 1)); opacity: var(--o, 1); transition: none; }
+    transform: scale(var(--s, 1)); opacity: var(--o, 1); filter: blur(var(--bl, 0px)); transition: none; }
   .work .w img { position: absolute; display: block; max-width: none; box-shadow: none; translate: 0 calc(var(--pan, 0) * var(--pk, -12px));
     transition: filter .5s ease, scale .6s ease; }
   /* Mobile product: phone frame, centred, running off the bottom edge */
@@ -284,9 +284,9 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   /* Reveal: as the work section scrolls in, the cards uncover from the top downward (a clip wipe with
      a soft blur-in), one after another. script.js adds .reveal-ready to <html> once it is watching, and
      .revealed to each card in turn (--d is its stagger delay). Without script the cards just show. */
-  .reveal-ready .work .w:not(.revealed) { clip-path: inset(0 0 100% 0 round 22px); filter: blur(10px); }
-  .reveal-ready .work .w.revealed { clip-path: inset(0 0 0 0 round 22px); filter: none;
-    transition: clip-path 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s), filter 1s ease var(--d, 0s); }
+  .reveal-ready .work .w:not(.revealed) { clip-path: inset(0 0 100% 0 round 22px); }
+  .reveal-ready .work .w.revealed { clip-path: inset(0 0 0 0 round 22px);
+    transition: clip-path 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s); }
   .work .w.open img { filter: blur(18px); }
   .work figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
     position: absolute; z-index: 2; inset: 0; top: 0; left: 0; right: 0; width: auto; margin: 0; padding: 20px 72px 20px 20px;
@@ -302,10 +302,14 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .work-toggle .ic-close { opacity: 0; transform: rotate(-90deg); }
   .work .w.open .ic-arrow { opacity: 0; transform: rotate(90deg); }
   .work .w.open .ic-close { opacity: 1; transform: none; }
-  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: var(--o, 1); filter: none; }
+  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: var(--o, 1); filter: blur(var(--bl, 0px)); }
   @media (prefers-reduced-motion: reduce) { .work .w, .work .w img, .work figcaption, .work-toggle svg { transition: none; } .work .w img { translate: none; } .reveal-ready .work .w:not(.revealed) { clip-path: none; filter: none; } }
   /* Comfortable tap targets for the text links */
   .nav { gap: 0; }
   .nav a { display: block; padding: 10px 0; }
   .foot a { display: inline-block; padding: 10px 0; }
+  /* About dandelion, blown up: instead of scaling the whole 3:1 clip (which wasted space above it), crop
+     it to a taller box and slide the clip so the bulb sits in the middle */
+  .sec-about { overflow-x: clip; }
+  .about-loop { aspect-ratio: 13 / 10; object-fit: cover; object-position: 101% 50%; transform: none; margin-top: 0; }
 }

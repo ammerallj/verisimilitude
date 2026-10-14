@@ -16,13 +16,14 @@ const update = () => {
   root.style.setProperty("--in", into.toFixed(3));
   body.classList.toggle("rail-on", into > 0.5);
   body.classList.toggle("seeds-on", out > 0.3);
+  body.classList.toggle("topbar-on", window.scrollY > vh * 0.7); // phone top bar
 };
 window.addEventListener("scroll", update, { passive: true });
 window.addEventListener("resize", update);
 update();
 
 // Mark the nav link for the section currently on screen.
-const links = [...document.querySelectorAll(".nav a[data-sec]")];
+const links = [...document.querySelectorAll(".nav a[data-sec], .topbar a[data-sec]")];
 const sections = [...document.querySelectorAll(".sec")];
 const markCurrent = () => {
   const mid = window.innerHeight * 0.5;

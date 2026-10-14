@@ -247,7 +247,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 .work-toggle { display: none; }
 @media (max-width: 900px) {
   .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 40px; }
-  .work .w { position: relative; width: 100%; height: auto; overflow: hidden; background: #f1f1ee;
+  .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; overflow: hidden; background: #f1f1ee;
     transform: scale(var(--s, 1)); opacity: var(--o, 1); transition: none; }
   .work .w img { position: static; display: block; width: 100%; height: auto; box-shadow: none;
     transition: filter .5s ease, transform .6s ease; }

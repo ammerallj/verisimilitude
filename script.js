@@ -22,6 +22,7 @@ const update = () => {
   // Phone hero: how far the hero's empty lower part has shrunk (0 at the top, 1 after a full screen of scrolling, eased).
   const heroT = clamp(window.scrollY / vh);               // closes over a full screen of scrolling
   root.style.setProperty("--hero-p", (heroT * heroT * (3 - 2 * heroT)).toFixed(3));  // eased: gentle start, gentle finish
+  root.style.setProperty("--cue-o", (1 - clamp(window.scrollY / (vh * 0.22))).toFixed(3)); // "Scroll down" is gone after ~180px
   // Phone hero: each lockup line, and the hero art, blurs and fades as it reaches a set height on the
   // screen: it starts when the element's bottom edge rises to 30% down the screen and is fully gone by 10%.
   const lockupKids = lockupEl ? [...lockupEl.children] : [];

@@ -185,3 +185,51 @@ const setLockupHeight = () => root.style.setProperty("--lh", `${lockupEl.offsetH
 setLockupHeight();
 window.addEventListener("resize", setLockupHeight);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(setLockupHeight);
+
+// Phone work carousel: a round button on each card opens its description over a blurred image,
+// and the cards ease in and out of scale and opacity as they pass the middle of the screen.
+const mobileMQ = window.matchMedia("(max-width: 900px)");
+const workCards = [...document.querySelectorAll(".work .w")];
+const ARROW = '<svg class="ic-arrow" viewBox="0 0 18 18" aria-hidden="true"><path d="M5 13L13 5M6 5h7v7"/></svg>';
+const CLOSE = '<svg class="ic-close" viewBox="0 0 18 18" aria-hidden="true"><path d="M4.5 4.5l9 9M13.5 4.5l-9 9"/></svg>';
+const closeCards = () => workCards.forEach((card) => {
+  card.classList.remove("open");
+  const b = card.querySelector(".work-toggle");
+  if (b) { b.setAttribute("aria-expanded", "false"); b.setAttribute("aria-label", `About ${card.querySelector("strong").textContent}`); }
+});
+workCards.forEach((card) => {
+  const title = card.querySelector("strong").textContent;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "work-toggle";
+  btn.setAttribute("aria-expanded", "false");
+  btn.setAttribute("aria-label", `About ${title}`);
+  btn.innerHTML = ARROW + CLOSE;
+  btn.addEventListener("click", () => {
+    const willOpen = !card.classList.contains("open");
+    closeCards();
+    if (willOpen) {
+      card.classList.add("open");
+      btn.setAttribute("aria-expanded", "true");
+      btn.setAttribute("aria-label", `Close ${title} details`);
+    }
+  });
+  card.appendChild(btn);
+});
+const cardMotion = () => {
+  const vh = window.innerHeight;
+  workCards.forEach((card) => {
+    if (!mobileMQ.matches || !motionOK) {
+      card.style.removeProperty("--s");
+      card.style.removeProperty("--o");
+      return;
+    }
+    const r = card.getBoundingClientRect();
+    const d = Math.min(Math.abs(r.top + r.height / 2 - vh / 2) / vh, 0.6);
+    card.style.setProperty("--s", (1 - d * 0.14).toFixed(3));
+    card.style.setProperty("--o", (1 - d * 0.7).toFixed(3));
+  });
+};
+window.addEventListener("scroll", cardMotion, { passive: true });
+window.addEventListener("resize", () => { if (!mobileMQ.matches) closeCards(); cardMotion(); });
+cardMotion();

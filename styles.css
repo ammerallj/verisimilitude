@@ -240,23 +240,38 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 html { scrollbar-gutter: stable; }
 html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 
-/* Phones and small tablets: stack the work in one column so the images read at full width,
-   and show each caption under its image (there is no hover on touch screens). */
+/* Phones and small tablets: the work is a vertical carousel of full-width cards. Each card has a
+   round arrow button at the top right: it blurs the image and reveals the description, and turns
+   into a close button. Cards ease in and out of scale and opacity as they pass the middle of the
+   screen (script.js sets --s and --o). */
+.work-toggle { display: none; }
 @media (max-width: 900px) {
-  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 48px; }
-  .work .w { position: static; width: 100%; height: auto; }
-  .work .w1 { width: 62%; }
-  .work .w4 { width: 88%; align-self: flex-end; }
-  .work .w img { position: static; height: auto; box-shadow: -24px 24px 40px rgba(67, 98, 124, .2); }
-  .work .w1 img { aspect-ratio: 240 / 535; }
+  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 40px; }
+  .work .w { position: relative; width: 100%; height: auto; overflow: hidden; background: #f1f1ee;
+    transform: scale(var(--s, 1)); opacity: var(--o, 1); transition: none; }
+  .work .w img { position: static; display: block; width: 100%; height: auto; box-shadow: none;
+    transition: filter .5s ease, transform .6s ease; }
+  .work .w1 img { aspect-ratio: 4 / 5; object-fit: cover; }
   .work .w2 img { aspect-ratio: 378 / 228; }
   .work .w3 img { aspect-ratio: 639 / 359; }
   .work .w4 img { aspect-ratio: 477 / 265; }
+  .work .w.open img { filter: blur(18px); transform: scale(1.08); }
   .work figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
-    position: static; width: auto; margin-top: 14px; font-size: 16px; text-align: left;
-    opacity: 1; filter: none; transform: none; }
-  .work figcaption strong { font-size: 20px; }
-  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: 1; filter: none; }
+    position: absolute; inset: 0; top: 0; left: 0; right: 0; width: auto; margin: 0; padding: 20px 72px 20px 20px;
+    display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; overflow: auto;
+    background: rgba(244, 244, 241, .55); font-size: 17px; text-align: left;
+    opacity: 0; filter: none; transform: none; pointer-events: none; transition: opacity .45s ease; }
+  .work .w.open figcaption { opacity: 1; pointer-events: auto; }
+  .work figcaption strong { font-size: 24px; }
+  .work-toggle { display: grid; place-items: center; position: absolute; z-index: 2; top: 12px; right: 12px; width: 44px; height: 44px;
+    padding: 0; border: 0; border-radius: 50%; background: #fff; color: #000; cursor: pointer; box-shadow: 0 1px 8px rgba(0, 0, 0, .18); }
+  .work-toggle svg { grid-area: 1 / 1; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    transition: opacity .3s ease, transform .4s cubic-bezier(.2, .7, .3, 1); }
+  .work-toggle .ic-close { opacity: 0; transform: rotate(-90deg); }
+  .work .w.open .ic-arrow { opacity: 0; transform: rotate(90deg); }
+  .work .w.open .ic-close { opacity: 1; transform: none; }
+  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: var(--o, 1); filter: none; }
+  @media (prefers-reduced-motion: reduce) { .work .w, .work .w img, .work figcaption, .work-toggle svg { transition: none; } }
   /* Comfortable tap targets for the text links */
   .nav { gap: 0; }
   .nav a { display: block; padding: 10px 0; }

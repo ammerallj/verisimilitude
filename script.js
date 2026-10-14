@@ -4,6 +4,9 @@ const root = document.documentElement;
 const body = document.body;
 const work = document.querySelector(".work");
 const clamp = (n) => Math.min(1, Math.max(0, n));
+const railBEl = document.querySelector(".rail-b");
+const lockupEl = document.querySelector(".rail-a");
+const heroVideoEl = document.querySelector(".hero video");
 const update = () => {
   const vh = window.innerHeight;
   // Progress follows the work section: it starts as the first image enters the
@@ -16,13 +19,50 @@ const update = () => {
   root.style.setProperty("--in", into.toFixed(3));
   body.classList.toggle("rail-on", into > 0.5);
   body.classList.toggle("seeds-on", out > 0.3);
+  // Phone hero: how far the hero's empty lower part has shrunk (0 at the top, 1 after a full screen of scrolling, eased).
+  const heroT = clamp(window.scrollY / vh);               // closes over a full screen of scrolling
+  root.style.setProperty("--hero-p", (heroT * heroT * (3 - 2 * heroT)).toFixed(3));  // eased: gentle start, gentle finish
+  root.style.setProperty("--cue-o", (1 - clamp(window.scrollY / (vh * 0.22))).toFixed(3)); // "Scroll down" is gone after ~180px
+  // Phone hero: each lockup line, and the hero art, blurs and fades as it reaches a set height on the
+  // screen: it starts when the element's bottom edge rises to 30% down the screen and is fully gone by 10%.
+  const lockupKids = lockupEl ? [...lockupEl.children] : [];
+  const topFade = (bottom) => clamp((vh * 0.30 - bottom) / (vh * 0.20));
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    lockupKids.forEach((el) => {
+      const g = topFade(el.getBoundingClientRect().bottom);
+      el.style.setProperty("--lb", `${(g * 12).toFixed(1)}px`);
+      el.style.setProperty("--lo", (1 - g).toFixed(3));
+    });
+    const art = heroVideoEl.getBoundingClientRect();
+    const artBottom = lockupKids.length ? lockupKids[0].getBoundingClientRect().top - 20 : art.bottom;  // the art ends where the lockup begins
+    const ga = topFade(artBottom);
+    heroVideoEl.style.setProperty("--vb", `${(ga * 14).toFixed(1)}px`);
+    heroVideoEl.style.setProperty("--vo", (1 - ga).toFixed(3));
+  } else {
+    lockupKids.forEach((el) => { el.style.removeProperty("--lb"); el.style.removeProperty("--lo"); });
+    heroVideoEl.style.removeProperty("--vb");
+    heroVideoEl.style.removeProperty("--vo");
+  }
+  // Phone page-end wash: it starts a little above the big contact email (its top blends in from the plain background) and runs to the bottom of the site.
+  const contactEl = document.querySelector(".sec-services .copy");
+  if (contactEl) root.style.setProperty("--wash-top", `${Math.max(0, Math.round(contactEl.getBoundingClientRect().top + window.scrollY - 110))}px`);
+  // Phone watercolour wash: the stroke is drawn up past the "Design studio" block, its tip leading the
+  // top of the block by about a third of the screen, and stops near the top of the screen. It ends with
+  // the section: it fades as the bottom of the block leaves, so it never reaches the work cards.
+  const blk = railBEl.getBoundingClientRect();
+  const tipY = Math.max(blk.top - vh * 0.32, vh * 0.08);
+  const scaleY = Math.max(1, (vh * 1.04 - tipY) / (vh * 0.2)); // the wash is 20svh tall and sits 4svh below the screen
+  root.style.setProperty("--wash-s", scaleY.toFixed(3));
+  root.style.setProperty("--wash", clamp((scaleY - 1) / 3.7).toFixed(3));
+  root.style.setProperty("--wash-o", (1 - clamp((vh * 0.5 - blk.bottom) / (vh * 0.4))).toFixed(3));
+  body.classList.toggle("topbar-on", window.scrollY > vh * 0.7); // phone top bar
 };
 window.addEventListener("scroll", update, { passive: true });
 window.addEventListener("resize", update);
 update();
 
 // Mark the nav link for the section currently on screen.
-const links = [...document.querySelectorAll(".nav a[data-sec]")];
+const links = [...document.querySelectorAll(".nav a[data-sec], .topbar a[data-sec]")];
 const sections = [...document.querySelectorAll(".sec")];
 const markCurrent = () => {
   const mid = window.innerHeight * 0.5;
@@ -150,6 +190,16 @@ const sectionProgress = (el) => {
 };
 const fadeUpdate = () => {
   if (!motionOK) return;
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    // Phones: the cards fade and blur on their own near the top of the screen, so the work section is
+    // never faded as a whole, and About and Services come in piece by piece (see the stagger code below).
+    const vh = window.innerHeight;
+    fadeSections.forEach((el) => {
+      const v = 1;
+      el.style.setProperty("--v", v.toFixed(3));
+    });
+    return;
+  }
   const prog = fadeSections.map(sectionProgress);
   fadeSections.forEach((el, i) => {
     const into = clamp((prog[i] - 0.55) / 0.45);
@@ -177,3 +227,135 @@ const waveV = () => {
 if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
   setTimeout(waveV, 7000 + Math.random() * 5000);
 }
+
+// Phone hero: tell the CSS how tall the text lockup is so the animation + lockup group can be centred.
+const setLockupHeight = () => root.style.setProperty("--lh", `${lockupEl.offsetHeight}px`);
+setLockupHeight();
+window.addEventListener("resize", setLockupHeight);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(setLockupHeight);
+
+// Phone work carousel: a round button on each card opens its description over a blurred image,
+// and the cards ease in and out of scale and opacity as they pass the middle of the screen.
+const mobileMQ = window.matchMedia("(max-width: 900px)");
+const workCards = [...document.querySelectorAll(".work .w")];
+const ARROW = '<svg class="ic-arrow" viewBox="0 0 18 18" aria-hidden="true"><path d="M5 13L13 5M6 5h7v7"/></svg>';
+const CLOSE = '<svg class="ic-close" viewBox="0 0 18 18" aria-hidden="true"><path d="M4.5 4.5l9 9M13.5 4.5l-9 9"/></svg>';
+const closeCards = () => workCards.forEach((card) => {
+  card.classList.remove("open");
+  const b = card.querySelector(".work-toggle");
+  if (b) { b.setAttribute("aria-expanded", "false"); b.setAttribute("aria-label", `About ${card.querySelector("strong").textContent}`); }
+});
+workCards.forEach((card) => {
+  const title = card.querySelector("strong").textContent;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "work-toggle";
+  btn.setAttribute("aria-expanded", "false");
+  btn.setAttribute("aria-label", `About ${title}`);
+  btn.innerHTML = ARROW + CLOSE;
+  btn.addEventListener("click", () => {
+    const willOpen = !card.classList.contains("open");
+    closeCards();
+    if (willOpen) {
+      card.classList.add("open");
+      btn.setAttribute("aria-expanded", "true");
+      btn.setAttribute("aria-label", `Close ${title} details`);
+    }
+  });
+  card.appendChild(btn);
+});
+const cardMotion = () => {
+  const vh = window.innerHeight;
+  workCards.forEach((card) => {
+    if (!mobileMQ.matches || !motionOK) {
+      ["--s", "--o", "--bl", "--pan"].forEach((p) => card.style.removeProperty(p));
+      return;
+    }
+    const r = card.getBoundingClientRect();
+    const centre = r.top + r.height / 2;
+    // Sharp and full size through the middle of the screen; cards still below ease up from 95%.
+    const below = Math.max(0, Math.min(0.5, (centre - vh / 2) / vh));
+    card.style.setProperty("--s", (1 - below * 0.1).toFixed(3));
+    // Blur and fade only once the card starts sliding under the top bar (its top edge passes 64px down
+    // the screen), in proportion to how much of it has gone, so a card stays sharp while it is readable.
+    const gone = clamp((64 - r.top) / r.height);
+    card.style.setProperty("--bl", `${(gone * 10).toFixed(1)}px`);
+    card.style.setProperty("--o", (1 - gone * 0.55).toFixed(3));
+    card.style.setProperty("--pan", Math.max(-1, Math.min(1, (centre - vh / 2) / vh)).toFixed(3));
+  });
+};
+window.addEventListener("scroll", cardMotion, { passive: true });
+window.addEventListener("resize", () => { if (!mobileMQ.matches) closeCards(); cardMotion(); });
+cardMotion();
+
+// Phone work cards: they slide in and fade up one after another down the page as the section scrolls
+// into view. Cards that come into view together arrive from the top card down (0.18s apart); each
+// arrives once.
+if (workCards.length && "IntersectionObserver" in window && motionOK) {
+  root.classList.add("reveal-ready");
+  const revealer = new IntersectionObserver((entries) => {
+    const entering = entries
+      .filter((e) => e.isIntersecting && mobileMQ.matches)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    entering.forEach((e, i) => {
+      e.target.style.setProperty("--d", `${(i * 0.18).toFixed(2)}s`);
+      e.target.classList.add("revealed");
+      revealer.unobserve(e.target);
+    });
+  }, { threshold: 0, rootMargin: "0px 0px -12% 0px" }); // fires as a card's top edge enters (its own clip-path would zero any ratio)
+  workCards.forEach((card) => revealer.observe(card));
+  // On wider screens the cards are not reveal-animated; make sure none is left hidden.
+  mobileMQ.addEventListener("change", () => { if (!mobileMQ.matches) workCards.forEach((c) => c.classList.add("revealed")); });
+}
+
+// Phone About and Services: the pieces blur and fade in one after another as they enter the view, the
+// animation first and then each text block, 0.22s apart when several arrive together.
+const staggerItems = [...document.querySelectorAll(
+  ".sec-about .about-loop, .sec-about .copy p, .sec-services .copy, .sec-services .services li")];
+staggerItems.forEach((el) => el.classList.add("stagger"));
+if (staggerItems.length && "IntersectionObserver" in window && motionOK) {
+  const staggerer = new IntersectionObserver((entries) => {
+    const entering = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    entering.forEach((e, i) => {
+      e.target.style.setProperty("--d", `${(i * 0.22).toFixed(2)}s`);
+      e.target.classList.add("in");
+      staggerer.unobserve(e.target);
+    });
+  }, { threshold: 0, rootMargin: "0px 0px -10% 0px" });
+  const armStagger = () => {
+    if (mobileMQ.matches) {
+      root.classList.add("stagger-ready");
+      staggerItems.forEach((el) => { if (!el.classList.contains("in")) staggerer.observe(el); });
+    } else {
+      root.classList.remove("stagger-ready");
+    }
+  };
+  armStagger();
+  mobileMQ.addEventListener("change", armStagger);
+}
+
+// Phone contact line: size the email so it fills the column on a single line, however wide the screen.
+const bigEmail = document.querySelector(".big-email");
+const fitEmail = () => {
+  if (!bigEmail) return;
+  if (!mobileMQ.matches) { bigEmail.style.removeProperty("font-size"); return; }
+  bigEmail.style.fontSize = "100px";                 // measure at a known size, then scale to the column
+  const natural = bigEmail.scrollWidth;
+  const room = bigEmail.parentElement.clientWidth;
+  bigEmail.style.fontSize = `${Math.floor((100 * room / natural) * 0.995 * 10) / 10}px`;
+};
+fitEmail();
+window.addEventListener("resize", fitEmail);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitEmail);
+
+// Phone Services screen: the section is sized to the viewport minus the footer, so tell the CSS how tall
+// the footer (with its bottom margin) is.
+const footEl = document.querySelector(".foot");
+const setFootHeight = () => {
+  if (!footEl) return;
+  const cs = getComputedStyle(footEl);
+  root.style.setProperty("--foot-h", `${Math.round(footEl.offsetHeight + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom))}px`);
+};
+setFootHeight();
+window.addEventListener("resize", setFootHeight);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(setFootHeight);

@@ -104,7 +104,7 @@ html { scroll-behavior: smooth; }
   .cols { flex-direction: column; gap: 60px; }
   .side { width: 100%; gap: 48px; }
   .main { width: 100%; min-height: 0 !important; }
-  .sec, .sec-services { min-height: 0; padding-top: 80px; }
+  .sec, .sec-services { min-height: 0; padding-top: 44px; }
   .p-home .foot { margin-top: 80px; }
   .work figcaption, .work .w2 figcaption, .work .w4 figcaption { top: 100%; left: 0; right: auto; width: 240px; margin-top: 16px; text-align: left; }
   .foot { flex-direction: column; align-items: flex-start; font-size: 15px; }
@@ -146,19 +146,80 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 .rail-b .nav a { pointer-events: none; }
 .p-home.rail-on .rail-b .nav a { pointer-events: auto; }
 @media (prefers-reduced-motion: reduce) { .hero video { display: none; } }
+/* Phones: the hero is one screen, text at the top, the animation in the middle and a
+   "Scroll down" cue at the bottom; the studio intro follows below it. The rail and page
+   wrappers dissolve (display: contents) so their children can be ordered in one column. */
+.scroll-cue, .wash, .c-mob { display: none; }
+.topbar { display: none; }
+@keyframes cue-nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
 @media (max-width: 900px) {
-  .p-home .page { padding-top: 48px; }
-  .rail { position: static; width: auto; margin: 48px var(--gutter) 0; pointer-events: auto; }
-  .rail-a, .rail-b { position: static; width: 100%; opacity: 1 !important; transform: none !important; filter: none !important; }
-  .rail-b { margin-top: 48px; }
-  .rail-b .nav a { pointer-events: auto; }
-  .rail-a h1 { font-size: 36px; }
-  body:not(.intro-play):not(.intro-wait) :is(.rail-a .phonetic, .rail-a .definition) { opacity: 1 !important; filter: none !important; }
-  .studio { opacity: 1 !important; filter: none !important; }
+  body.p-home { display: flex; flex-direction: column; }
+  .rail, .page { display: contents; }
+  /* Closing the gap: the hero is one screen tall at first, then its empty lower part shrinks away as you
+     scroll (--hero-p eases from 0 to 1 over a screen of scrolling in script.js), so the Design studio block rises to meet the text lockup
+     faster than the page scrolls. overflow-anchor is off so the browser doesn't undo the shift. */
+  body.p-home { overflow-anchor: none; }
+  .hero { order: 1; height: 100vh; height: calc(100svh - var(--hero-p, 0) * (100svh - var(--hero-min))); margin: 0; overflow: hidden; }
+  /* One group, centred vertically above the scroll cue: the visible animation, a 20px gap, then the
+     text lockup. Geometry (the clip is 3:1): shown at 2.6x from its top-right corner, the girl's hair
+     top sits at 14.5% of the frame and the stem leaves the bottom edge, so the visible art is
+     74.1vw tall and starts 12.6vw below the video's top. --lh is the lockup's height (script.js keeps
+     it current); --group-top is where the art starts. */
+  :root { --lh: 116px; --group-top: max(24px, calc((100svh - 120px - (74.1vw + 20px + var(--lh))) / 2));
+    --hero-min: calc(var(--group-top) + 74.1vw + 20px + var(--lh) + 8px); }  /* where the hero stops shrinking: just under the lockup */
+  .hero video { inset: auto; right: 0; top: calc(var(--group-top) - 12.6vw); width: 100vw; height: 33.333vw;
+    object-fit: fill; transform-origin: 100% 0; transform: scale(2.6); }
+  .hero video { opacity: calc((1 - var(--out, 0)) * var(--vo, 1)); filter: blur(calc(var(--out, 0) * 14px + var(--vb, 0px))); }  /* plus its own near-the-top fade (--vo, --vb) */
+  .rail-a { position: absolute; z-index: 3; top: calc(var(--group-top) + 74.1vw + 20px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
+  .rail-a h1 { font-size: 34px; }
+  .rail-a .phonetic, .rail-a .definition { font-size: 20px; margin-top: 0; }
+  .rail-a .studio { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* Once the intro has played, each lockup line blurs and fades by its own height on the screen (--lo and
+     --lb are set per line in script.js as the line nears the top). */
+  body:not(.intro-play):not(.intro-wait) .rail-a > * { opacity: var(--lo, 1) !important; filter: blur(var(--lb, 0px)) !important; }
+  /* Watercolour wash behind the scroll cue: pale yellow-green into stem green into dandelion blue-grey,
+     drawn from the animation's palette. It sits faint at the bottom and, as you scroll, stretches
+     upward like a brush stroke whose tip is drawn up past the "Design studio" block and ends with that section
+     (--wash-s is the stretch, --wash its 0..1 strength, --wash-o the fade; all set in script.js). */
+  .wash { display: block; position: fixed; z-index: -1; left: 50%; bottom: -4svh; width: 54vw; height: 20svh; margin-left: -27vw;
+    border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
+    /* heaviest at the bottom edge and thinning toward the top, so the eye is pulled down the page */
+    background: linear-gradient(to top, rgba(86, 114, 132, .95) 0%, rgba(118, 152, 118, .8) 28%, rgba(190, 208, 150, .5) 60%, rgba(240, 238, 200, .12) 100%);
+    filter: blur(28px); opacity: calc(.78 * var(--wash-o, 1) + var(--wash, 0) * .08);
+    transform-origin: 50% 100%; transform: scaleY(var(--wash-s, 1)); will-change: transform, opacity; }
+  body.intro-wait .wash { opacity: 0; }
+  .intro-play .wash { animation: intro-in 1.4s ease .9s backwards; }
+  @media (prefers-reduced-motion: reduce) { .wash { transform: none; } }
+  .scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 0; right: 0; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+    font-style: italic; font-size: 18px; color: #8b9096; pointer-events: none; opacity: var(--cue-o, 1); }
+  body.intro-wait .scroll-cue { opacity: 0; }
+  .scroll-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .scroll-cue span:last-child { animation: none; } }
+  .intro-play .scroll-cue { animation: intro-in 1.2s ease .9s backwards; }
+  .rail-b { order: 2; position: static; width: auto; margin: 56px var(--gutter) 56px;
+    opacity: 1 !important; transform: none !important; filter: none !important; }
+  /* Studio intro: no repeated title; the description is the centred hero statement */
+  .rail-b { text-align: center; }  /* 56px above, and 56px below before the first work card */
   .rail-b .name { display: none; }
-  .p-home .stage { margin-left: 0; width: 100%; }
-  .hero { height: 50vh; }
+  .rail-b .intro { align-items: center; gap: 24px; }
+  .rail-b .desc { font: 400 30px/1.25 var(--display); text-wrap: pretty; }  /* centred, natural line lengths */
+  .rail-b .note { max-width: 30ch; text-wrap: pretty; }
+  .rail-b .nav { display: none; }            /* the top bar carries About and Services */
+  .rail-b .nav a { pointer-events: auto; }
+  .p-home .stage { order: 3; margin: 0 var(--gutter); width: auto; }
+  .p-home .foot { order: 4; margin: 0 var(--gutter) 50px; }
   .p-home .work { margin-top: 0; }
+  /* Top bar: slides in once you scroll past the hero, title top left, section links right */
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; position: fixed; z-index: 10; top: 0; left: 0; right: 0;
+    padding: calc(12px + env(safe-area-inset-top, 0px)) var(--gutter) 12px; background: rgba(255, 255, 255, .88);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0, 0, 0, .08);
+    transform: translateY(-100%); opacity: 0; pointer-events: none; transition: transform .45s cubic-bezier(.2, .7, .3, 1), opacity .35s ease; }
+  .topbar-on .topbar { transform: none; opacity: 1; pointer-events: auto; }
+  .topbar-title { font: 400 20px var(--display); white-space: nowrap; }
+  .topbar-nav { display: flex; gap: 18px; font-size: 16px; }
+  .topbar-nav a { padding: 8px 0; }
+  .topbar-nav .current { font-style: italic; text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
+  .sec { scroll-margin-top: 56px; }
 }
 
 /* Dandelion seeds (see script.js) float over the whole page */
@@ -200,25 +261,96 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 html { scrollbar-gutter: stable; }
 html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 
-/* Phones and small tablets: stack the work in one column so the images read at full width,
-   and show each caption under its image (there is no hover on touch screens). */
+/* Phones and small tablets: the work is a vertical carousel of rounded product-shot cards on a light
+   gradient. The mobile product sits in a thin phone outline, the web products in a hairline window, both
+   cropped off the card edge; the peach illustration is a plain corner crop. A round arrow button at
+   each card's top right blurs the shot and reveals the description, and turns into a close button.
+   Cards ease in and out of scale and opacity as they pass the middle of the screen (script.js sets
+   --s, --o and --pan). */
+@property --arrive { syntax: "<number>"; inherits: false; initial-value: 1; }
+.work-toggle { display: none; }
 @media (max-width: 900px) {
-  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 48px; }
-  .work .w { position: static; width: 100%; height: auto; }
-  .work .w1 { width: 62%; }
-  .work .w4 { width: 88%; align-self: flex-end; }
-  .work .w img { position: static; height: auto; box-shadow: -24px 24px 40px rgba(67, 98, 124, .2); }
-  .work .w1 img { aspect-ratio: 240 / 535; }
-  .work .w2 img { aspect-ratio: 378 / 228; }
-  .work .w3 img { aspect-ratio: 639 / 359; }
-  .work .w4 img { aspect-ratio: 477 / 265; }
+  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 28px; }
+  .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 5 / 4; overflow: hidden;
+    border-radius: 22px; background: linear-gradient(145deg, #f8f9fa 0%, #e5e9ed 100%);
+    transform: scale(var(--s, 1)); opacity: calc(var(--o, 1) * var(--arrive, 1)); translate: 0 calc((1 - var(--arrive, 1)) * 56px);
+    filter: blur(var(--bl, 0px)); transition: none; }
+  .work .w img { position: absolute; display: block; max-width: none; box-shadow: none; translate: 0 calc(var(--pan, 0) * var(--pk, -12px));
+    transition: filter .5s ease, scale .6s ease; }
+  /* Mobile product: phone frame, centred, running off the bottom edge */
+  .work .w1 img { left: 23%; top: 9%; width: 54%; height: auto; aspect-ratio: 412 / 917; object-fit: cover; object-position: top;
+    border: 3px solid #17181a; border-radius: 28px; box-shadow: 0 22px 44px rgba(20, 30, 50, .24); }
+  /* Web products, each cropped differently so the cards don't repeat: Optimly is a close zoom on its
+     product panel (left side off the card, running off the bottom); Paysages is the mirror, a
+     window bleeding off the left and bottom. */
+  .work .w3 img, .work .w4 img { height: auto; object-fit: cover; border: 1px solid rgba(20, 30, 50, .12); box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
+  .work .w3 img { left: -66%; top: 15%; width: 172%; aspect-ratio: 639 / 359; border-radius: 0 14px 0 0; }
+  .work .w4 img { left: -16%; top: 22%; width: 120%; aspect-ratio: 477 / 265; border-radius: 0 14px 0 0; }
+  /* Illustration: plain corner crop, no device */
+  .work .w2 img { inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; transform-origin: 0 0; scale: 1.3; }
+  /* Soft fade where a device runs off the bottom of the card */
+  .work .w1::after, .work .w3::after, .work .w4::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 30%;
+    background: linear-gradient(to bottom, rgba(229, 233, 237, 0), #e5e9ed); pointer-events: none; }
+  /* Arrival: as the work section scrolls in, each card slides up into place from 56px below while it
+     fades in, one after another from the top card down (--d is its stagger delay). script.js adds
+     .reveal-ready to <html> once it is watching, and .revealed to each card in turn. Without script
+     the cards just show. */
+  .reveal-ready .work .w:not(.revealed) { --arrive: 0; }
+  .reveal-ready .work .w.revealed { --arrive: 1; transition: --arrive 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s); }
+  .work .w.open img { filter: blur(18px); }
   .work figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
-    position: static; width: auto; margin-top: 14px; font-size: 16px; text-align: left;
-    opacity: 1; filter: none; transform: none; }
-  .work figcaption strong { font-size: 20px; }
-  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: 1; filter: none; }
+    position: absolute; z-index: 2; inset: 0; top: 0; left: 0; right: 0; width: auto; margin: 0; padding: 20px 72px 20px 20px;
+    display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; overflow: auto;
+    background: rgba(244, 245, 246, .6); font-size: 17px; text-align: left;
+    opacity: 0; filter: none; transform: none; pointer-events: none; transition: opacity .45s ease; }
+  .work .w.open figcaption { opacity: 1; pointer-events: auto; }
+  .work figcaption strong { font-size: 24px; }
+  .work-toggle { display: grid; place-items: center; position: absolute; z-index: 3; top: 12px; right: 12px; width: 44px; height: 44px;
+    padding: 0; border: 0; border-radius: 50%; background: #fff; color: #000; cursor: pointer; box-shadow: 0 1px 8px rgba(0, 0, 0, .18); }
+  .work-toggle svg { grid-area: 1 / 1; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    transition: opacity .3s ease, transform .4s cubic-bezier(.2, .7, .3, 1); }
+  .work-toggle .ic-close { opacity: 0; transform: rotate(-90deg); }
+  .work .w.open .ic-arrow { opacity: 0; transform: rotate(90deg); }
+  .work .w.open .ic-close { opacity: 1; transform: none; }
+  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: calc(var(--o, 1) * var(--arrive, 1)); filter: blur(var(--bl, 0px)); }
+  @media (prefers-reduced-motion: reduce) { .work .w, .work .w img, .work figcaption, .work-toggle svg { transition: none; } .work .w img { translate: none; } .reveal-ready .work .w:not(.revealed) { --arrive: 1; } }
   /* Comfortable tap targets for the text links */
   .nav { gap: 0; }
   .nav a { display: block; padding: 10px 0; }
   .foot a { display: inline-block; padding: 10px 0; }
+  /* About dandelion, blown up: instead of scaling the whole 3:1 clip (which wasted space above it), crop
+     it to a taller box and slide the clip so the bulb sits in the middle */
+  .about-loop { aspect-ratio: 1 / 1; object-fit: cover; object-position: 93.6% 50%; transform: none; margin-top: 0; mix-blend-mode: multiply; }  /* bulb centred, about 3x the clip */
+  /* Soft sage wash, after the leaf-blur reference: it starts just above the big contact email and runs
+     down behind the services and the footer to the very bottom of the site, deepening slightly at the
+     end. A few very faint green blooms plus fine grain, light enough that the black text stays easy to
+     read. script.js sets --wash-top (a little above the contact line). */
+  body.p-home::after { content: ""; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; top: var(--wash-top, 2800px);
+    pointer-events: none;
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .38  0 0 0 0 .48  0 0 0 0 .34  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      radial-gradient(260px 200px at 82% 150px, rgba(160, 196, 128, .13), transparent 72%),
+      radial-gradient(280px 240px at 6% 330px, rgba(104, 146, 104, .10), transparent 74%),
+      radial-gradient(320px 260px at 78% 470px, rgba(150, 190, 140, .09), transparent 72%),
+      linear-gradient(to top, rgba(120, 156, 128, .22) 0, rgba(190, 210, 170, .12) 140px, rgba(230, 238, 226, 0) 460px),
+      linear-gradient(to bottom, rgba(232, 240, 228, 0), rgba(230, 238, 226, .34) 160px, rgba(230, 238, 226, .34));
+    /* eased feather: the plain page background melts into the wash over ~260px */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, .06) 50px, rgba(0, 0, 0, .22) 110px, rgba(0, 0, 0, .5) 180px, rgba(0, 0, 0, .8) 230px, #000 280px);
+    mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, .06) 50px, rgba(0, 0, 0, .22) 110px, rgba(0, 0, 0, .5) 180px, rgba(0, 0, 0, .8) 230px, #000 280px); }
+  /* Services/contact is its own full-height screen: the section fills the viewport above the footer
+     (script.js sets --foot-h), its content centred with generous space around it, and the footer
+     sitting on the bottom edge. */
+  .sec-services { min-height: calc(100vh - var(--foot-h, 180px)); min-height: calc(100svh - var(--foot-h, 180px));
+    justify-content: center; padding: 0; margin-top: 0; }
+  /* Contact: the email is the big line, as wide as the column allows on one line (script.js sizes it),
+     with the sentence below it */
+  .c-desk { display: none; }
+  .c-mob { display: block; margin-top: 14px; }
+  .copy .big-email { display: block; white-space: nowrap; font-family: var(--display); line-height: 1.1; letter-spacing: -.01em;
+    text-decoration-thickness: 1.5px; text-underline-offset: .14em; }
+  /* Staggered blur-in for About and Services (script.js adds .stagger-ready, then .in piece by piece) */
+  .stagger-ready .stagger:not(.in) { opacity: 0; filter: blur(14px); translate: 0 16px; }
+  .stagger-ready .stagger.in { opacity: 1; filter: none; translate: none;
+    transition: opacity 1s ease var(--d, 0s), filter 1s ease var(--d, 0s), translate 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s); }
+  @media (prefers-reduced-motion: reduce) { .stagger-ready .stagger:not(.in) { opacity: 1; filter: none; translate: none; } }
 }

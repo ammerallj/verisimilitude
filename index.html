@@ -16,6 +16,14 @@
   <noscript><style>.intro-wait .rail-a > * { opacity: 1 !important; filter: none !important; } html.scroll-lock, html.scroll-lock body { overflow: auto; }</style></noscript>
 </head>
 <body class="p-home intro-wait" id="top">
+  <div class="wash" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="topbar-title" href="#top">Verisimilitude Studio</a>
+    <nav class="topbar-nav" aria-label="Sections">
+      <a href="#about" data-sec="about">About</a>
+      <a href="#services" data-sec="services">Services</a>
+    </nav>
+  </header>
   <div class="rail" id="rail">
     <div class="rail-a">
       <h1><a class="title-link" href="#top"><span class="vmark">V</span>erisimilitude<span class="studio"> Studio</span></a></h1>
@@ -25,7 +33,7 @@
     <aside class="side rail-b">
       <div class="intro">
         <span class="name" aria-hidden="true">Verisimilitude Studio</span>
-        <p class="desc">Design studio based in San Francisco and Seattle creating honest and simple digital experiences.</p>
+        <p class="desc"><span class="lead">Design studio</span> based in San Francisco and Seattle creating honest and simple digital experiences.</p>
         <p class="note">*We're a private studio and most projects are in stealth mode</p>
       </div>
       <nav class="nav">
@@ -40,6 +48,7 @@
         <source src="images/dandelion.webm" type="video/webm">
         <source src="images/dandelion.mp4" type="video/mp4">
       </video>
+      <div class="scroll-cue" aria-hidden="true"><span>Scroll down</span><span>↓</span></div>
     </section>
     <div class="stage">
       <section class="work" aria-label="Selected work">
@@ -72,7 +81,7 @@
         </div>
       </section>
       <section class="sec sec-services" id="services" data-sec="services">
-        <p class="copy">Please contact us at <a href="mailto:hello@veris.studio">hello@veris.studio</a> to get things started.</p>
+        <p class="copy contact"><span class="c-desk">Please contact us at </span><a class="big-email" href="mailto:hello@veris.studio">hello@veris.studio</a><span class="c-desk"> to get things started.</span><span class="c-mob">Please contact us to get things started.</span></p>
         <ul class="services">
           <li><span>0-1 Marketing Website</span><em>Inquire for pricing</em></li>
           <li><span>Website Revamp</span><em>Inquire for pricing</em></li>
@@ -82,7 +91,7 @@
     </div>
     <footer class="foot">
       <p>Verisimilitude: <em>noun</em> — how much a story, artwork, or idea looks like the truth.</p>
-      <a href="mailto:hello@veris.studio">hello@veris.studio</a>
+      <span class="copyright">© 2026 Verisimilitude Studio</span>
     </footer>
   </main>
   <script src="script.js"></script>

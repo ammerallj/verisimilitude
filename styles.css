@@ -155,18 +155,21 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 @media (max-width: 900px) {
   body.p-home { display: flex; flex-direction: column; }
   .rail, .page { display: contents; }
-  /* Scroll-over: the hero (and its text lockup) stays pinned while the rest of the page, a white sheet
-     with a rounded top edge, slides up over it. The sheet is rail-b + the stage + the footer. */
-  .hero { order: 1; position: sticky; top: 0; z-index: 0; height: 100vh; height: 100svh; margin: 0; overflow: hidden; }
+  /* Closing the gap: the hero is one screen tall at first, then its empty lower part shrinks away as you
+     scroll (--hero-p goes 0..1 in script.js), so the Design studio block rises to meet the text lockup
+     faster than the page scrolls. overflow-anchor is off so the browser doesn't undo the shift. */
+  body.p-home { overflow-anchor: none; }
+  .hero { order: 1; height: 100vh; height: calc(100svh - var(--hero-p, 0) * (100svh - var(--hero-min))); margin: 0; overflow: hidden; }
   /* One group, centred vertically above the scroll cue: the visible animation, a 20px gap, then the
      text lockup. Geometry (the clip is 3:1): shown at 2.6x from its top-right corner, the girl's hair
      top sits at 14.5% of the frame and the stem leaves the bottom edge, so the visible art is
      74.1vw tall and starts 12.6vw below the video's top. --lh is the lockup's height (script.js keeps
      it current); --group-top is where the art starts. */
-  :root { --lh: 116px; --group-top: max(24px, calc((100svh - 120px - (74.1vw + 20px + var(--lh))) / 2)); }
+  :root { --lh: 116px; --group-top: max(24px, calc((100svh - 120px - (74.1vw + 20px + var(--lh))) / 2));
+    --hero-min: calc(var(--group-top) + 74.1vw + 20px + var(--lh) + 8px); }  /* where the hero stops shrinking: just under the lockup */
   .hero video { inset: auto; right: 0; top: calc(var(--group-top) - 12.6vw); width: 100vw; height: 33.333vw;
     object-fit: fill; transform-origin: 100% 0; transform: scale(2.6); }
-  .rail-a { position: fixed; z-index: 0; top: calc(var(--group-top) + 74.1vw + 20px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
+  .rail-a { position: absolute; z-index: 3; top: calc(var(--group-top) + 74.1vw + 20px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
   .rail-a h1 { font-size: 34px; }
   .rail-a .phonetic, .rail-a .definition { font-size: 20px; margin-top: 0; }
   .rail-a .studio { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -175,7 +178,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
      drawn from the animation's palette. It sits faint at the bottom and, as you scroll, stretches
      upward like a brush stroke whose tip is drawn up past the "Design studio" block and ends with that section
      (--wash-s is the stretch, --wash its 0..1 strength, --wash-o the fade; all set in script.js). */
-  .wash { display: block; position: fixed; z-index: 2; mix-blend-mode: multiply; left: 50%; bottom: -4svh; width: 54vw; height: 20svh; margin-left: -27vw;
+  .wash { display: block; position: fixed; z-index: -1; left: 50%; bottom: -4svh; width: 54vw; height: 20svh; margin-left: -27vw;
     border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
     /* heaviest at the bottom edge and thinning toward the top, so the eye is pulled down the page */
     background: linear-gradient(to top, rgba(86, 114, 132, .95) 0%, rgba(118, 152, 118, .8) 28%, rgba(190, 208, 150, .5) 60%, rgba(240, 238, 200, .12) 100%);
@@ -185,24 +188,23 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .intro-play .wash { animation: intro-in 1.4s ease .9s backwards; }
   @media (prefers-reduced-motion: reduce) { .wash { transform: none; } }
   .scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 0; right: 0; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
-    font-style: italic; font-size: 18px; color: #8b9096; pointer-events: none; opacity: calc(1 - var(--out, 0) * 3); }
+    font-style: italic; font-size: 18px; color: #8b9096; pointer-events: none; opacity: calc(1 - var(--hero-p, 0) * 3); }
   body.intro-wait .scroll-cue { opacity: 0; }
   .scroll-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) { .scroll-cue span:last-child { animation: none; } }
   .intro-play .scroll-cue { animation: intro-in 1.2s ease .9s backwards; }
-  .rail-b { order: 2; position: relative; top: auto; z-index: 1; width: auto; margin: 0; padding: 56px var(--gutter) 56px; background: #fff;
-    border-radius: 26px 26px 0 0; box-shadow: 0 -14px 40px rgba(20, 30, 50, .07);
+  .rail-b { order: 2; position: static; width: auto; margin: 56px var(--gutter) 56px;
     opacity: 1 !important; transform: none !important; filter: none !important; }
   /* Studio intro: no repeated title; the description is the centred hero statement */
-  .rail-b { text-align: center; }  /* 56px of sheet above and below: the gap before the first work card */
+  .rail-b { text-align: center; }  /* 56px above, and 56px below before the first work card */
   .rail-b .name { display: none; }
   .rail-b .intro { align-items: center; gap: 24px; }
   .rail-b .desc { font: 400 30px/1.25 var(--display); text-wrap: pretty; }  /* centred, natural line lengths */
   .rail-b .note { max-width: 30ch; text-wrap: pretty; }
   .rail-b .nav { display: none; }            /* the top bar carries About and Services */
   .rail-b .nav a { pointer-events: auto; }
-  .p-home .stage { order: 3; position: relative; z-index: 1; margin: 0; padding: 0 var(--gutter); width: auto; background: #fff; }
-  .p-home .foot { order: 4; position: relative; z-index: 1; margin: 0; padding: 80px var(--gutter) 50px; background: #fff; }
+  .p-home .stage { order: 3; margin: 0 var(--gutter); width: auto; }
+  .p-home .foot { order: 4; margin: 80px var(--gutter) 50px; }
   .p-home .work { margin-top: 0; }
   /* Top bar: slides in once you scroll past the hero, title top left, section links right */
   .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; position: fixed; z-index: 10; top: 0; left: 0; right: 0;

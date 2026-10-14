@@ -17,6 +17,8 @@ const update = () => {
   root.style.setProperty("--in", into.toFixed(3));
   body.classList.toggle("rail-on", into > 0.5);
   body.classList.toggle("seeds-on", out > 0.3);
+  // Phone hero: how far the hero's empty lower part has shrunk (0 at the top, 1 after about half a screen).
+  root.style.setProperty("--hero-p", clamp(window.scrollY / (vh * 0.55)).toFixed(3));
   // Phone watercolour wash: the stroke is drawn up past the "Design studio" block, its tip leading the
   // top of the block by about a third of the screen, and stops near the top of the screen. It ends with
   // the section: it fades as the bottom of the block leaves, so it never reaches the work cards.

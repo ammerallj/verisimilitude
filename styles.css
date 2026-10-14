@@ -169,11 +169,14 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
     --hero-min: calc(var(--group-top) + 74.1vw + 20px + var(--lh) + 8px); }  /* where the hero stops shrinking: just under the lockup */
   .hero video { inset: auto; right: 0; top: calc(var(--group-top) - 12.6vw); width: 100vw; height: 33.333vw;
     object-fit: fill; transform-origin: 100% 0; transform: scale(2.6); }
+  .hero video { opacity: calc((1 - var(--out, 0)) * var(--vo, 1)); filter: blur(calc(var(--out, 0) * 14px + var(--vb, 0px))); }  /* plus its own near-the-top fade (--vo, --vb) */
   .rail-a { position: absolute; z-index: 3; top: calc(var(--group-top) + 74.1vw + 20px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
   .rail-a h1 { font-size: 34px; }
   .rail-a .phonetic, .rail-a .definition { font-size: 20px; margin-top: 0; }
   .rail-a .studio { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  body:not(.intro-play):not(.intro-wait) :is(.rail-a .phonetic, .rail-a .definition) { opacity: 1 !important; filter: none !important; }
+  /* Once the intro has played, each lockup line blurs and fades by its own height on the screen (--lo and
+     --lb are set per line in script.js as the line nears the top). */
+  body:not(.intro-play):not(.intro-wait) .rail-a > * { opacity: var(--lo, 1) !important; filter: blur(var(--lb, 0px)) !important; }
   /* Watercolour wash behind the scroll cue: pale yellow-green into stem green into dandelion blue-grey,
      drawn from the animation's palette. It sits faint at the bottom and, as you scroll, stretches
      upward like a brush stroke whose tip is drawn up past the "Design studio" block and ends with that section

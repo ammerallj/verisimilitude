@@ -5,6 +5,8 @@ const body = document.body;
 const work = document.querySelector(".work");
 const clamp = (n) => Math.min(1, Math.max(0, n));
 const railBEl = document.querySelector(".rail-b");
+const lockupEl = document.querySelector(".rail-a");
+const heroVideoEl = document.querySelector(".hero video");
 const update = () => {
   const vh = window.innerHeight;
   // Progress follows the work section: it starts as the first image enters the
@@ -20,6 +22,26 @@ const update = () => {
   // Phone hero: how far the hero's empty lower part has shrunk (0 at the top, 1 after a full screen of scrolling, eased).
   const heroT = clamp(window.scrollY / vh);               // closes over a full screen of scrolling
   root.style.setProperty("--hero-p", (heroT * heroT * (3 - 2 * heroT)).toFixed(3));  // eased: gentle start, gentle finish
+  // Phone hero: each lockup line, and the hero art, blurs and fades as it reaches a set height on the
+  // screen: it starts when the element's bottom edge rises to 30% down the screen and is fully gone by 10%.
+  const lockupKids = lockupEl ? [...lockupEl.children] : [];
+  const topFade = (bottom) => clamp((vh * 0.30 - bottom) / (vh * 0.20));
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    lockupKids.forEach((el) => {
+      const g = topFade(el.getBoundingClientRect().bottom);
+      el.style.setProperty("--lb", `${(g * 12).toFixed(1)}px`);
+      el.style.setProperty("--lo", (1 - g).toFixed(3));
+    });
+    const art = heroVideoEl.getBoundingClientRect();
+    const artBottom = lockupKids.length ? lockupKids[0].getBoundingClientRect().top - 20 : art.bottom;  // the art ends where the lockup begins
+    const ga = topFade(artBottom);
+    heroVideoEl.style.setProperty("--vb", `${(ga * 14).toFixed(1)}px`);
+    heroVideoEl.style.setProperty("--vo", (1 - ga).toFixed(3));
+  } else {
+    lockupKids.forEach((el) => { el.style.removeProperty("--lb"); el.style.removeProperty("--lo"); });
+    heroVideoEl.style.removeProperty("--vb");
+    heroVideoEl.style.removeProperty("--vo");
+  }
   // Phone page-end wash: it starts a little above the big contact email (its top blends in from the plain background) and runs to the bottom of the site.
   const contactEl = document.querySelector(".sec-services .copy");
   if (contactEl) root.style.setProperty("--wash-top", `${Math.max(0, Math.round(contactEl.getBoundingClientRect().top + window.scrollY - 110))}px`);
@@ -206,7 +228,6 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 }
 
 // Phone hero: tell the CSS how tall the text lockup is so the animation + lockup group can be centred.
-const lockupEl = document.querySelector(".rail-a");
 const setLockupHeight = () => root.style.setProperty("--lh", `${lockupEl.offsetHeight}px`);
 setLockupHeight();
 window.addEventListener("resize", setLockupHeight);

@@ -30,11 +30,11 @@ em { font-style: italic; }
 .cols { display: flex; justify-content: space-between; align-items: flex-start; }
 .side { position: sticky; top: 50px; align-self: flex-start; display: flex; flex-direction: column; gap: 100px; width: 376px; flex: none; }
 .intro { display: flex; flex-direction: column; gap: 20px; }
-.name { font: 400 36px var(--display); }
-.desc { font-size: 18px; }
-.note { font-style: italic; font-size: 15px; color: #555; }
-.nav { display: flex; flex-direction: column; gap: 10px; }
-.nav a:hover { text-decoration: underline; }
+.name { font: 400 32px var(--display); }
+.desc { font-size: 15px; }
+.note { font-size: 15px; }
+.nav { display: flex; flex-direction: column; gap: 10px; font-size: 18px; }
+.nav a:hover { text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
 .nav .current { font-style: italic; text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
 .main, .work { width: 1102px; flex: 0 1 1102px; min-width: 0; }
 .foot {
@@ -42,7 +42,7 @@ em { font-style: italic; }
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  font: 400 17px var(--display);
+  font: 400 14px var(--display);
   color: #555;
   margin-top: 100px;
 }
@@ -63,23 +63,60 @@ em { font-style: italic; }
   transition: opacity .5s ease, filter .5s ease, transform .5s ease; }
 .work .w2 figcaption, .work .w4 figcaption { left: auto; right: calc(100% + 48px); text-align: right; }
 .work figcaption strong { font-weight: 400; font-size: 24px; }
-.work figcaption span { font-style: italic; }
+.work figcaption span { font-style: normal; }
 .work figcaption small { font-size: 15px; color: #555; }
 /* Hover or focus one image: the others blur back and its caption comes forward */
 .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: .35; filter: blur(10px); }
 /* The Optimly caption is long and the image sits mid-column, so it opens below the image */
-.work .w3 figcaption { top: 100%; left: 0; right: auto; width: min(420px, 38vw); margin-top: 18px; text-align: left; }
+.work .w3 figcaption { left: auto; right: calc(100% + 48px); text-align: right; }  /* opens to the card's left */
 .w:hover figcaption, .w:focus-visible figcaption { opacity: 1; filter: none; transform: none; }
 .w1 { left: 21.960%; top: 0.000%; width: 21.779%; height: 30.398%; }
 .w2 { left: 42.105%; top: 31.818%; width: 57.895%; height: 23.352%; }
 /* Toshi Chen mockup: big enough to read (2932:1458 recording) */
 .w3 { left: 11.978%; top: 57.386%; width: 57.985%; height: 18.068%; }
 .w4 { left: 50.000%; top: 81.250%; width: 43.285%; height: 16.932%; }
+/* Desktop: one frame at a time down the right column, the next peeking in below. Sizes are 15% up on the old collage. */
+@media (min-width: 901px) {
+  /* Even 150px between frames (script.js eases a frame to the centre when you stop close to it). */
+  .work { aspect-ratio: auto; display: flex; flex-direction: column; container-type: inline-size; gap: 150px; padding-bottom: 20vh; }
+  .work .w { position: relative; left: auto; top: auto; height: auto; }
+  .work .w1 { --h: calc(39.1cqw * 535 / 240); width: 39.1%; aspect-ratio: 240 / 535; margin-left: 30.45%; }
+  .work .w1 figcaption { left: auto; right: calc(100% + 48px); text-align: right; }  /* centred card: caption opens to its left, like the right-hand cards */
+  .work .w2 { --h: calc(92cqw * 411 / 638); width: 92%; aspect-ratio: 638 / 411; margin-left: 8%; }
+  .work .w3 { --h: calc(86cqw * 318 / 639); width: 86%; aspect-ratio: 639 / 318; margin-left: 0; }
+  .work .w4 { --h: calc(80cqw * 298 / 477); width: 80%; aspect-ratio: 477 / 298; margin-left: 12%; }
+  .p-home .rail-a h1 { opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }  /* the title leaves with the definition */
+  .p-home.rail-on .rail-a a { pointer-events: none; }
+  .rail-a .studio { display: none; }
+  /* Even 150px between work, About and Services */
+  .work { padding-bottom: 0; }
+  .p-home .sec { padding-top: 150px; }
+  .p-home .sec-about { min-height: 0; }
+  /* Services matches the About column: 500px, on the left edge of the right section */
+  .p-home .sec-services { align-items: flex-start; }
+  .p-home .sec-services .copy, .p-home .sec-services .services { max-width: 500px; }
+  /* Last screen: Services + footer fill exactly one viewport at the end of the page, so no About shows above it */
+  .p-home .sec-services { min-height: calc(100vh - var(--foot-h, 72px) - 50px); }
+  /* Services starts level with the rail title; the margin keeps the 150px gap above it */
+  .p-home .sec-services { padding-top: 65px; margin-top: 85px; }
+  /* Fixed measure so the description breaks after "Seattle" */
+  .rail-b .desc { width: 336px; }
+  /* Hovering a frame also grows it 8% with a gentle ease */
+  .work .w { transition: opacity .5s ease, filter .5s ease, transform .7s cubic-bezier(.22, .61, .36, 1); }
+  .work .w:hover, .work .w:focus-visible { transform: scale(1.08); z-index: 2; }
+  /* The card grows 8% on hover; the caption shrinks back by the same factor so its text stays 18px, like About and Services */
+  .work figcaption { transform-origin: 0 0; font-size: 18px; }
+  .work .w1 figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption { transform-origin: 100% 0; }
+  .work .w:hover figcaption, .work .w:focus-visible figcaption { transform: scale(.926); }
+  /* Hovering a frame also pushes the left rail back, like the other frames */
+  .rail { transition: opacity .5s ease, filter .5s ease; }
+  body:has(.work .w:hover, .work .w:focus-visible) .rail { opacity: .35; filter: blur(10px); }
+}
 
 /* About / Services sections (stacked below the work on the one long page) */
 .sec { min-height: 100vh; padding-top: 150px; display: flex; flex-direction: column; align-items: center; gap: 50px; }
 .sec .copy { width: 100%; }
-.sec-about .copy { align-self: flex-end; } /* block sits on the right margin; its text stays left-aligned */
+.sec-about .copy { align-self: flex-start; max-width: 500px; font-size: 18px; } /* narrow measure, on the left edge of the right section */
 .sec-services .copy { width: 100%; }
 /* Last screen: Services plus the footer fill exactly one viewport, footer on the bottom edge. */
 .sec-services { min-height: calc(100vh - 72px); }
@@ -88,12 +125,13 @@ em { font-style: italic; }
 .about-loop { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: contain; object-position: center; flex: none;
   /* The dandelion sits ~79% across the clip: shift it onto the paragraph's centre, then
      scale up about the stem's base so it grows upward; margin-top reserves that room. */
-  transform-origin: 79% 100%; transform: translateX(-29%) scale(1.6); margin-top: 20%; }
+  transform-origin: 79% 100%; transform: translateX(calc(250px - 79%)) scale(1.6); margin-top: 20%; }
 .copy a { text-decoration: underline; text-decoration-skip-ink: none; text-underline-position: from-font; }
-.services { list-style: none; display: flex; flex-direction: column; gap: 15px; width: 100%; }
-.services li { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(0, 0, 0, .25); }
-.services li > * { flex: 1; min-width: 0; }
-.services em { text-align: right; }
+.sec-services { font-size: 18px; }  /* same body size as About */
+.services { list-style: none; display: flex; flex-direction: column; gap: 56px; width: 100%; }
+.services li { display: flex; align-items: flex-start; gap: 24px; }
+.services li > span { flex: 0 0 50%; }
+.services em { flex: 1; text-align: left; font-size: 14px; line-height: 1.7; color: #555; }  /* same as the note under the intro */
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
@@ -110,7 +148,7 @@ html { scroll-behavior: smooth; }
   .sec, .sec-services { min-height: 0; padding-top: 44px; }
   .p-home .foot { margin-top: 80px; }
   .work figcaption, .work .w2 figcaption, .work .w4 figcaption { top: 100%; left: 0; right: auto; width: 240px; margin-top: 16px; text-align: left; }
-  .foot { flex-direction: column; align-items: flex-start; font-size: 15px; }
+  .foot { flex-direction: column; align-items: flex-start; font-size: 14px; }
   .landing > * { width: 100%; }
 }
 
@@ -129,7 +167,8 @@ html { scroll-behavior: smooth; }
 .rail { position: fixed; top: 0; bottom: 0; left: var(--gutter); width: var(--rail); z-index: 2; pointer-events: none; }
 .rail a { pointer-events: auto; }
 .rail-a, .rail-b { position: absolute; left: 0; width: 100%; will-change: opacity, filter; }
-.rail-a { top: 150px; width: 384px; display: flex; flex-direction: column; gap: 20px; }
+/* Landing: the lockup sits vertically centred and simply blurs/fades out as the studio intro blurs in */
+.rail-a { top: calc((100vh - var(--lh, 220px)) / 2); width: 384px; display: flex; flex-direction: column; gap: 20px; }
 /* Opening beat: lines blur in once, then scroll takes over (see script.js) */
 body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !important; }
 .intro-play .rail-a > * { animation: intro-in 1.2s ease backwards; }
@@ -138,14 +177,13 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 @keyframes intro-in { from { opacity: 0; filter: blur(14px); } }
 /* "Verisimilitude" shrinks in place to the title size while " Studio" blurs in next to it,
    in step with the intro text blurring in (--in); the definition lines blur out first (--out). */
-.rail-a h1 { font: 400 calc(48px - var(--in, 0) * 12px) var(--display); white-space: nowrap; }
+.rail-a h1 { font: 400 44px var(--display); white-space: nowrap; }
 .rail-a h1 a { display: inline-block; }
 .studio { display: inline-block; white-space: pre; opacity: var(--in, 0); filter: blur(calc((1 - var(--in, 0)) * 14px)); }
 .rail-a .phonetic, .rail-a .definition { opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }
-.rail-b .name { visibility: hidden; }
 .rail-a .phonetic { font-style: italic; font-size: 24px; }
 .rail-a .definition { font-size: 24px; margin-top: 20px; }
-.rail-b { top: 150px; position: absolute; opacity: var(--in, 0); filter: blur(calc((1 - var(--in, 0)) * 14px)); }
+.rail-b { top: calc(var(--gutter) - 14px); position: absolute; opacity: var(--in, 0); filter: blur(calc((1 - var(--in, 0)) * 14px)); }
 .rail-b .nav a { pointer-events: none; }
 .p-home.rail-on .rail-b .nav a { pointer-events: auto; }
 @media (prefers-reduced-motion: reduce) { .hero video { display: none; } }
@@ -222,7 +260,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .topbar-nav { display: flex; gap: 18px; font-size: 16px; }
   .topbar-nav a { padding: 8px 0; }
   .topbar-nav .current { font-style: italic; text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
-  .sec { scroll-margin-top: 56px; }
+  .sec, .work { scroll-margin-top: 56px; }
 }
 
 /* Dandelion seeds (see script.js) float over the whole page */
@@ -234,31 +272,6 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 
 /* Scroll-driven blur and fade between sections (see script.js) */
 .fade-sec { opacity: var(--v, 1); filter: blur(calc((1 - var(--v, 1)) * 14px)); will-change: opacity, filter; }
-
-/* Hover the V in Verisimilitude: the letter gives way to the seed icon */
-.vmark { position: relative; display: inline-block; transition: color .35s ease; }
-/* Sized so the icon's arm tips and point land on the V's top corners and baseline point
-   (Palatino: ink spans x .010-.705em, cap top .129em, point .823em from the box top). */
-.vmark::after { content: ""; position: absolute; left: -.0825em; top: -.1096em; width: .8796em; height: .9912em; background: currentColor;
-  -webkit-mask: url(images/favicon.svg) 0 0 / 100% 100% no-repeat; mask: url(images/favicon.svg) 0 0 / 100% 100% no-repeat;
-  opacity: 0; filter: blur(6px); transform: rotate(-12deg) scale(.8);
-  transition: opacity .35s ease, filter .35s ease, transform .5s cubic-bezier(.2, .7, .3, 1); pointer-events: none; }
-.vmark:hover { color: transparent; }
-.vmark:hover::after { opacity: 1; filter: none; transform: none; color: #000; }
-
-/* The same swap, on its own and waving: the icon pivots on its point */
-.vmark.waving { color: transparent; }
-.vmark.waving::after { opacity: 1; filter: none; color: #000; transform-origin: 50% 94%; animation: seed-wave 2.8s ease-in-out both; }
-@keyframes seed-wave {
-  0% { opacity: 0; filter: blur(6px); transform: rotate(-12deg) scale(.8); }
-  12% { opacity: 1; filter: none; transform: rotate(0) scale(1); }
-  26% { transform: rotate(-18deg); }
-  42% { transform: rotate(16deg); }
-  58% { transform: rotate(-13deg); }
-  72% { transform: rotate(9deg); }
-  86% { opacity: 1; filter: none; transform: rotate(0); }
-  100% { opacity: 0; filter: blur(6px); transform: rotate(0) scale(.9); }
-}
 
 /* Held during the opening beat so nothing scrolls until the definition appears */
 html { scrollbar-gutter: stable; }

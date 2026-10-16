@@ -63,7 +63,7 @@ update();
 
 // Mark the nav link for the section currently on screen.
 const links = [...document.querySelectorAll(".nav a[data-sec], .topbar a[data-sec]")];
-const sections = [...document.querySelectorAll(".sec")];
+const sections = [work, ...document.querySelectorAll(".sec")];
 const markCurrent = () => {
   const mid = window.innerHeight * 0.5;
   const current = sections.filter((s) => s.getBoundingClientRect().top <= mid).pop();
@@ -73,6 +73,26 @@ const markCurrent = () => {
     on ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current");
   });
 };
+// Nav links land their section centred in the viewport (the first work card, for "From the Studio").
+if (!window.matchMedia("(max-width: 900px)").matches) {
+  links.forEach((a) => a.addEventListener("click", (e) => {
+    const target = document.querySelector(a.getAttribute("href"));
+    if (!target) return;
+    e.preventDefault();
+    let top, bottom, lift = 0;
+    if (target === work) {
+      const r = work.querySelector(".w").getBoundingClientRect();
+      top = r.top; bottom = r.bottom;
+    } else {
+      const r = target.getBoundingClientRect();
+      top = r.top + parseFloat(getComputedStyle(target).paddingTop); bottom = r.bottom;
+      const art = target.querySelector(".about-loop");  // the scaled dandelion reaches above its box
+      if (art) { top = Math.min(top, art.getBoundingClientRect().top); lift = 60; }  // lands a bit above centre
+    }
+    const y = window.scrollY + (top + bottom) / 2 - window.innerHeight / 2 + lift;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  }));
+}
 window.addEventListener("scroll", markCurrent, { passive: true });
 window.addEventListener("resize", markCurrent);
 markCurrent();
@@ -175,9 +195,8 @@ if (!heroVideo || window.matchMedia("(prefers-reduced-motion: reduce)").matches 
   setTimeout(showIntro, 6000); // fallback if the video never plays
 }
 
-// Each section blurs and fades out as the next one nears the middle of the view, then the
-// next blurs in, the same two-beat handover the landing uses.
-const fadeSections = [document.querySelector(".work"), ...document.querySelectorAll(".sec")];
+// Only the work section blurs and fades in (the landing handover); it and the sections after it stay put.
+const fadeSections = [document.querySelector(".work")];
 const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const contentTop = (el) => el.getBoundingClientRect().top + parseFloat(getComputedStyle(el).paddingTop);
 const sectionProgress = (el) => {
@@ -212,21 +231,6 @@ fadeSections.forEach((el) => el.classList.add("fade-sec"));
 window.addEventListener("scroll", fadeUpdate, { passive: true });
 window.addEventListener("resize", fadeUpdate);
 fadeUpdate();
-
-// Every so often the V in the visible "Verisimilitude" turns into the seed icon and waves.
-const railLeadV = () => document.querySelector(".rail-a .vmark");
-const waveV = () => {
-  const v = railLeadV();
-  const hidden = document.hidden || body.classList.contains("intro-wait");
-  if (v && !hidden && !v.matches(":hover")) {
-    v.classList.add("waving");
-    setTimeout(() => v.classList.remove("waving"), 2800);
-  }
-  setTimeout(waveV, 6000 + Math.random() * 8000);
-};
-if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  setTimeout(waveV, 7000 + Math.random() * 5000);
-}
 
 // Phone hero: tell the CSS how tall the text lockup is so the animation + lockup group can be centred.
 const setLockupHeight = () => root.style.setProperty("--lh", `${lockupEl.offsetHeight}px`);
@@ -382,3 +386,22 @@ document.querySelectorAll(".work .w").forEach((card) => {
   new IntersectionObserver(([en]) => { if (mobileMQ.matches) set(en.isIntersecting); }, { threshold: 0.98 }).observe(card);
   mobileMQ.addEventListener("change", () => set(false));
 });
+
+// Work frames: stop within a short way of the vertical centre and the frame eases the rest of the way.
+// Anywhere farther out the page just scrolls, so nothing pulls you back.
+if (!window.matchMedia("(max-width: 900px)").matches && motionOK) {
+  let settle;
+  window.addEventListener("scroll", () => {
+    clearTimeout(settle);
+    settle = setTimeout(() => {
+      const vh = window.innerHeight;
+      let best = null;
+      workCards.forEach((c) => {
+        const r = c.getBoundingClientRect();
+        const d = (r.top + r.bottom) / 2 - vh / 2;
+        if (!best || Math.abs(d) < Math.abs(best)) best = d;
+      });
+      if (best !== null && Math.abs(best) > 2 && Math.abs(best) < vh * 0.1) window.scrollBy({ top: best, behavior: "smooth" });
+    }, 140);
+  }, { passive: true });
+}

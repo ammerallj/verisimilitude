@@ -52,12 +52,12 @@ em { font-style: italic; }
 /* Home / work */
 .work { position: relative; width: 100%; aspect-ratio: 1102 / 1760; }
 .work .w { position: absolute; margin: 0; outline: none; transition: opacity .5s ease, filter .5s ease; }
-.work .w img, .work .w1 video, .work .w2 video, .work .w3 video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover;
+.work .w img, .work .w1 video, .work .w2 video, .work .w3 video, .work .w4 video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover;
   box-shadow: -60px 60px 70px rgba(67, 98, 124, .2); }
 .work .w2 img, .work .w2 video { object-position: top; }
 /* Card 1 stacks a still (loads first) under the animation, which fades in only while it plays (script.js) */
-.work .w1 .play, .work .w2 .play, .work .w3 .play { opacity: 0; visibility: hidden; }
-.work .w1.playing .play, .work .w2.playing .play, .work .w3.playing .play { opacity: 1; visibility: visible; }
+.work .w1 .play, .work .w2 .play, .work .w3 .play, .work .w4 .play { opacity: 0; visibility: hidden; }
+.work .w1.playing .play, .work .w2.playing .play, .work .w3.playing .play, .work .w4.playing .play { opacity: 1; visibility: visible; }
 .work figcaption { position: absolute; top: 0; left: calc(100% + 48px); width: min(280px, 24vw); display: flex; flex-direction: column; gap: 8px;
   font-size: 18px; opacity: 0; filter: blur(8px); transform: translateY(8px); pointer-events: none;
   transition: opacity .5s ease, filter .5s ease, transform .5s ease; }
@@ -278,7 +278,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
     border-radius: 22px; background: linear-gradient(145deg, #f8f9fa 0%, #e5e9ed 100%);
     transform: scale(var(--s, 1)); opacity: calc(var(--o, 1) * var(--arrive, 1)); translate: 0 calc((1 - var(--arrive, 1)) * 56px);
     filter: blur(var(--bl, 0px)); transition: none; }
-  .work .w img, .work .w1 video, .work .w2 video, .work .w3 video { position: absolute; display: block; max-width: none; box-shadow: none; translate: 0 calc(var(--pan, 0) * var(--pk, -12px));
+  .work .w img, .work .w1 video, .work .w2 video, .work .w3 video, .work .w4 video { position: absolute; display: block; max-width: none; box-shadow: none; translate: 0 calc(var(--pan, 0) * var(--pk, -12px));
     transition: filter .5s ease, scale .6s ease; }
   /* Mobile product: phone frame, centred, running off the bottom edge */
   .work .w1 { aspect-ratio: 3 / 4; }  /* taller card so the whole screen shows */
@@ -287,9 +287,9 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   /* Web products, each cropped differently so the cards don't repeat: Toshi Chen is a zoom on its
      product panel (left side off the card, running off the bottom); Threadscape is the mirror, a
      window bleeding off the left and bottom. */
-  .work .w3 img, .work .w3 video, .work .w4 img { height: auto; object-fit: cover; border: 1px solid rgba(20, 30, 50, .12); box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
+  .work .w3 img, .work .w3 video, .work .w4 img, .work .w4 video { height: auto; object-fit: cover; border: 1px solid rgba(20, 30, 50, .12); box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
   .work .w3 img, .work .w3 video { left: -20%; top: 15%; inset-inline-end: auto; width: 150%; aspect-ratio: 2932 / 1458; border-radius: 0 14px 0 0; }
-  .work .w4 img { left: -16%; top: 22%; width: 120%; aspect-ratio: 2000 / 1250; border-radius: 0 14px 0 0; }
+  .work .w4 img, .work .w4 video { left: -16%; top: 22%; width: 120%; aspect-ratio: 2000 / 1250; border-radius: 0 14px 0 0; }
   /* Genius Academy: a close zoom on its hero */
   .work .w2 img, .work .w2 video { left: -66%; top: 15%; inset-inline-end: auto; width: 172%; height: auto; aspect-ratio: 1910 / 1230; object-fit: cover; border: 1px solid rgba(20, 30, 50, .12); border-radius: 0 14px 0 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
   /* Soft fade where a device runs off the bottom of the card */

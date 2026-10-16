@@ -359,3 +359,28 @@ const setFootHeight = () => {
 setFootHeight();
 window.addEventListener("resize", setFootHeight);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(setFootHeight);
+
+// Card 1 (AfterMath): the still loads with the page; the video is fetched once the page has loaded and
+// plays while the card is hovered (desktop) or fully in view (phones), and rewinds when it stops.
+{
+  const card = document.querySelector(".work .w1");
+  const vid = card && card.querySelector("video.play");
+  if (vid) {
+    let ready = false, want = false;
+    const sync = () => {
+      const on = ready && want;
+      card.classList.toggle("playing", on);
+      if (on) vid.play().catch(() => {});
+      else { vid.pause(); vid.currentTime = 0; }
+    };
+    const load = () => { vid.addEventListener("canplaythrough", () => { ready = true; sync(); }, { once: true }); vid.preload = "auto"; vid.load(); };
+    if (document.readyState === "complete") load(); else window.addEventListener("load", load, { once: true });
+    const set = (v) => { want = v && motionOK; sync(); };
+    card.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse" && !mobileMQ.matches) set(true); });
+    card.addEventListener("pointerleave", () => { if (!mobileMQ.matches) set(false); });
+    card.addEventListener("focus", () => { if (!mobileMQ.matches) set(true); });
+    card.addEventListener("blur", () => { if (!mobileMQ.matches) set(false); });
+    new IntersectionObserver(([en]) => { if (mobileMQ.matches) set(en.isIntersecting); }, { threshold: 0.98 }).observe(card);
+    mobileMQ.addEventListener("change", () => set(false));
+  }
+}

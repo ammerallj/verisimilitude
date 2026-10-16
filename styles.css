@@ -52,9 +52,12 @@ em { font-style: italic; }
 /* Home / work */
 .work { position: relative; width: 100%; aspect-ratio: 1102 / 1610; }
 .work .w { position: absolute; margin: 0; outline: none; transition: opacity .5s ease, filter .5s ease; }
-.work .w img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover;
+.work .w img, .work .w1 video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover;
   box-shadow: -60px 60px 70px rgba(67, 98, 124, .2); }
 .work .w2 img { object-position: top; }
+/* Card 1 stacks a still (loads first) under the animation, which fades in only while it plays (script.js) */
+.work .w1 .play { opacity: 0; visibility: hidden; }
+.work .w1.playing .play { opacity: 1; visibility: visible; }
 .work figcaption { position: absolute; top: 0; left: calc(100% + 48px); width: min(280px, 24vw); display: flex; flex-direction: column; gap: 8px;
   font-size: 18px; opacity: 0; filter: blur(8px); transform: translateY(8px); pointer-events: none;
   transition: opacity .5s ease, filter .5s ease, transform .5s ease; }
@@ -275,10 +278,10 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
     border-radius: 22px; background: linear-gradient(145deg, #f8f9fa 0%, #e5e9ed 100%);
     transform: scale(var(--s, 1)); opacity: calc(var(--o, 1) * var(--arrive, 1)); translate: 0 calc((1 - var(--arrive, 1)) * 56px);
     filter: blur(var(--bl, 0px)); transition: none; }
-  .work .w img { position: absolute; display: block; max-width: none; box-shadow: none; translate: 0 calc(var(--pan, 0) * var(--pk, -12px));
+  .work .w img, .work .w1 video { position: absolute; display: block; max-width: none; box-shadow: none; translate: 0 calc(var(--pan, 0) * var(--pk, -12px));
     transition: filter .5s ease, scale .6s ease; }
   /* Mobile product: phone frame, centred, running off the bottom edge */
-  .work .w1 img { left: 23%; top: 9%; width: 54%; height: auto; aspect-ratio: 412 / 917; object-fit: cover; object-position: top;
+  .work .w1 img, .work .w1 video { left: 23%; top: 9%; width: 54%; height: auto; aspect-ratio: 412 / 917; object-fit: cover; object-position: top;
     border: 3px solid #17181a; border-radius: 28px; box-shadow: 0 22px 44px rgba(20, 30, 50, .24); }
   /* Web products, each cropped differently so the cards don't repeat: Optimly is a close zoom on its
      product panel (left side off the card, running off the bottom); Paysages is the mirror, a

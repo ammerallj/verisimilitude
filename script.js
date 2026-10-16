@@ -7,12 +7,21 @@ const clamp = (n) => Math.min(1, Math.max(0, n));
 const railBEl = document.querySelector(".rail-b");
 const lockupEl = document.querySelector(".rail-a");
 const heroVideoEl = document.querySelector(".hero video");
+let workP = 0;
 const update = () => {
   const vh = window.innerHeight;
   // Progress follows the work section: it starts as the first image enters the
   // lower part of the view and finishes as that image nears the vertical centre.
-  const top = work.getBoundingClientRect().top;
-  const p = clamp((vh * 0.9 - top) / (vh * 0.5));
+  let p;
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    p = clamp((vh * 0.9 - work.getBoundingClientRect().top) / (vh * 0.5));
+  } else {
+    // Desktop: both beats are paced to the first frame, finishing exactly as it reaches the vertical centre.
+    const c = work.querySelector(".w").getBoundingClientRect();
+    const centerTop = vh / 2 - c.height / 2;
+    p = clamp((vh * 0.95 - c.top) / Math.max(vh * 0.95 - centerTop, 1));
+  }
+  workP = p;
   const out = clamp(p / 0.45);
   const into = clamp((p - 0.55) / 0.45);
   root.style.setProperty("--out", out.toFixed(3));
@@ -221,7 +230,8 @@ const fadeUpdate = () => {
   }
   const prog = fadeSections.map(sectionProgress);
   fadeSections.forEach((el, i) => {
-    const into = clamp((prog[i] - 0.55) / 0.45);
+    // the work section blurs in on the same beat as the studio intro
+    const into = clamp(((i === 0 ? workP : prog[i]) - 0.55) / 0.45);
     const out = i + 1 < fadeSections.length ? clamp(prog[i + 1] / 0.45) : 0;
     const v = into * (1 - out);
     el.style.setProperty("--v", v.toFixed(3));
@@ -386,22 +396,3 @@ document.querySelectorAll(".work .w").forEach((card) => {
   new IntersectionObserver(([en]) => { if (mobileMQ.matches) set(en.isIntersecting); }, { threshold: 0.98 }).observe(card);
   mobileMQ.addEventListener("change", () => set(false));
 });
-
-// Work frames: stop within a short way of the vertical centre and the frame eases the rest of the way.
-// Anywhere farther out the page just scrolls, so nothing pulls you back.
-if (!window.matchMedia("(max-width: 900px)").matches && motionOK) {
-  let settle;
-  window.addEventListener("scroll", () => {
-    clearTimeout(settle);
-    settle = setTimeout(() => {
-      const vh = window.innerHeight;
-      let best = null;
-      workCards.forEach((c) => {
-        const r = c.getBoundingClientRect();
-        const d = (r.top + r.bottom) / 2 - vh / 2;
-        if (!best || Math.abs(d) < Math.abs(best)) best = d;
-      });
-      if (best !== null && Math.abs(best) > 2 && Math.abs(best) < vh * 0.1) window.scrollBy({ top: best, behavior: "smooth" });
-    }, 140);
-  }, { passive: true });
-}

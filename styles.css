@@ -56,7 +56,6 @@ em { font-style: italic; }
   box-shadow: -60px 60px 70px rgba(67, 98, 124, .2); }
 .work .w2 img { object-position: top; }
 /* Card 1 stacks a still (loads first) under the animation, which fades in only while it plays (script.js) */
-.work .w1 img, .work .w1 video { box-shadow: none; }  /* desktop: just the frame, no card or shadow */
 .work .w1 .play { opacity: 0; visibility: hidden; }
 .work .w1.playing .play { opacity: 1; visibility: visible; }
 .work figcaption { position: absolute; top: 0; left: calc(100% + 48px); width: min(280px, 24vw); display: flex; flex-direction: column; gap: 8px;

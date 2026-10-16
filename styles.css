@@ -74,7 +74,7 @@ em { font-style: italic; }
 .w2 { left: 42.105%; top: 31.818%; width: 57.895%; height: 23.352%; }
 /* Toshi Chen mockup: big enough to read (2932:1458 recording) */
 .w3 { left: 11.978%; top: 57.386%; width: 57.985%; height: 18.068%; }
-.w4 { left: 50.000%; top: 81.250%; width: 43.285%; height: 15.057%; }
+.w4 { left: 50.000%; top: 81.250%; width: 43.285%; height: 16.932%; }
 
 /* About / Services sections (stacked below the work on the one long page) */
 .sec { min-height: 100vh; padding-top: 150px; display: flex; flex-direction: column; align-items: center; gap: 50px; }
@@ -285,11 +285,11 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .work .w1 img, .work .w1 video { left: 22%; top: 7%; width: 56%; height: auto; aspect-ratio: 412 / 917; object-fit: cover; object-position: top;
     border: 3px solid #17181a; border-radius: 28px; box-shadow: 0 22px 44px rgba(20, 30, 50, .24); }
   /* Web products, each cropped differently so the cards don't repeat: Toshi Chen is a zoom on its
-     product panel (left side off the card, running off the bottom); Paysages is the mirror, a
+     product panel (left side off the card, running off the bottom); Threadscape is the mirror, a
      window bleeding off the left and bottom. */
   .work .w3 img, .work .w3 video, .work .w4 img { height: auto; object-fit: cover; border: 1px solid rgba(20, 30, 50, .12); box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
   .work .w3 img, .work .w3 video { left: -20%; top: 15%; inset-inline-end: auto; width: 150%; aspect-ratio: 2932 / 1458; border-radius: 0 14px 0 0; }
-  .work .w4 img { left: -16%; top: 22%; width: 120%; aspect-ratio: 477 / 265; border-radius: 0 14px 0 0; }
+  .work .w4 img { left: -16%; top: 22%; width: 120%; aspect-ratio: 2000 / 1250; border-radius: 0 14px 0 0; }
   /* Genius Academy: a close zoom on its hero */
   .work .w2 img, .work .w2 video { left: -66%; top: 15%; inset-inline-end: auto; width: 172%; height: auto; aspect-ratio: 1910 / 1230; object-fit: cover; border: 1px solid rgba(20, 30, 50, .12); border-radius: 0 14px 0 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
   /* Soft fade where a device runs off the bottom of the card */

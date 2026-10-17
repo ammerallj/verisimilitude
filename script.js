@@ -13,12 +13,21 @@ const heroPhone = document.querySelector(".hero-phone");
 const heroFull = document.querySelector(".hero-full");
 const pickHero = () => (phoneMQ.matches ? heroPhone : heroFull);
 let heroVideoEl = pickHero();
+let workP = 0;
 const update = () => {
   const vh = window.innerHeight;
   // Progress follows the work section: it starts as the first image enters the
   // lower part of the view and finishes as that image nears the vertical centre.
-  const top = work.getBoundingClientRect().top;
-  const p = clamp((vh * 0.9 - top) / (vh * 0.5));
+  let p;
+  if (window.matchMedia("(max-width: 900px)").matches) {
+    p = clamp((vh * 0.9 - work.getBoundingClientRect().top) / (vh * 0.5));
+  } else {
+    // Desktop: both beats are paced to the first frame, finishing exactly as it reaches the vertical centre.
+    const c = work.querySelector(".w").getBoundingClientRect();
+    const centerTop = vh / 2 - c.height / 2;
+    p = clamp((vh * 0.95 - c.top) / Math.max(vh * 0.95 - centerTop, 1));
+  }
+  workP = p;
   const out = clamp(p / 0.45);
   const into = clamp((p - 0.55) / 0.45);
   root.style.setProperty("--out", out.toFixed(3));
@@ -49,19 +58,13 @@ const update = () => {
     heroVideoEl.style.removeProperty("--vb");
     heroVideoEl.style.removeProperty("--vo");
   }
-  // Phone page-end wash: it starts a little above the big contact email (its top blends in from the plain background) and runs to the bottom of the site.
-  const contactEl = document.querySelector(".sec-services .copy");
-  if (contactEl) root.style.setProperty("--wash-top", `${Math.max(0, Math.round(contactEl.getBoundingClientRect().top + window.scrollY - 110))}px`);
-  // Phone watercolour wash: the stroke is drawn up past the "Design studio" block, its tip leading the
-  // top of the block by about a third of the screen, and stops near the top of the screen. It ends with
-  // the section: it fades as the bottom of the block leaves, so it never reaches the work cards.
-  const blk = railBEl.getBoundingClientRect();
-  const tipY = Math.max(blk.top - vh * 0.32, vh * 0.08);
-  const scaleY = Math.max(1, (vh * 1.04 - tipY) / (vh * 0.2)); // the wash is 20svh tall and sits 4svh below the screen
-  root.style.setProperty("--wash-s", scaleY.toFixed(3));
-  root.style.setProperty("--wash", clamp((scaleY - 1) / 3.7).toFixed(3));
-  root.style.setProperty("--wash-o", (1 - clamp((vh * 0.5 - blk.bottom) / (vh * 0.4))).toFixed(3));
-  body.classList.toggle("topbar-on", window.scrollY > vh * 0.7); // phone top bar
+  // Phone watercolour wash: it sits behind the scroll cue, stretches up a little as you start to scroll and
+  // fades out before the text block arrives, so the "Design studio" lockup is on plain white.
+  const washP = clamp(window.scrollY / (vh * 0.4));
+  root.style.setProperty("--wash-s", (1 + 0.55 * washP).toFixed(3));
+  root.style.setProperty("--wash", "0");
+  root.style.setProperty("--wash-o", (1 - washP).toFixed(3));
+  body.classList.toggle("topbar-on", railBEl.getBoundingClientRect().top < vh * 0.5); // phone top bar: arrives with the "Design studio" text
 };
 window.addEventListener("scroll", update, { passive: true });
 window.addEventListener("resize", update);
@@ -243,7 +246,8 @@ const fadeUpdate = () => {
   }
   const prog = fadeSections.map(sectionProgress);
   fadeSections.forEach((el, i) => {
-    const into = clamp((prog[i] - 0.55) / 0.45);
+    // the work section blurs in on the same beat as the studio intro
+    const into = clamp(((i === 0 ? workP : prog[i]) - 0.55) / 0.45);
     const out = i + 1 < fadeSections.length ? clamp(prog[i + 1] / 0.45) : 0;
     const v = into * (1 - out);
     el.style.setProperty("--v", v.toFixed(3));
@@ -290,75 +294,10 @@ workCards.forEach((card) => {
   });
   card.appendChild(btn);
 });
-const cardMotion = () => {
-  const vh = window.innerHeight;
-  workCards.forEach((card) => {
-    if (!mobileMQ.matches || !motionOK) {
-      ["--s", "--o", "--bl", "--pan"].forEach((p) => card.style.removeProperty(p));
-      return;
-    }
-    const r = card.getBoundingClientRect();
-    const centre = r.top + r.height / 2;
-    // Sharp and full size through the middle of the screen; cards still below ease up from 95%.
-    const below = Math.max(0, Math.min(0.5, (centre - vh / 2) / vh));
-    card.style.setProperty("--s", (1 - below * 0.1).toFixed(3));
-    // Blur and fade only once the card starts sliding under the top bar (its top edge passes 64px down
-    // the screen), in proportion to how much of it has gone, so a card stays sharp while it is readable.
-    const gone = clamp((64 - r.top) / r.height);
-    card.style.setProperty("--bl", `${(gone * 10).toFixed(1)}px`);
-    card.style.setProperty("--o", (1 - gone * 0.55).toFixed(3));
-    card.style.setProperty("--pan", Math.max(-1, Math.min(1, (centre - vh / 2) / vh)).toFixed(3));
-  });
-};
-window.addEventListener("scroll", cardMotion, { passive: true });
-window.addEventListener("resize", () => { if (!mobileMQ.matches) closeCards(); cardMotion(); });
-cardMotion();
+// (Phone cards no longer scale, blur or fade on scroll, and About and Services no longer blur in:
+// the only scroll fade on phones is the hero handing over to the studio work.)
+window.addEventListener("resize", () => { if (!mobileMQ.matches) closeCards(); });
 
-// Phone work cards: they slide in and fade up one after another down the page as the section scrolls
-// into view. Cards that come into view together arrive from the top card down (0.18s apart); each
-// arrives once.
-if (workCards.length && "IntersectionObserver" in window && motionOK) {
-  root.classList.add("reveal-ready");
-  const revealer = new IntersectionObserver((entries) => {
-    const entering = entries
-      .filter((e) => e.isIntersecting && mobileMQ.matches)
-      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-    entering.forEach((e, i) => {
-      e.target.style.setProperty("--d", `${(i * 0.18).toFixed(2)}s`);
-      e.target.classList.add("revealed");
-      revealer.unobserve(e.target);
-    });
-  }, { threshold: 0, rootMargin: "0px 0px -12% 0px" }); // fires as a card's top edge enters (its own clip-path would zero any ratio)
-  workCards.forEach((card) => revealer.observe(card));
-  // On wider screens the cards are not reveal-animated; make sure none is left hidden.
-  mobileMQ.addEventListener("change", () => { if (!mobileMQ.matches) workCards.forEach((c) => c.classList.add("revealed")); });
-}
-
-// Phone About and Services: the pieces blur and fade in one after another as they enter the view, the
-// animation first and then each text block, 0.22s apart when several arrive together.
-const staggerItems = [...document.querySelectorAll(
-  ".sec-about .about-loop, .sec-about .copy p, .sec-services .copy, .sec-services .services li")];
-staggerItems.forEach((el) => el.classList.add("stagger"));
-if (staggerItems.length && "IntersectionObserver" in window && motionOK) {
-  const staggerer = new IntersectionObserver((entries) => {
-    const entering = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-    entering.forEach((e, i) => {
-      e.target.style.setProperty("--d", `${(i * 0.22).toFixed(2)}s`);
-      e.target.classList.add("in");
-      staggerer.unobserve(e.target);
-    });
-  }, { threshold: 0, rootMargin: "0px 0px -10% 0px" });
-  const armStagger = () => {
-    if (mobileMQ.matches) {
-      root.classList.add("stagger-ready");
-      staggerItems.forEach((el) => { if (!el.classList.contains("in")) staggerer.observe(el); });
-    } else {
-      root.classList.remove("stagger-ready");
-    }
-  };
-  armStagger();
-  mobileMQ.addEventListener("change", armStagger);
-}
 
 // Phone contact line: size the email so it fills the column on a single line, however wide the screen.
 const bigEmail = document.querySelector(".big-email");
@@ -408,22 +347,3 @@ document.querySelectorAll(".work .w").forEach((card) => {
   new IntersectionObserver(([en]) => { if (mobileMQ.matches) set(en.isIntersecting); }, { threshold: 0.98 }).observe(card);
   mobileMQ.addEventListener("change", () => set(false));
 });
-
-// Work frames: stop within a short way of the vertical centre and the frame eases the rest of the way.
-// Anywhere farther out the page just scrolls, so nothing pulls you back.
-if (!window.matchMedia("(max-width: 900px)").matches && motionOK) {
-  let settle;
-  window.addEventListener("scroll", () => {
-    clearTimeout(settle);
-    settle = setTimeout(() => {
-      const vh = window.innerHeight;
-      let best = null;
-      workCards.forEach((c) => {
-        const r = c.getBoundingClientRect();
-        const d = (r.top + r.bottom) / 2 - vh / 2;
-        if (!best || Math.abs(d) < Math.abs(best)) best = d;
-      });
-      if (best !== null && Math.abs(best) > 2 && Math.abs(best) < vh * 0.1) window.scrollBy({ top: best, behavior: "smooth" });
-    }, 140);
-  }, { passive: true });
-}

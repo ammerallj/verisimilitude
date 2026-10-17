@@ -56,6 +56,8 @@ em { font-style: italic; }
   box-shadow: -60px 60px 70px rgba(67, 98, 124, .2); }
 .work .w2 img, .work .w2 video { object-position: top; }
 /* Card 1 stacks a still (loads first) under the animation, which fades in only while it plays (script.js) */
+/* The still carries the shadow; the video sits over it, so its own shadow would double up while it plays */
+.work .w video { box-shadow: none !important; }
 .work .w1 .play, .work .w2 .play, .work .w3 .play, .work .w4 .play { opacity: 0; visibility: hidden; }
 .work .w1.playing .play, .work .w2.playing .play, .work .w3.playing .play, .work .w4.playing .play { opacity: 1; visibility: visible; }
 .work figcaption { position: absolute; top: 0; left: calc(100% + 48px); width: min(280px, 24vw); display: flex; flex-direction: column; gap: 8px;
@@ -194,7 +196,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 /* Phones: the hero is one screen, text at the top, the animation in the middle and a
    "Scroll down" cue at the bottom; the studio intro follows below it. The rail and page
    wrappers dissolve (display: contents) so their children can be ordered in one column. */
-.scroll-cue, .wash, .c-mob { display: none; }
+.scroll-cue, .wash, .c-mob, .m-br { display: none; }
 .topbar { display: none; }
 @keyframes cue-nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
 @media (max-width: 900px) {
@@ -228,17 +230,17 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
      drawn from the animation's palette. It sits faint at the bottom and, as you scroll, stretches
      upward like a brush stroke whose tip is drawn up past the "Design studio" block and ends with that section
      (--wash-s is the stretch, --wash its 0..1 strength, --wash-o the fade; all set in script.js). */
-  .wash { display: block; position: fixed; z-index: -1; left: 50%; bottom: -4svh; width: 54vw; height: 20svh; margin-left: -27vw;
+  .wash { display: block; position: fixed; z-index: -1; left: 50%; bottom: -4svh; width: 30vw; height: 20svh; margin-left: -15vw;
     border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
     /* heaviest at the bottom edge and thinning toward the top, so the eye is pulled down the page */
-    background: linear-gradient(to top, rgba(86, 114, 132, .95) 0%, rgba(118, 152, 118, .8) 28%, rgba(190, 208, 150, .5) 60%, rgba(240, 238, 200, .12) 100%);
-    filter: blur(28px); opacity: calc(.78 * var(--wash-o, 1) + var(--wash, 0) * .08);
+    background: linear-gradient(to top, rgba(86, 114, 132, .95) 0%, rgba(118, 152, 118, .8) 28%, rgba(190, 208, 150, .5) 60%, rgba(226, 232, 190, .38) 100%);
+    filter: blur(22px); opacity: calc(.78 * var(--wash-o, 1) + var(--wash, 0) * .08);
     transform-origin: 50% 100%; transform: scaleY(var(--wash-s, 1)); will-change: transform, opacity; }
   body.intro-wait .wash { opacity: 0; }
   .intro-play .wash { animation: intro-in 1.4s ease .9s backwards; }
   @media (prefers-reduced-motion: reduce) { .wash { transform: none; } }
   .scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 0; right: 0; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
-    font-style: italic; font-size: 18px; color: #8b9096; pointer-events: none; opacity: var(--cue-o, 1); }
+    font-style: italic; font-size: 18px; color: #000; pointer-events: none; opacity: var(--cue-o, 1); }
   body.intro-wait .scroll-cue { opacity: 0; }
   .scroll-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) { .scroll-cue span:last-child { animation: none; } }
@@ -246,15 +248,15 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .rail-b { order: 2; position: static; width: auto; margin: 56px var(--gutter) 56px;
     opacity: 1 !important; transform: none !important; filter: none !important; }
   /* Studio intro: no repeated title; the description is the centred hero statement */
-  .rail-b { text-align: center; }  /* 56px above, and 56px below before the first work card */
+  .rail-b { text-align: center; align-self: stretch; }  /* full width, so the centred text sits in the middle of the screen; 56px above, and 56px below before the first work card */
   .rail-b .name { display: none; }
   .rail-b .intro { align-items: center; gap: 24px; }
-  .rail-b .desc { font: 400 30px/1.25 var(--display); text-wrap: pretty; }  /* centred, natural line lengths */
-  .rail-b .note { max-width: 30ch; text-wrap: pretty; }
+  .rail-b .desc { font: 400 26px/1.25 var(--display); text-wrap: pretty; }  /* centred, natural line lengths */
+  .rail-b .note { max-width: none; text-wrap: balance; font-size: 17px; }  /* same size as the example descriptions */
   .rail-b .nav { display: none; }            /* the top bar carries About and Services */
   .rail-b .nav a { pointer-events: auto; }
   .p-home .stage { order: 3; margin: 0 var(--gutter); width: auto; }
-  .p-home .foot { order: 4; margin: 0 var(--gutter) 50px; }
+  .p-home .foot { order: 4; margin: 0 var(--gutter) 24px; }
   .p-home .work { margin-top: 0; }
   /* Top bar: slides in once you scroll past the hero, title top left, section links right */
   .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; position: fixed; z-index: 10; top: 0; left: 0; right: 0;
@@ -263,7 +265,9 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
     transform: translateY(-100%); opacity: 0; pointer-events: none; transition: transform .45s cubic-bezier(.2, .7, .3, 1), opacity .35s ease; }
   .topbar-on .topbar { transform: none; opacity: 1; pointer-events: auto; }
   .topbar-title { font: 400 20px var(--display); white-space: nowrap; }
-  .topbar-nav { display: flex; gap: 18px; font-size: 16px; }
+  .topbar-nav { display: flex; gap: 14px; font-size: 16px; white-space: nowrap; }
+  .m-br { display: inline; }  /* the hero text lockup breaks into four set lines on phones */
+  .m-hide { display: none; }  /* top bar: "Verisimilitude" and "Studio" only, so the bar fits one line */
   .topbar-nav a { padding: 8px 0; }
   .topbar-nav .current { font-style: italic; text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
   .sec, .work { scroll-margin-top: 56px; }
@@ -292,44 +296,29 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 @property --arrive { syntax: "<number>"; inherits: false; initial-value: 1; }
 .work-toggle { display: none; }
 @media (max-width: 900px) {
-  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 28px; }
-  .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; aspect-ratio: 5 / 4; overflow: hidden;
-    border-radius: 22px; background: linear-gradient(145deg, #f8f9fa 0%, #e5e9ed 100%);
+  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 72px; }
+  /* Each example is its frame with the description underneath (a grid: frame on top, caption below). All four
+     are plain rounded frames. */
+  .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; display: grid; grid-template-columns: 100%;
     transform: scale(var(--s, 1)); opacity: calc(var(--o, 1) * var(--arrive, 1)); translate: 0 calc((1 - var(--arrive, 1)) * 56px);
     filter: blur(var(--bl, 0px)); transition: none; }
-  .work .w img, .work .w1 video, .work .w2 video, .work .w3 video, .work .w4 video { position: absolute; display: block; max-width: none; box-shadow: none; translate: 0 calc(var(--pan, 0) * var(--pk, -12px));
-    transition: filter .5s ease, scale .6s ease; }
-  /* Mobile product: phone frame, centred, running off the bottom edge */
-  .work .w1 { aspect-ratio: 3 / 4; }  /* taller card so the whole screen shows */
-  .work .w1 img, .work .w1 video { left: 22%; top: 7%; width: 56%; height: auto; aspect-ratio: 412 / 917; object-fit: cover; object-position: top;
-    border: 3px solid #17181a; border-radius: 28px; box-shadow: 0 22px 44px rgba(20, 30, 50, .24); }
-  /* Web products, each cropped differently so the cards don't repeat: Toshi Chen is a zoom on its
-     product panel (left side off the card, running off the bottom); Threadscape is the mirror, a
-     window bleeding off the left and bottom. */
-  .work .w3 img, .work .w3 video, .work .w4 img, .work .w4 video { height: auto; object-fit: cover; border: 1px solid rgba(20, 30, 50, .12); box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
-  .work .w3 img, .work .w3 video { left: -20%; top: 15%; inset-inline-end: auto; width: 150%; aspect-ratio: 2932 / 1458; border-radius: 0 14px 0 0; }
-  .work .w4 img, .work .w4 video { left: -16%; top: 22%; width: 120%; aspect-ratio: 2000 / 1250; border-radius: 0 14px 0 0; }
-  /* Genius Academy: a close zoom on its hero */
-  .work .w2 img, .work .w2 video { left: -66%; top: 15%; inset-inline-end: auto; width: 172%; height: auto; aspect-ratio: 1910 / 1230; object-fit: cover; border: 1px solid rgba(20, 30, 50, .12); border-radius: 0 14px 0 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
-  /* Soft fade where a device runs off the bottom of the card */
-  .work .w1::after, .work .w2::after, .work .w3::after, .work .w4::after { content: ""; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 30%;
-    background: linear-gradient(to bottom, rgba(229, 233, 237, 0), #e5e9ed); pointer-events: none; }
+  .work .w img, .work .w1 video, .work .w2 video, .work .w3 video, .work .w4 video { grid-area: 1 / 1; position: static; display: block; max-width: none; width: 100%; height: auto;
+    object-fit: cover; object-position: top; border-radius: 14px; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); transition: filter .5s ease, scale .6s ease; }
+  .work .w1 img, .work .w1 video { width: 72%; justify-self: center; aspect-ratio: 412 / 917; border: 0; border-radius: 14px; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
+  .work .w2 img, .work .w2 video { aspect-ratio: 1910 / 1230; }
+  .work .w3 img, .work .w3 video { aspect-ratio: 2932 / 1458; }
+  .work .w4 img, .work .w4 video { aspect-ratio: 2000 / 1250; }
   /* Arrival: as the work section scrolls in, each card slides up into place from 56px below while it
      fades in, one after another from the top card down (--d is its stagger delay). script.js adds
      .reveal-ready to <html> once it is watching, and .revealed to each card in turn. Without script
      the cards just show. */
   .reveal-ready .work .w:not(.revealed) { --arrive: 0; }
   .reveal-ready .work .w.revealed { --arrive: 1; transition: --arrive 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s); }
-  .work .w.open img { filter: blur(18px); }
-  .work figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
-    position: absolute; z-index: 2; inset: 0; top: 0; left: 0; right: 0; width: auto; margin: 0; padding: 20px 72px 20px 20px;
-    display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; overflow: auto;
-    background: rgba(244, 245, 246, .6); font-size: 17px; text-align: left;
-    opacity: 0; filter: none; transform: none; pointer-events: none; transition: opacity .45s ease; }
-  .work .w.open figcaption { opacity: 1; pointer-events: auto; }
-  .work figcaption strong { font-size: 24px; }
-  .work-toggle { display: grid; place-items: center; position: absolute; z-index: 3; top: 12px; right: 12px; width: 44px; height: 44px;
-    padding: 0; border: 0; border-radius: 50%; background: #fff; color: #000; cursor: pointer; box-shadow: 0 1px 8px rgba(0, 0, 0, .18); }
+  .work figcaption, .work .w1 figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
+    grid-area: 2 / 1; position: static; width: auto; justify-self: stretch; margin: 0; padding: 28px 8.333% 0; display: flex; flex-direction: column; gap: 6px;
+    font-size: 17px; text-align: center; opacity: 1; filter: none; transform: none; pointer-events: auto; transition: none; }
+  .work figcaption strong { font-size: 22px; }
+  .work-toggle { display: none !important; }  /* descriptions sit under each frame, no button */
   .work-toggle svg { grid-area: 1 / 1; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
     transition: opacity .3s ease, transform .4s cubic-bezier(.2, .7, .3, 1); }
   .work-toggle .ic-close { opacity: 0; transform: rotate(-90deg); }
@@ -344,31 +333,24 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   /* About dandelion, blown up: instead of scaling the whole 3:1 clip (which wasted space above it), crop
      it to a taller box and slide the clip so the bulb sits in the middle */
   .about-loop { aspect-ratio: 1 / 1; object-fit: cover; object-position: 93.6% 50%; transform: none; margin-top: 0; mix-blend-mode: multiply; }  /* bulb centred, about 3x the clip */
-  /* Soft sage wash, after the leaf-blur reference: it starts just above the big contact email and runs
-     down behind the services and the footer to the very bottom of the site, deepening slightly at the
-     end. A few very faint green blooms plus fine grain, light enough that the black text stays easy to
-     read. script.js sets --wash-top (a little above the contact line). */
-  body.p-home::after { content: ""; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; top: var(--wash-top, 2800px);
-    pointer-events: none;
-    background:
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .38  0 0 0 0 .48  0 0 0 0 .34  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
-      radial-gradient(260px 200px at 82% 150px, rgba(160, 196, 128, .13), transparent 72%),
-      radial-gradient(280px 240px at 6% 330px, rgba(104, 146, 104, .10), transparent 74%),
-      radial-gradient(320px 260px at 78% 470px, rgba(150, 190, 140, .09), transparent 72%),
-      linear-gradient(to top, rgba(120, 156, 128, .22) 0, rgba(190, 210, 170, .12) 140px, rgba(230, 238, 226, 0) 460px),
-      linear-gradient(to bottom, rgba(232, 240, 228, 0), rgba(230, 238, 226, .34) 160px, rgba(230, 238, 226, .34));
-    /* eased feather: the plain page background melts into the wash over ~260px */
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, .06) 50px, rgba(0, 0, 0, .22) 110px, rgba(0, 0, 0, .5) 180px, rgba(0, 0, 0, .8) 230px, #000 280px);
-    mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, .06) 50px, rgba(0, 0, 0, .22) 110px, rgba(0, 0, 0, .5) 180px, rgba(0, 0, 0, .8) 230px, #000 280px); }
   /* Services/contact is its own full-height screen: the section fills the viewport above the footer
      (script.js sets --foot-h), its content centred with generous space around it, and the footer
      sitting on the bottom edge. */
   .sec-services { min-height: calc(100vh - var(--foot-h, 180px)); min-height: calc(100svh - var(--foot-h, 180px));
-    justify-content: center; padding: 0; margin-top: 0; }
+    justify-content: flex-start; padding: 110px 0 0; margin-top: 0; }  /* contact lockup near the top; the services centre in the space below it */
+  .services em { line-height: 2.2; }  /* a clear gap between each listed service */
+  /* The same soft green oblong as behind the hero cue, now behind the contact lockup */
+  .sec-services { position: relative; }
+  .sec-services::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 58px; width: 72vw; height: 190px; margin-left: -36vw;
+    border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
+    background: linear-gradient(to top, rgba(86, 114, 132, .95) 0%, rgba(118, 152, 118, .8) 28%, rgba(190, 208, 150, .5) 60%, rgba(226, 232, 190, .38) 100%);
+    filter: blur(22px); opacity: .78; }
+  .sec-services { gap: 0; }
+  .sec-services .services { margin-block: auto; padding-block: 24px; }  /* centred between the contact lockup and the footer */
   /* Contact: the email is the big line, as wide as the column allows on one line (script.js sizes it),
      with the sentence below it */
   .c-desk { display: none; }
-  .c-mob { display: block; margin-top: 14px; }
+  .c-mob { display: block; margin-top: 14px; text-align: center; }
   .copy .big-email { display: block; white-space: nowrap; font-family: var(--display); line-height: 1.1; letter-spacing: -.01em;
     text-decoration-thickness: 1.5px; text-underline-offset: .14em; }
   /* Staggered blur-in for About and Services (script.js adds .stagger-ready, then .in piece by piece) */

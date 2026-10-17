@@ -356,6 +356,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .foot a { display: inline-block; padding: 10px 0; }
   /* About dandelion, blown up: instead of scaling the whole 3:1 clip (which wasted space above it), crop
      it to a taller box and slide the clip so the bulb sits in the middle */
+  .sec-about .copy { align-self: center; }  /* wider phones and small tablets: the 500px text column sits in the middle under the centred dandelion */
   .about-loop { aspect-ratio: 1 / 1; object-fit: cover; object-position: 93.6% 50%; transform: none; margin-top: 0; mix-blend-mode: multiply; }  /* bulb centred, about 3x the clip */
   /* Services/contact is its own full-height screen: the section fills the viewport above the footer
      (script.js sets --foot-h), its content centred with generous space around it, and the footer

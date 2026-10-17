@@ -3,6 +3,8 @@
 const root = document.documentElement;
 const body = document.body;
 const work = document.querySelector(".work");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+let motionPaused = false;  // the About dandelion loop can be paused (button, or click the animation). The opening plays once and needs no control.
 const clamp = (n) => Math.min(1, Math.max(0, n));
 const railBEl = document.querySelector(".rail-b");
 const lockupEl = document.querySelector(".rail-a");
@@ -14,6 +16,20 @@ const heroFull = document.querySelector(".hero-full");
 const pickHero = () => (phoneMQ.matches ? heroPhone : heroFull);
 let heroVideoEl = pickHero();
 let workP = 0;
+// Desktop: the first frame settles with its top level with the studio title (the left rail's first line).
+const FRAME_TOP = 92;
+let handedOver = false; // desktop: flips on at HANDOVER_AT and back off only near the top (a gap, so it never flickers)
+const HANDOVER_AT = 0.12; // desktop: how far the first frame has risen when the handover fires
+// Only the half of the rail you can see is in the tab order: the lockup link at the top, the nav once the handover has played.
+const railLinks = { a: [...document.querySelectorAll(".rail-a a")], b: [...document.querySelectorAll(".rail-b .nav a")] };
+let railFocusKey = "";
+const syncRailFocus = (isPhone) => {
+  const key = `${isPhone}${handedOver}`;
+  if (key === railFocusKey) return;
+  railFocusKey = key;
+  railLinks.a.forEach((a) => { a.tabIndex = !isPhone && handedOver ? -1 : 0; });
+  railLinks.b.forEach((a) => { a.tabIndex = !isPhone && !handedOver ? -1 : 0; });
+};
 const update = () => {
   const vh = window.innerHeight;
   // Progress follows the work section: it starts as the first image enters the
@@ -24,12 +40,30 @@ const update = () => {
   } else {
     // Desktop: both beats are paced to the first frame, finishing exactly as it reaches the vertical centre.
     const c = work.querySelector(".w").getBoundingClientRect();
-    const centerTop = vh / 2 - c.height / 2;
-    p = clamp((vh * 0.95 - c.top) / Math.max(vh * 0.95 - centerTop, 1));
+    p = clamp((vh * 0.95 - c.top) / Math.max(vh * 0.95 - FRAME_TOP, 1));
   }
   workP = p;
-  const out = clamp(p / 0.45);
-  const into = clamp((p - 0.55) / 0.45);
+  // Phones scrub the handover with scroll. Desktop fires it once as the first frame nears: --out / --in
+  // flip between 0 and 1 and CSS plays the fade and blur on a timer.
+  const isPhone = window.matchMedia("(max-width: 900px)").matches;
+  if (!isPhone) {
+    if (p > HANDOVER_AT) {
+      // Coming down from the hero, the handover also glides the first frame up to FRAME_TOP, so it lands level with the title.
+      if (!handedOver && p < 1 && window.scrollY > 0) {
+        const c = work.querySelector(".w").getBoundingClientRect();
+        window.scrollTo({ top: window.scrollY + c.top - FRAME_TOP, behavior: reduceMotion.matches ? "auto" : "smooth" });
+      }
+      handedOver = true;
+    } else if (p < HANDOVER_AT / 3 && handedOver) {
+      handedOver = false;
+      // Back at the hero: the opening plays again from the first blow (not the whole sequence)
+      if (heroFull && heroFull.ended && !motionPaused && !reduceMotion.matches) { heroFull.currentTime = parseFloat(heroFull.dataset.introAt) || 0; heroFull.play().catch(() => {}); }
+    }
+  }
+  root.classList.toggle("handed-over", handedOver);
+  syncRailFocus(isPhone);
+  const out = isPhone ? clamp(p / 0.45) : (handedOver ? 1 : 0);
+  const into = isPhone ? clamp((p - 0.55) / 0.45) : out;
   root.style.setProperty("--out", out.toFixed(3));
   root.style.setProperty("--in", into.toFixed(3));
   body.classList.toggle("rail-on", into > 0.5);
@@ -82,7 +116,7 @@ const markCurrent = () => {
     on ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current");
   });
 };
-// Nav links land their section centred in the viewport (the first work card, for "From the Studio").
+// Nav links land their section centred in the viewport (the first work card, for "From the Studio", lands top-aligned with the title).
 if (!window.matchMedia("(max-width: 900px)").matches) {
   links.forEach((a) => a.addEventListener("click", (e) => {
     const target = document.querySelector(a.getAttribute("href"));
@@ -91,7 +125,7 @@ if (!window.matchMedia("(max-width: 900px)").matches) {
     let top, bottom, lift = 0;
     if (target === work) {
       const r = work.querySelector(".w").getBoundingClientRect();
-      top = r.top; bottom = r.bottom;
+      top = r.top; bottom = r.bottom; lift = window.innerHeight / 2 - FRAME_TOP - (bottom - top) / 2; // lands its top at FRAME_TOP
     } else {
       const r = target.getBoundingClientRect();
       top = r.top + parseFloat(getComputedStyle(target).paddingTop); bottom = r.bottom;
@@ -99,7 +133,9 @@ if (!window.matchMedia("(max-width: 900px)").matches) {
       if (art) { top = Math.min(top, art.getBoundingClientRect().top); lift = 60; }  // lands a bit above centre
     }
     const y = window.scrollY + (top + bottom) / 2 - window.innerHeight / 2 + lift;
-    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    window.scrollTo({ top: Math.max(0, y), behavior: reduceMotion.matches ? "auto" : "smooth" });
+    target.setAttribute("tabindex", "-1");        // keyboard and screen-reader focus follows the scroll
+    target.focus({ preventScroll: true });
   }));
 }
 window.addEventListener("scroll", markCurrent, { passive: true });
@@ -156,7 +192,6 @@ for (let i = 0; i < SEED_COUNT; i++) {
 }
 document.body.prepend(seedLayer);
 
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const drift = (now) => {
   requestAnimationFrame(drift);
   if (reduceMotion.matches) return;
@@ -247,7 +282,7 @@ const fadeUpdate = () => {
   const prog = fadeSections.map(sectionProgress);
   fadeSections.forEach((el, i) => {
     // the work section blurs in on the same beat as the studio intro
-    const into = clamp(((i === 0 ? workP : prog[i]) - 0.55) / 0.45);
+    const into = i === 0 ? (handedOver ? 1 : 0) : clamp((prog[i] - 0.55) / 0.45);
     const out = i + 1 < fadeSections.length ? clamp(prog[i + 1] / 0.45) : 0;
     const v = into * (1 - out);
     el.style.setProperty("--v", v.toFixed(3));
@@ -275,6 +310,11 @@ const closeCards = () => workCards.forEach((card) => {
   const b = card.querySelector(".work-toggle");
   if (b) { b.setAttribute("aria-expanded", "false"); b.setAttribute("aria-label", `About ${card.querySelector("strong").textContent}`); }
 });
+// Phones: each card has its own button, so the card itself is not a second tab stop.
+const syncCardFocus = () => workCards.forEach((card) => { if (mobileMQ.matches) card.removeAttribute("tabindex"); else card.tabIndex = 0; });
+syncCardFocus();
+mobileMQ.addEventListener("change", syncCardFocus);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && mobileMQ.matches) closeCards(); });
 workCards.forEach((card) => {
   const title = card.querySelector("strong").textContent;
   const btn = document.createElement("button");
@@ -347,3 +387,37 @@ document.querySelectorAll(".work .w").forEach((card) => {
   new IntersectionObserver(([en]) => { if (mobileMQ.matches) set(en.isIntersecting); }, { threshold: 0.98 }).observe(card);
   mobileMQ.addEventListener("change", () => set(false));
 });
+
+// Desktop hover effects (frame blur, grow, caption, rail dim) only apply once the pointer has actually moved:
+// scrolling drops them, so a frame gliding under a resting cursor doesn't blur everything around it.
+if (!phoneMQ.matches) {
+  window.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") root.classList.add("hover-live"); }, { passive: true });
+  window.addEventListener("scroll", () => root.classList.remove("hover-live"), { passive: true });
+}
+
+// Reduced motion: the looping dandelion stays on its poster frame.
+if (reduceMotion.matches) document.querySelectorAll("video.about-loop").forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+
+// The dandelion videos play through once and then rest on their last frame (it matches the first, so they sit as a
+// still). They play again when you come back to them: the About dandelion each time it scrolls into view, the phone
+// hero when it returns, the desktop opening from the first blow when you scroll back up (see update()).
+// The button at the top of the page (shown on keyboard focus) pauses or resumes whichever is playing.
+const toggleBtn = document.querySelector(".motion-toggle");
+const aboutLoop = document.querySelector(".about-loop");
+const playing = (v) => !v.paused && !v.ended;
+const replay = (v, from = 0) => { if (motionPaused || reduceMotion.matches || playing(v)) return; v.currentTime = from; v.play().catch(() => {}); };
+const setPaused = (paused) => {
+  motionPaused = paused;
+  [aboutLoop, heroVideoEl].filter(Boolean).forEach((v) => { if (paused) v.pause(); else if (!v.ended && v.currentTime > 0) v.play().catch(() => {}); });
+  if (toggleBtn) toggleBtn.textContent = paused ? "Play dandelion animation" : "Pause dandelion animation";
+};
+toggleBtn?.addEventListener("click", () => setPaused(!motionPaused));
+if (aboutLoop && !reduceMotion.matches) {
+  new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) replay(aboutLoop); }), { threshold: 0.6 }).observe(aboutLoop);
+}
+// Phones: the hero clip replays when you return to the top (the first pass is the load-time play above).
+const heroSection = document.querySelector(".hero");
+if (heroSection && !reduceMotion.matches) {
+  new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting && phoneMQ.matches && heroVideoEl.ended) replay(heroVideoEl); }), { threshold: 0.6 }).observe(heroSection);
+}
+if (reduceMotion.matches) setPaused(true);

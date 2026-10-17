@@ -17,6 +17,14 @@ body {
   position: relative;
 }
 a { color: inherit; text-decoration: none; }
+/* Keyboard focus: a clear ring on links and buttons; programmatic focus targets (sections) stay quiet */
+a:focus-visible, button:focus-visible { outline: 2px solid #000; outline-offset: 4px; border-radius: 2px; }
+[tabindex="-1"]:focus { outline: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip-link { position: fixed; top: 12px; left: 12px; z-index: 100; padding: 10px 16px; background: #fff; color: #000; border: 2px solid #000; border-radius: 4px; transform: translateY(-200%); }
+.skip-link:focus { transform: none; }
+.motion-toggle { left: 190px; font: inherit; cursor: pointer; }
+@media (hover: hover) and (pointer: fine) { .about-loop { cursor: none; } }
 em { font-style: italic; }
 
 /* Shared page frame */
@@ -33,7 +41,7 @@ em { font-style: italic; }
 .name { font: 400 32px var(--display); }
 .desc { font-size: 15px; }
 .note { font-size: 15px; }
-.nav { display: flex; flex-direction: column; gap: 10px; font-size: 18px; }
+.nav { display: flex; flex-direction: column; gap: 10px; font-size: 16px; }
 .nav a:hover { text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
 .nav .current { font-style: italic; text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
 .main, .work { width: 1102px; flex: 0 1 1102px; min-width: 0; }
@@ -68,10 +76,13 @@ em { font-style: italic; }
 .work figcaption span { font-style: normal; }
 .work figcaption small { font-size: 15px; color: #555; }
 /* Hover or focus one image: the others blur back and its caption comes forward */
-.work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: .35; filter: blur(10px); }
+.work .w:focus-visible { outline: 2px solid #000; outline-offset: 8px; }
+.work:has(.w:focus-visible) .w:not(:focus-visible) { opacity: .35; filter: blur(10px); }
+/* Mouse hover only counts once the pointer has moved (script.js sets .hover-live), so a frame that lands under a resting cursor doesn't react */
+.hover-live .work:has(.w:hover) .w:not(:hover) { opacity: .35; filter: blur(10px); }
 /* The Optimly caption is long and the image sits mid-column, so it opens below the image */
 .work .w3 figcaption { left: auto; right: calc(100% + 48px); text-align: right; }  /* opens to the card's left */
-.w:hover figcaption, .w:focus-visible figcaption { opacity: 1; filter: none; transform: none; }
+.hover-live .w:hover figcaption, .w:focus-visible figcaption { opacity: 1; filter: none; transform: none; }
 .w1 { left: 21.960%; top: 0.000%; width: 21.779%; height: 30.398%; }
 .w2 { left: 42.105%; top: 31.818%; width: 57.895%; height: 23.352%; }
 /* Toshi Chen mockup: big enough to read (2932:1458 recording) */
@@ -87,8 +98,19 @@ em { font-style: italic; }
   .work .w2 { --h: calc(92cqw * 411 / 638); width: 92%; aspect-ratio: 638 / 411; margin-left: 8%; }
   .work .w3 { --h: calc(86cqw * 318 / 639); width: 86%; aspect-ratio: 639 / 318; margin-left: 0; }
   .work .w4 { --h: calc(80cqw * 298 / 477); width: 80%; aspect-ratio: 477 / 298; margin-left: 12%; }
+  /* The handover is a one-off: script.js flips --out / --in and these play it on a timer. The old text
+     leaves first, then the studio intro and the work section come in. */
+  .hero video, .p-home .rail-a h1, .rail-a .phonetic, .rail-a .definition { transition: opacity .6s ease .45s, filter .6s ease .45s; }
+  .studio, .rail-b, .fade-sec { transition: opacity .6s ease, filter .6s ease; }
+  /* Going down the old text leaves first; coming back up the intro leaves first, so the two never overlap. */
+  .handed-over .hero video, .handed-over .p-home .rail-a h1, .handed-over .rail-a .phonetic, .handed-over .rail-a .definition { transition-delay: 0s; }
+  .handed-over .studio, .handed-over .rail-b, .handed-over .fade-sec { transition-delay: .45s; transition-duration: .8s; }
   .p-home .rail-a h1 { opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }  /* the title leaves with the definition */
   .p-home.rail-on .rail-a a { pointer-events: none; }
+  /* The rail is click-through so it never blocks the page, so its text needs to opt back in to be selectable:
+     the lockup while it is showing, the studio intro once it has taken over. */
+  html:not(.handed-over) .rail-a > * { pointer-events: auto; }
+  .handed-over .rail-b > :not(.nav) { pointer-events: auto; }
   .rail-a .studio { display: none; }
   /* Even 150px between work, About and Services */
   .work { padding-bottom: 0; }
@@ -105,14 +127,15 @@ em { font-style: italic; }
   .rail-b .desc { width: 336px; }
   /* Hovering a frame also grows it 8% with a gentle ease */
   .work .w { transition: opacity .5s ease, filter .5s ease, transform .7s cubic-bezier(.22, .61, .36, 1); }
-  .work .w:hover, .work .w:focus-visible { transform: scale(1.08); z-index: 2; }
+  .hover-live .work .w:hover, .work .w:focus-visible { transform: scale(1.08); z-index: 2; }
   /* The card grows 8% on hover; the caption shrinks back by the same factor so its text stays 18px, like About and Services */
   .work figcaption { transform-origin: 0 0; font-size: 18px; }
   .work .w1 figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption { transform-origin: 100% 0; }
-  .work .w:hover figcaption, .work .w:focus-visible figcaption { transform: scale(.926); }
+  .hover-live .work .w:hover figcaption, .work .w:focus-visible figcaption { transform: scale(.926); }
   /* Hovering a frame also pushes the left rail back, like the other frames */
   .rail { transition: opacity .5s ease, filter .5s ease; }
-  body:has(.work .w:hover, .work .w:focus-visible) .rail { opacity: .35; filter: blur(10px); }
+  body:has(.work .w:focus-visible) .rail { opacity: .35; filter: blur(10px); }
+  .hover-live body:has(.work .w:hover) .rail { opacity: .35; filter: blur(10px); }
 }
 
 /* About / Services sections (stacked below the work on the one long page) */
@@ -124,11 +147,12 @@ em { font-style: italic; }
 .sec-services { min-height: calc(100vh - 72px); }
 .p-home .foot { margin-top: 0; }
 .sec-about .copy p + p { margin-top: 1lh; }
+.sec-about .copy p, .rail-a .definition, .work figcaption { text-wrap: pretty; }  /* no single short word left alone on the last line */
 .about-loop { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: contain; object-position: center; flex: none;
   /* The dandelion sits ~79% across the clip: shift it onto the paragraph's centre, then
      scale up about the stem's base so it grows upward; margin-top reserves that room. */
   transform-origin: 79% 100%; transform: translateX(calc(250px - 79%)) scale(1.6); margin-top: 20%; }
-.copy a { text-decoration: underline; text-decoration-skip-ink: none; text-underline-position: from-font; }
+.copy a { text-decoration: underline; text-decoration-thickness: from-font; text-decoration-skip-ink: none; text-underline-position: from-font; }
 .sec-services { font-size: 18px; }  /* same body size as About */
 .services { list-style: none; display: flex; flex-direction: column; gap: 56px; width: 100%; }
 .services li { display: flex; align-items: flex-start; gap: 24px; }
@@ -262,8 +286,8 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; position: fixed; z-index: 10; top: 0; left: 0; right: 0;
     padding: calc(12px + env(safe-area-inset-top, 0px)) var(--gutter) 12px; background: rgba(255, 255, 255, .88);
     -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0, 0, 0, .08);
-    transform: translateY(-100%); opacity: 0; pointer-events: none; transition: transform .45s cubic-bezier(.2, .7, .3, 1), opacity .35s ease; }
-  .topbar-on .topbar { transform: none; opacity: 1; pointer-events: auto; }
+    transform: translateY(-100%); opacity: 0; pointer-events: none; visibility: hidden; transition: transform .45s cubic-bezier(.2, .7, .3, 1), opacity .35s ease, visibility 0s .45s; }  /* hidden from keyboard and screen readers until it slides in */
+  .topbar-on .topbar { transform: none; opacity: 1; pointer-events: auto; visibility: visible; transition-delay: 0s; }
   .topbar-title { font: 400 20px var(--display); white-space: nowrap; }
   .topbar-nav { display: flex; gap: 14px; font-size: 16px; white-space: nowrap; }
   .m-br { display: inline; }  /* the hero text lockup breaks into four set lines on phones */
@@ -298,13 +322,13 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 @media (max-width: 900px) {
   .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 72px; }
   /* Each example is its frame with the description underneath (a grid: frame on top, caption below). All four
-     are plain rounded frames. */
+     are plain square frames. */
   .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; display: grid; grid-template-columns: 100%;
     transform: scale(var(--s, 1)); opacity: calc(var(--o, 1) * var(--arrive, 1)); translate: 0 calc((1 - var(--arrive, 1)) * 56px);
     filter: blur(var(--bl, 0px)); transition: none; }
   .work .w img, .work .w1 video, .work .w2 video, .work .w3 video, .work .w4 video { grid-area: 1 / 1; position: static; display: block; max-width: none; width: 100%; height: auto;
-    object-fit: cover; object-position: top; border-radius: 14px; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); transition: filter .5s ease, scale .6s ease; }
-  .work .w1 img, .work .w1 video { width: 72%; justify-self: center; aspect-ratio: 412 / 917; border: 0; border-radius: 14px; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
+    object-fit: cover; object-position: top; border-radius: 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); transition: filter .5s ease, scale .6s ease; }
+  .work .w1 img, .work .w1 video { width: 72%; justify-self: center; aspect-ratio: 412 / 917; border: 0; border-radius: 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
   .work .w2 img, .work .w2 video { aspect-ratio: 1910 / 1230; }
   .work .w3 img, .work .w3 video { aspect-ratio: 2932 / 1458; }
   .work .w4 img, .work .w4 video { aspect-ratio: 2000 / 1250; }
@@ -324,7 +348,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .work-toggle .ic-close { opacity: 0; transform: rotate(-90deg); }
   .work .w.open .ic-arrow { opacity: 0; transform: rotate(90deg); }
   .work .w.open .ic-close { opacity: 1; transform: none; }
-  .work:has(.w:hover, .w:focus-visible) .w:not(:hover, :focus-visible) { opacity: calc(var(--o, 1) * var(--arrive, 1)); filter: blur(var(--bl, 0px)); }
+  .work:has(.w:focus-visible) .w:not(:focus-visible) { opacity: calc(var(--o, 1) * var(--arrive, 1)); filter: blur(var(--bl, 0px)); }
   @media (prefers-reduced-motion: reduce) { .work .w, .work .w img, .work figcaption, .work-toggle svg { transition: none; } .work .w img { translate: none; } .reveal-ready .work .w:not(.revealed) { --arrive: 1; } }
   /* Comfortable tap targets for the text links */
   .nav { gap: 0; }
@@ -343,8 +367,8 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .sec-services { position: relative; }
   .sec-services::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 58px; width: 72vw; height: 190px; margin-left: -36vw;
     border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
-    background: linear-gradient(to top, rgba(86, 114, 132, .95) 0%, rgba(118, 152, 118, .8) 28%, rgba(190, 208, 150, .5) 60%, rgba(226, 232, 190, .38) 100%);
-    filter: blur(22px); opacity: .78; }
+    background: linear-gradient(to top, rgba(128, 154, 170, .5) 0%, rgba(158, 188, 156, .42) 30%, rgba(208, 222, 178, .3) 62%, rgba(234, 240, 208, .16) 100%);
+    filter: blur(28px); opacity: .7; }  /* softened: pale enough that black text stays well above 4.5:1 (see the contrast check in the notes) */
   .sec-services { gap: 0; }
   .sec-services .services { margin-block: auto; padding-block: 24px; }  /* centred between the contact lockup and the footer */
   /* Contact: the email is the big line, as wide as the column allows on one line (script.js sizes it),
@@ -352,10 +376,14 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .c-desk { display: none; }
   .c-mob { display: block; margin-top: 14px; text-align: center; }
   .copy .big-email { display: block; white-space: nowrap; font-family: var(--display); line-height: 1.1; letter-spacing: -.01em;
-    text-decoration-thickness: 1.5px; text-underline-offset: .14em; }
+    text-decoration-thickness: 1px; text-underline-offset: .12em; }  /* the email is sized up to fill the column, so a fixed hairline (from-font would scale with it) */
   /* Staggered blur-in for About and Services (script.js adds .stagger-ready, then .in piece by piece) */
   .stagger-ready .stagger:not(.in) { opacity: 0; filter: blur(14px); translate: 0 16px; }
   .stagger-ready .stagger.in { opacity: 1; filter: none; translate: none;
     transition: opacity 1s ease var(--d, 0s), filter 1s ease var(--d, 0s), translate 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s); }
   @media (prefers-reduced-motion: reduce) { .stagger-ready .stagger:not(.in) { opacity: 1; filter: none; translate: none; } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero video, .p-home .rail-a h1, .rail-a .phonetic, .rail-a .definition, .studio, .rail-b, .fade-sec, .rail, .work .w, .topbar { transition: none !important; }
 }

@@ -415,9 +415,9 @@ toggleBtn?.addEventListener("click", () => setPaused(!motionPaused));
 if (aboutLoop && !reduceMotion.matches) {
   new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) replay(aboutLoop); }), { threshold: 0.6 }).observe(aboutLoop);
 }
-// Phones: the hero clip replays when you return to the top (the first pass is the load-time play above).
+// Phones: the hero (now the portrait opening) replays from the first blow when you return to the top; the first full pass is the load-time play above.
 const heroSection = document.querySelector(".hero");
 if (heroSection && !reduceMotion.matches) {
-  new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting && phoneMQ.matches && heroVideoEl.ended) replay(heroVideoEl); }), { threshold: 0.6 }).observe(heroSection);
+  new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting && phoneMQ.matches && heroVideoEl.ended) replay(heroVideoEl, parseFloat(heroVideoEl.dataset.introAt) || 0); }), { threshold: 0.6 }).observe(heroSection);
 }
 if (reduceMotion.matches) setPaused(true);

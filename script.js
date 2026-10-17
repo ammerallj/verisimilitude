@@ -6,7 +6,13 @@ const work = document.querySelector(".work");
 const clamp = (n) => Math.min(1, Math.max(0, n));
 const railBEl = document.querySelector(".rail-b");
 const lockupEl = document.querySelector(".rail-a");
-const heroVideoEl = document.querySelector(".hero video");
+// Two heroes (see index.html): the phone clip and the full-height opening. Only the one for the
+// current screen is played; the other is never fetched.
+const phoneMQ = window.matchMedia("(max-width: 900px)");
+const heroPhone = document.querySelector(".hero-phone");
+const heroFull = document.querySelector(".hero-full");
+const pickHero = () => (phoneMQ.matches ? heroPhone : heroFull);
+let heroVideoEl = pickHero();
 const update = () => {
   const vh = window.innerHeight;
   // Progress follows the work section: it starts as the first image enters the
@@ -167,9 +173,12 @@ requestAnimationFrame(drift);
 
 // Opening beat: the animation plays on its own first; the definition blurs in once the
 // blowing is under way. INTRO_AT is a position in the video, so buffering can't make it early.
-const INTRO_AT = 1.5; // seconds into the video; the seeds start to leave the dandelion shortly after (~2.5s)
+// It belongs to the video: the video's data-intro-at says when the lockup should appear (the
+// current hero's breath starts at ~1.4s, so 1.5s is the default). A hero that opens with the
+// bag sequence sets its own, e.g. data-intro-at="3.6" (as the first blow begins).
 const INTRO_LOCK_AFTER = 1200; // scrolling stays locked until the text is mostly in
-const heroVideo = document.querySelector(".hero video");
+const heroVideo = heroVideoEl;
+const INTRO_AT = parseFloat(heroVideo?.dataset.introAt ?? "") || 1.5;
 let introShown = false;
 const unlockScroll = () => root.classList.remove("scroll-lock");
 const showIntro = () => {
@@ -192,8 +201,21 @@ if (!heroVideo || window.matchMedia("(prefers-reduced-motion: reduce)").matches 
     else requestAnimationFrame(watchBlow);
   };
   heroVideo.addEventListener("playing", watchBlow, { once: true });
-  setTimeout(showIntro, 6000); // fallback if the video never plays
+  heroVideo.play().catch(() => {});
+  setTimeout(showIntro, Math.max(6000, (INTRO_AT + 4.5) * 1000)); // fallback if the video never plays
 }
+
+// Resizing across the phone breakpoint swaps heroes: stop the one that is hidden, start the other.
+phoneMQ.addEventListener("change", () => {
+  const prev = heroVideoEl;
+  heroVideoEl = pickHero();
+  if (prev === heroVideoEl) return;
+  prev.pause();
+  prev.style.removeProperty("--vb");
+  prev.style.removeProperty("--vo");
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) heroVideoEl.play().catch(() => {});
+  update();
+});
 
 // Only the work section blurs and fades in (the landing handover); it and the sections after it stay put.
 const fadeSections = [document.querySelector(".work")];

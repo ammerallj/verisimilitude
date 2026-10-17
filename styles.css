@@ -186,6 +186,10 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 .rail-b { top: calc(var(--gutter) - 14px); position: absolute; opacity: var(--in, 0); filter: blur(calc((1 - var(--in, 0)) * 14px)); }
 .rail-b .nav a { pointer-events: none; }
 .p-home.rail-on .rail-b .nav a { pointer-events: auto; }
+/* Larger screens: the full-height opening, filling the hero. It is 16:9 with the scene on the right and
+   the left kept empty for the text and the drifting seeds, so a narrower window trims the left. */
+.hero .hero-full { display: block; object-fit: cover; object-position: 100% 50%; transform: none; }
+.hero .hero-phone { display: none; }
 @media (prefers-reduced-motion: reduce) { .hero video { display: none; } }
 /* Phones: the hero is one screen, text at the top, the animation in the middle and a
    "Scroll down" cue at the bottom; the studio intro follows below it. The rail and page
@@ -194,6 +198,8 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 .topbar { display: none; }
 @keyframes cue-nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
 @media (max-width: 900px) {
+  .hero .hero-full { display: none; }
+  .hero .hero-phone { display: block; }
   body.p-home { display: flex; flex-direction: column; }
   .rail, .page { display: contents; }
   /* Closing the gap: the hero is one screen tall at first, then its empty lower part shrinks away as you

@@ -210,16 +210,16 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   body.p-home { overflow-anchor: none; }
   .hero { order: 1; height: 100vh; height: calc(100svh - var(--hero-p, 0) * (100svh - var(--hero-min))); margin: 0; overflow: hidden; }
   /* One group, centred vertically above the scroll cue: the visible animation, a 20px gap, then the
-     text lockup. Geometry (the clip is 3:1): shown at 2.6x from its top-right corner, the girl's hair
-     top sits at 14.5% of the frame and the stem leaves the bottom edge, so the visible art is
-     74.1vw tall and starts 12.6vw below the video's top. --lh is the lockup's height (script.js keeps
+     text lockup. The phone clip is 1080x2160 and fills the hero from the top (the green runs the full height); its scene
+     occupies the top --art-h (92.6vw), so the lockup sits right beneath it.
+     --lh is the lockup's height (script.js keeps
      it current); --group-top is where the art starts. */
-  :root { --lh: 116px; --group-top: max(24px, calc((100svh - 120px - (74.1vw + 20px + var(--lh))) / 2));
-    --hero-min: calc(var(--group-top) + 74.1vw + 20px + var(--lh) + 8px); }  /* where the hero stops shrinking: just under the lockup */
-  .hero video { inset: auto; right: 0; top: calc(var(--group-top) - 12.6vw); width: 100vw; height: 33.333vw;
-    object-fit: fill; transform-origin: 100% 0; transform: scale(2.6); }
+  :root { --lh: 116px; --art-h: 92.593vw; --group-top: 0px;
+    --hero-min: calc(var(--group-top) + var(--art-h) + 20px + var(--lh) + 8px); }  /* where the hero stops shrinking: just under the lockup */
+  .hero video { inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 50% 0; transform: none; }
   .hero video { opacity: calc((1 - var(--out, 0)) * var(--vo, 1)); filter: blur(calc(var(--out, 0) * 14px + var(--vb, 0px))); }  /* plus its own near-the-top fade (--vo, --vb) */
-  .rail-a { position: absolute; z-index: 3; top: calc(var(--group-top) + 74.1vw + 20px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
+  .rail-a { position: absolute; z-index: 3; top: calc(var(--group-top) + var(--art-h) + 20px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
   .rail-a h1 { font-size: 34px; }
   .rail-a .phonetic, .rail-a .definition { font-size: 20px; margin-top: 0; }
   .rail-a .studio { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -230,7 +230,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
      drawn from the animation's palette. It sits faint at the bottom and, as you scroll, stretches
      upward like a brush stroke whose tip is drawn up past the "Design studio" block and ends with that section
      (--wash-s is the stretch, --wash its 0..1 strength, --wash-o the fade; all set in script.js). */
-  .wash { display: block; position: fixed; z-index: -1; left: 50%; bottom: -4svh; width: 30vw; height: 20svh; margin-left: -15vw;
+  .wash { display: block; position: fixed; z-index: 2; left: 50%; bottom: -4svh; width: 30vw; height: 20svh; margin-left: -15vw;
     border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
     /* heaviest at the bottom edge and thinning toward the top, so the eye is pulled down the page */
     background: linear-gradient(to top, rgba(86, 114, 132, .95) 0%, rgba(118, 152, 118, .8) 28%, rgba(190, 208, 150, .5) 60%, rgba(226, 232, 190, .38) 100%);
@@ -239,7 +239,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   body.intro-wait .wash { opacity: 0; }
   .intro-play .wash { animation: intro-in 1.4s ease .9s backwards; }
   @media (prefers-reduced-motion: reduce) { .wash { transform: none; } }
-  .scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; left: 0; right: 0; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  .scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; z-index: 4; left: 0; right: 0; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
     font-style: italic; font-size: 18px; color: #000; pointer-events: none; opacity: var(--cue-o, 1); }
   body.intro-wait .scroll-cue { opacity: 0; }
   .scroll-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }

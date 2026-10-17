@@ -46,14 +46,14 @@
   </div>
   <main class="page">
     <section class="hero" aria-hidden="true">
-      <!-- Two heroes: phones keep the 3:1 clip their layout is built around; larger screens get the
-           full-height opening (the bag sequence, then the blow). Only the one for the current screen is
+      <!-- Two heroes, the same opening (the bag sequence, then the blow): a 16:9 one filling the screen on
+           larger screens, and a near-square one framed for phones, with the lockup beneath it. Only the one for the current screen is
            loaded and played (script.js). data-intro-at is when the text lockup comes in: the first blow. -->
-      <video class="hero-phone" loop muted playsinline preload="none" poster="images/dandelion.webp">
-        <source src="images/dandelion.webm" type="video/webm">
-        <source src="images/dandelion.mp4" type="video/mp4">
+      <video class="hero-phone" loop muted playsinline preload="none" poster="images/opening-hero-phone-tall.webp" data-intro-at="3.6">
+        <source src="images/opening-hero-phone-tall.webm" type="video/webm">
+        <source src="images/opening-hero-phone-tall.mp4" type="video/mp4">
       </video>
-      <video class="hero-full" loop muted playsinline preload="none" poster="images/opening-hero.webp" data-intro-at="3.6">
+      <video class="hero-full" loop muted playsinline preload="none" poster="images/opening-hero-first.webp" data-intro-at="3.6">
         <source src="images/opening-hero.webm" type="video/webm">
         <source src="images/opening-hero.mp4" type="video/mp4">
       </video>

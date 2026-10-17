@@ -232,16 +232,21 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
      scroll (--hero-p eases from 0 to 1 over a screen of scrolling in script.js), so the Design studio block rises to meet the text lockup
      faster than the page scrolls. overflow-anchor is off so the browser doesn't undo the shift. */
   body.p-home { overflow-anchor: none; }
-  .hero { order: 1; height: 100vh; height: calc(100svh - var(--hero-p, 0) * (100svh - var(--hero-min))); margin: 0; overflow: hidden; }
+  .hero { order: 1; height: var(--hero-h); height: calc(var(--hero-h) - var(--hero-p, 0) * (var(--hero-h) - var(--hero-min))); margin: 0; overflow: hidden; }
   /* One group, centred vertically above the scroll cue: the visible animation, a 20px gap, then the
      text lockup. The phone clip is 1080x2160 and fills the hero from the top (the green runs the full height); its scene
      occupies the top --art-h (92.6vw), so the lockup sits right beneath it.
      --lh is the lockup's height (script.js keeps
      it current); --group-top is where the art starts. */
-  :root { --lh: 116px; --art-h: 92.593vw; --group-top: 0px;
+  /* Any screen height: the art + lockup group sits centred in the space above the scroll cue (--cue-h reserves the cue and a
+     breathing gap), and the hero grows past one screen when the group plus cue would not fit, so they never overlap. */
+  :root { --lh: 116px; --art-h: 92.593vw; --cue-h: 112px;
+    --group-h: calc(var(--art-h) + 20px + var(--lh));
+    --hero-h: max(100svh, calc(var(--group-h) + var(--cue-h)));
+    --group-top: calc((var(--hero-h) - var(--cue-h) - var(--group-h)) / 2);
     --hero-min: calc(var(--group-top) + var(--art-h) + 20px + var(--lh) + 8px); }  /* where the hero stops shrinking: just under the lockup */
   .hero video { inset: 0; width: 100%; height: 100%;
-    object-fit: cover; object-position: 50% 0; transform: none; }
+    object-fit: cover; object-position: 50% 0; transform: translateY(var(--group-top)); }
   .hero video { opacity: calc((1 - var(--out, 0)) * var(--vo, 1)); filter: blur(calc(var(--out, 0) * 14px + var(--vb, 0px))); }  /* plus its own near-the-top fade (--vo, --vb) */
   .rail-a { position: absolute; z-index: 3; top: calc(var(--group-top) + var(--art-h) + 20px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
   .rail-a h1 { font-size: 34px; }
@@ -328,7 +333,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
     filter: blur(var(--bl, 0px)); transition: none; }
   .work .w img, .work .w1 video, .work .w2 video, .work .w3 video, .work .w4 video { grid-area: 1 / 1; position: static; display: block; max-width: none; width: 100%; height: auto;
     object-fit: cover; object-position: top; border-radius: 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); transition: filter .5s ease, scale .6s ease; }
-  .work .w1 img, .work .w1 video { width: 72%; justify-self: center; aspect-ratio: 412 / 917; border: 0; border-radius: 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
+  .work .w1 img, .work .w1 video { width: min(72%, 300px); justify-self: center; aspect-ratio: 412 / 917; border: 0; border-radius: 0; box-shadow: 0 20px 44px rgba(20, 30, 50, .2); }
   .work .w2 img, .work .w2 video { aspect-ratio: 1910 / 1230; }
   .work .w3 img, .work .w3 video { aspect-ratio: 2932 / 1458; }
   .work .w4 img, .work .w4 video { aspect-ratio: 2000 / 1250; }
@@ -357,7 +362,9 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   /* About dandelion, blown up: instead of scaling the whole 3:1 clip (which wasted space above it), crop
      it to a taller box and slide the clip so the bulb sits in the middle */
   .sec-about .copy { align-self: center; }  /* wider phones and small tablets: the 500px text column sits in the middle under the centred dandelion */
-  .about-loop { aspect-ratio: 1 / 1; object-fit: cover; object-position: 93.6% 50%; transform: none; margin-top: 0; mix-blend-mode: multiply; }  /* bulb centred, about 3x the clip */
+  /* The top of this frame is empty until the seeds fly into it, so it tucks up under the last example (margin % is of the column
+     width, so the overlap scales with the screen) instead of leaving a tall blank gap. It is decorative and click-through. */
+  .about-loop { aspect-ratio: 1 / 1; object-fit: cover; object-position: 93.6% 50%; transform: none; margin-top: -40%; mix-blend-mode: multiply; pointer-events: none; }  /* bulb centred, about 3x the clip */
   /* Services/contact is its own full-height screen: the section fills the viewport above the footer
      (script.js sets --foot-h), its content centred with generous space around it, and the footer
      sitting on the bottom edge. */

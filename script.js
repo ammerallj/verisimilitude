@@ -5,6 +5,9 @@ const body = document.body;
 const work = document.querySelector(".work");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let motionPaused = false;  // the About dandelion loop can be paused (button, or click the animation). The opening plays once and needs no control.
+// The opening always starts from the top: phones restore the last scroll position on reload, which skipped the opening.
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+if (!location.hash) window.scrollTo(0, 0);
 const clamp = (n) => Math.min(1, Math.max(0, n));
 const railBEl = document.querySelector(".rail-b");
 const lockupEl = document.querySelector(".rail-a");
@@ -239,7 +242,12 @@ if (!heroVideo || window.matchMedia("(prefers-reduced-motion: reduce)").matches 
     else requestAnimationFrame(watchBlow);
   };
   heroVideo.addEventListener("playing", watchBlow, { once: true });
+  heroVideo.preload = "auto";
   heroVideo.play().catch(() => {});
+  // Phones can refuse autoplay (data saver, low power): start on the first touch or retry once the data is in.
+  const retryPlay = () => { if (heroVideo.paused && !heroVideo.ended) heroVideo.play().catch(() => {}); };
+  heroVideo.addEventListener("loadeddata", retryPlay, { once: true });
+  ["touchstart", "pointerdown", "scroll"].forEach((ev) => window.addEventListener(ev, retryPlay, { once: true, passive: true }));
   setTimeout(showIntro, Math.max(6000, (INTRO_AT + 4.5) * 1000)); // fallback if the video never plays
 }
 

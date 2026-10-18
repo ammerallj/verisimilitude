@@ -422,7 +422,9 @@ if (reduceMotion.matches) document.querySelectorAll("video.about-loop").forEach(
 const toggleBtn = document.querySelector(".motion-toggle");
 const aboutLoop = document.querySelector(".about-loop");
 const playing = (v) => !v.paused && !v.ended;
-const replay = (v, from = 0) => { if (motionPaused || reduceMotion.matches || playing(v)) return; v.currentTime = from; v.play().catch(() => {}); };
+// If the phone refuses to play the About dandelion (Low Power Mode), it rests on its still (the poster) instead.
+const restOnPoster = (v) => { v.querySelectorAll("source").forEach((src) => src.remove()); v.removeAttribute("src"); v.load(); };
+const replay = (v, from = 0) => { if (motionPaused || reduceMotion.matches || playing(v)) return; v.currentTime = from; v.play().catch(() => { if (v === aboutLoop) restOnPoster(v); }); };
 const setPaused = (paused) => {
   motionPaused = paused;
   [aboutLoop, heroVideoEl].filter(Boolean).forEach((v) => { if (paused) v.pause(); else if (!v.ended && v.currentTime > 0) v.play().catch(() => {}); });

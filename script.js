@@ -243,11 +243,20 @@ if (!heroVideo || window.matchMedia("(prefers-reduced-motion: reduce)").matches 
   };
   heroVideo.addEventListener("playing", watchBlow, { once: true });
   heroVideo.preload = "auto";
-  heroVideo.play().catch(() => {});
-  // Phones can refuse autoplay (data saver, low power): start on the first touch or retry once the data is in.
-  const retryPlay = () => { if (heroVideo.paused && !heroVideo.ended) heroVideo.play().catch(() => {}); };
-  heroVideo.addEventListener("loadeddata", retryPlay, { once: true });
-  ["touchstart", "pointerdown", "scroll"].forEach((ev) => window.addEventListener(ev, retryPlay, { once: true, passive: true }));
+  // Phones can refuse autoplay (Low Power Mode, data saver): rather than sit on the green first frame,
+  // show a still of the blow and bring the lockup in straight away.
+  const useStill = () => {
+    if (introShown && heroVideo.currentTime > 0) return;
+    heroVideo.poster = "images/opening-hero-phone-still.webp";
+    heroVideo.querySelectorAll("source").forEach((src) => src.remove());
+    heroVideo.removeAttribute("src");
+    heroVideo.load();
+    showIntro();
+  };
+  if (heroVideo === heroPhone) {
+    heroVideo.play().catch(useStill);
+    setTimeout(() => { if (heroVideo.paused || heroVideo.currentTime === 0) useStill(); }, 3000);
+  } else heroVideo.play().catch(() => {});
   setTimeout(showIntro, Math.max(6000, (INTRO_AT + 4.5) * 1000)); // fallback if the video never plays
 }
 

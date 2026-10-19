@@ -325,7 +325,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 @property --arrive { syntax: "<number>"; inherits: false; initial-value: 1; }
 .work-toggle { display: none; }
 @media (max-width: 900px) {
-  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 72px; }
+  .work { aspect-ratio: auto; display: flex; flex-direction: column; gap: 112px; }
   /* Each example is its frame with the description underneath (a grid: frame on top, caption below). All four
      are plain square frames. */
   .work .w { position: relative; left: auto; top: auto; width: 100%; height: auto; display: grid; grid-template-columns: 100%;
@@ -344,7 +344,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .reveal-ready .work .w:not(.revealed) { --arrive: 0; }
   .reveal-ready .work .w.revealed { --arrive: 1; transition: --arrive 1s cubic-bezier(.2, .7, .3, 1) var(--d, 0s); }
   .work figcaption, .work .w1 figcaption, .work .w2 figcaption, .work .w3 figcaption, .work .w4 figcaption {
-    grid-area: 2 / 1; position: static; width: auto; justify-self: stretch; margin: 0; padding: 28px 0 0; display: flex; flex-direction: column; gap: 6px;
+    grid-area: 2 / 1; position: static; width: auto; justify-self: stretch; margin: 0; padding: 36px 0 0; display: flex; flex-direction: column; gap: 6px;
     font-size: 16px; text-align: center; opacity: 1; filter: none; transform: none; pointer-events: auto; transition: none; }
   .work figcaption strong { font-size: 18px; }
   .sec-about .copy, .sec-services { font-size: 16px; }  /* phone body text */

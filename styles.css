@@ -243,7 +243,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   :root { --lh: 116px; --art-h: 92.593vw; --cue-h: 112px;
     --group-h: calc(var(--art-h) + 20px + var(--lh));
     --hero-h: max(100svh, calc(var(--group-h) + var(--cue-h)));
-    --group-top: calc(env(safe-area-inset-top, 0px) + 16px);  /* art sits at the top of the screen */
+    --group-top: 0px;  /* the clip starts flush with the top of the screen (its opening frames are full-height green) */
     --hero-min: calc(var(--group-top) + var(--art-h) + 20px + var(--lh) + 8px); }  /* where the hero stops shrinking: just under the lockup */
   .hero video { inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: 50% 0; transform: translateY(var(--group-top)); }

@@ -274,14 +274,14 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .scroll-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) { .scroll-cue span:last-child { animation: none; } }
   .intro-play .scroll-cue { animation: intro-in 1.2s ease .9s backwards; }
-  .rail-b { order: 2; position: static; width: auto; margin: 56px var(--gutter) 56px;
+  .rail-b { order: 2; position: static; width: auto; margin: 24px var(--gutter) 56px;
     opacity: 1 !important; transform: none !important; filter: none !important; }
   /* Studio intro: no repeated title; the description is the centred hero statement */
-  .rail-b { text-align: center; align-self: stretch; }  /* full width, so the centred text sits in the middle of the screen; 56px above, and 56px below before the first work card */
+  .rail-b { text-align: center; align-self: stretch; }  /* full width, so the centred text sits in the middle of the screen; 24px above, and 56px below before the first work card */
   .rail-b .name { display: none; }
   .rail-b .intro { align-items: center; gap: 24px; }
   .rail-b .desc { font: 400 26px/1.25 var(--display); text-wrap: pretty; }  /* centred, natural line lengths */
-  .rail-b .note { max-width: none; text-wrap: balance; font-size: 17px; }  /* same size as the example descriptions */
+  .rail-b .note { max-width: none; text-wrap: balance; font-size: 16px; }  /* same size as the example descriptions */
   .rail-b .nav { display: none; }            /* the top bar carries About and Services */
   .rail-b .nav a { pointer-events: auto; }
   .p-home .stage { order: 3; margin: 0 var(--gutter); width: auto; }

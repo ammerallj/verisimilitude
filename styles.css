@@ -347,6 +347,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
     grid-area: 2 / 1; position: static; width: auto; justify-self: stretch; margin: 0; padding: 36px 0 0; display: flex; flex-direction: column; gap: 6px;
     font-size: 16px; text-align: center; opacity: 1; filter: none; transform: none; pointer-events: auto; transition: none; }
   .work figcaption strong { font-size: 18px; }
+  .work figcaption span { font-style: italic; color: #555; }  /* the description takes the Services list style: italic, soft grey */
   .sec-about .copy, .sec-services { font-size: 16px; }  /* phone body text */
   .work-toggle { display: none !important; }  /* descriptions sit under each frame, no button */
   .work-toggle svg { grid-area: 1 / 1; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;

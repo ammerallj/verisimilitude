@@ -371,11 +371,11 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
      (script.js sets --foot-h), its content centred with generous space around it, and the footer
      sitting on the bottom edge. */
   .sec-services { min-height: calc(100vh - var(--foot-h, 180px)); min-height: calc(100svh - var(--foot-h, 180px));
-    justify-content: flex-start; padding: 61px 0 0; margin-top: 0; }  /* contact lockup near the top; the services centre in the space below it */
+    justify-content: flex-start; padding: 215px 0 0; margin-top: 0; }  /* contact lockup near the top; the services centre in the space below it */
   .services em { line-height: 2.2; }  /* a clear gap between each listed service */
   /* The same soft green oblong as behind the hero cue, now behind the contact lockup */
   .sec-services { position: relative; }
-  .sec-services::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 9px; width: 72vw; height: 190px; margin-left: -36vw;
+  .sec-services::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 163px; width: 72vw; height: 190px; margin-left: -36vw;
     border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
     background: linear-gradient(to top, rgba(128, 154, 170, .5) 0%, rgba(158, 188, 156, .42) 30%, rgba(208, 222, 178, .3) 62%, rgba(234, 240, 208, .16) 100%);
     filter: blur(28px); opacity: .7; }  /* softened: pale enough that black text stays well above 4.5:1 (see the contrast check in the notes) */

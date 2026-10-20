@@ -365,7 +365,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .sec-about .copy { align-self: center; }  /* wider phones and small tablets: the 500px text column sits in the middle under the centred dandelion */
   /* The top of this frame is empty until the seeds fly into it, so it tucks up under the last example (margin % is of the column
      width, so the overlap scales with the screen) instead of leaving a tall blank gap. It is decorative and click-through. */
-  .about-loop { aspect-ratio: 1 / 1; object-fit: cover; object-position: 93.6% 50%; transform: none; margin-top: -40%; mix-blend-mode: multiply; pointer-events: none; }  /* bulb centred, about 3x the clip */
+  .about-loop { aspect-ratio: 1 / 1; object-fit: cover; object-position: 93.6% 50%; transform: none; margin-top: -12%; mix-blend-mode: multiply; pointer-events: none; }  /* bulb centred, about 3x the clip */
   /* Services/contact is its own full-height screen: the section fills the viewport above the footer
      (script.js sets --foot-h), its content centred with generous space around it, and the footer
      sitting on the bottom edge. */

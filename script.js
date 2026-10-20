@@ -112,7 +112,9 @@ const links = [...document.querySelectorAll(".nav a[data-sec], .topbar a[data-se
 const sections = [work, ...document.querySelectorAll(".sec")];
 const markCurrent = () => {
   const mid = window.innerHeight * 0.5;
-  const current = sections.filter((s) => s.getBoundingClientRect().top <= mid).pop();
+  let current = sections.filter((s) => s.getBoundingClientRect().top <= mid).pop();
+  // Phones: the Studio statement sits above the first example, so Studio is current as soon as the landing has left the screen.
+  if (!current && phoneMQ.matches && document.querySelector(".hero").getBoundingClientRect().bottom <= 0) current = work;
   links.forEach((a) => {
     const on = current && a.dataset.sec === current.dataset.sec;
     a.classList.toggle("current", !!on);

@@ -244,7 +244,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
     --group-h: calc(var(--art-h) + 20px + var(--lh));
     --hero-h: max(100svh, calc(var(--group-h) + var(--cue-h)));
     --group-top: 0px;  /* the clip starts flush with the top of the screen (its opening frames are full-height green) */
-    --hero-min: calc(var(--group-top) + var(--art-h) + 20px + var(--lh) + 8px); }  /* where the hero stops shrinking: just under the lockup */
+    --hero-min: calc(var(--art-h) * .7); }  /* where the hero stops shrinking: the faded art is mostly gone by then, so the Studio statement rises close under the top bar */
   .hero video { inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: 50% 0; transform: translateY(var(--group-top)); }
   .hero video { opacity: calc((1 - var(--out, 0)) * var(--vo, 1)); filter: blur(calc(var(--out, 0) * 14px + var(--vb, 0px))); }  /* plus its own near-the-top fade (--vo, --vb) */
@@ -274,10 +274,10 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .scroll-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) { .scroll-cue span:last-child { animation: none; } }
   .intro-play .scroll-cue { animation: intro-in 1.2s ease .9s backwards; }
-  .rail-b { order: 2; position: static; width: auto; margin: 24px var(--gutter) 56px;
+  .rail-b { order: 2; position: static; width: auto; margin: 24px var(--gutter) 96px;
     opacity: 1 !important; transform: none !important; filter: none !important; }
   /* Studio intro: no repeated title; the description is the centred hero statement */
-  .rail-b { text-align: center; align-self: stretch; }  /* full width, so the centred text sits in the middle of the screen; 24px above, and 56px below before the first work card */
+  .rail-b { text-align: center; align-self: stretch; }  /* full width, so the centred text sits in the middle of the screen; 24px above, and 96px below before the first work card */
   .rail-b .name { display: none; }
   .rail-b .intro { align-items: center; gap: 24px; }
   .rail-b .desc { font: 400 26px/1.25 var(--display); text-wrap: pretty; }  /* centred, natural line lengths */

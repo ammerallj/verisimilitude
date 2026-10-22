@@ -57,7 +57,8 @@ The green/blue wash behind the phone scroll cue and the contact lockup is built 
 | Phonetic / definition | 20px | |
 | Studio statement ("Design studio based in…") | 26px / 1.25 Palatino | Centred |
 | Top bar title | 20px Palatino | |
-| Top bar nav | 16px | Current item: italic + underline |
+| Top bar "Menu" button | 16px | Opens the full-page menu |
+| Menu links | 40px Palatino | Current page or section in italic + underline, 24px between items; the seed mark (`favicon.svg`, 28px) sits centred at the bottom; "*Student community only" note 13px italic `#555` |
 | Scroll cue | 18px italic | |
 | Contact email | Fitted by `script.js` (`fitEmail`) | Fills the column on one line, Palatino, 1px underline |
 
@@ -99,7 +100,11 @@ Phone landing:
 
 ## Internship page
 
-`internship.html` reuses `styles.css` (body class `p-intern`). Left: studio name, statement, nav, then the "Student community only" note (13px italic) over an italic underlined "Internship program" link. Right: 500px text at 18px, then the role list (name left, italic "Apply →" right, `mailto:` links). The home rail carries the same note and link on desktop; on phones the footer carries a link instead.
+`internship.html` reuses `styles.css` (body class `p-intern`). Left: studio name, statement, nav, then the "Student community only" note (13px italic) over an italic underlined "Internship program" link. Right: 500px text at 18px, then the role list (name left, italic "Apply →" right, `mailto:` links). The home rail carries the same note and link on desktop; on phones the menu carries the link.
+
+## Footer
+
+Phone: a stacked layout. Top row has the dandelion seed mark (`logo-mark.svg`, 26px) on the left and LinkedIn and X icons (20px, `#555`) on the right; below that the definition, then the copyright, all left-aligned (14px Palatino `#555`, 24px (the page gutter) between the top row and the definition, 56px above and 56px below the email, then 24px between the copyright and "Design studio"). Desktop: one row, mark, definition, copyright, then the icons (18px). The social links point at the LinkedIn and X home pages until the studio's profile URLs are added.
 
 ## Components
 
@@ -109,7 +114,7 @@ Phone landing:
   - Desktop: four frames at varied positions and widths; the caption fades in on hover or focus beside each frame.
   - Phone: a single column. Square frames, with the first one narrower (72%, max 300px). Description sits below with no toggle button. Cards scale, fade and blur as they pass the middle of the screen, and slide up 56px as they arrive.
 - **About dandelion.** `solo-dand-3` plays once on scroll-in and rests on its last frame, which matches the first. If the phone refuses to play it, it rests on `solo-dand-3.webp`.
-- **Phone top bar.** Fixed; slides in after the hero. "Studio" is current as soon as the landing has left the screen; About and Services follow when their sections reach the middle.
+- **Phone top bar.** Fixed; slides in after the hero; title on the left, "Menu" on the right (always in on the Internship page). Menu opens a full-page white overlay of large links (From the Studio, About, Services, Internship program) that fades and blurs in and out (.45s). The top bar (title and button) is the one thing that does not fade: it stays in place above the overlay and Menu becomes Close. Close, Esc or choosing a link dismisses it. The current section is italic: Studio as soon as the landing has left the screen, About and Services when their sections reach the middle. Code in `menu.js`.
 - **Contact lockup.** Email in Palatino, sized to the column, with a soft green wash behind it (blurred 28px, 72vw wide, 190px tall).
 - **Seeds.** Dandelion seeds float over the whole page and blow away when touched.
 

@@ -97,6 +97,10 @@ Phone landing:
 | Last example to About section | 100px padding; the dandelion tucks up by 12% of its width (about 61px clear of the last description) |
 | About text to the contact email | 215px, to match the visual gap above the dandelion (61px + about 154px of empty frame) |
 
+## Internship page
+
+`internship.html` reuses `styles.css` (body class `p-intern`). Left: studio name, statement, nav, then the "Student community only" note (13px italic) over an italic underlined "Internship program" link. Right: 500px text at 18px, then the role list (name left, italic "Apply →" right, `mailto:` links). The home rail carries the same note and link on desktop; on phones the footer carries a link instead.
+
 ## Components
 
 - **Opening hero.** Two clips: `hero-phone` (portrait, 1080 wide) and `hero-full` (16:9, desktop). The lockup blurs in at `data-intro-at="3.6"` seconds, the first blow. Scroll is locked until the text is mostly in.

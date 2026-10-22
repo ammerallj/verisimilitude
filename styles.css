@@ -302,6 +302,44 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .sec, .work { scroll-margin-top: 56px; }
 }
 
+/* Internship: a small note and an italic underlined link, in the rail on the home page and on the internship page itself */
+.intern-link { display: flex; flex-direction: column; gap: 6px; }
+.intern-link .note { font-size: 13px; font-style: italic; color: #555; }
+.intern-link a { font-size: 16px; align-self: flex-start; }
+.intern-link a:hover, .intern-link a[aria-current] { text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
+.intern-link a[aria-current] { font-style: italic; }  /* selected only on its own page, like the nav's current item */
+.rail-b .intern-link { margin-top: -20px; }  /* sits 80px under the nav, not the 100px gap */
+.rail-b .intern-link a { pointer-events: none; }
+.p-home.rail-on .rail-b .intern-link a { pointer-events: auto; }
+.foot-intern { display: none; }
+@media (max-width: 900px) {
+  .rail-b .intern-link { display: none; }  /* phones: the link sits above the footer instead */
+  .foot-intern { display: block; }
+}
+
+/* Internship page */
+.p-intern .page { padding-top: 80px; }
+.p-intern .side { gap: 100px; }
+.p-intern .name:hover { text-decoration: underline; text-decoration-thickness: from-font; }
+.p-intern .nav .current { font-style: italic; }
+.intern-main { width: calc((100% - var(--grid-gap)) / 2); flex: none; display: flex; flex-direction: column; gap: 100px; font-size: 18px; }
+.intern-main .copy { max-width: 500px; }
+.intern-main .copy p { text-wrap: pretty; }
+.intern-main .copy p + p { margin-top: 1lh; }
+.roles { list-style: none; display: flex; flex-direction: column; gap: 28px; max-width: 500px; margin-top: auto; }
+.roles li { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+.roles a { font-style: italic; white-space: nowrap; }
+.roles a:hover { text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
+@media (max-width: 900px) {
+  .p-intern .page { display: flex; padding-top: 48px; }  /* the home page dissolves .page on phones; here it stays the frame */
+  .p-intern .side { gap: 48px; }
+  .p-intern .nav { gap: 0; }
+  .intern-main { width: 100%; gap: 56px; }
+  .p-intern .cols { gap: 56px; }
+  .intern-main, .roles { font-size: 16px; }
+  .roles li { padding: 6px 0; }
+}
+
 /* Dandelion seeds (see script.js) float over the whole page */
 .seeds { position: absolute; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; opacity: var(--out, 0); }
 .seeds span { position: absolute; display: block; line-height: 0; padding: 8px; margin: -8px; pointer-events: none; }

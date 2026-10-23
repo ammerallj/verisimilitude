@@ -275,9 +275,16 @@ if (!heroVideo || skipIntro || window.matchMedia("(prefers-reduced-motion: reduc
   };
   if (heroVideo === heroPhone) {
     heroVideo.play().catch(useStill);
-    setTimeout(() => { if (heroVideo.paused || heroVideo.currentTime === 0) useStill(); }, 3000);
+    setTimeout(() => { if (heroVideo.paused) useStill(); }, 3000);  // only when autoplay was refused: a slow download just waits for the blow
   } else heroVideo.play().catch(() => {});
-  setTimeout(showIntro, Math.max(6000, (INTRO_AT + 4.5) * 1000)); // fallback if the video never plays
+  // Fallback if the video never plays. A video that is still downloading keeps waiting (up to 25s), so the text never beats the blow on a slow connection.
+  const giveUp = performance.now() + 25000;
+  const fallback = () => {
+    if (introShown) return;
+    if (!heroVideo.error && heroVideo.currentTime < INTRO_AT && performance.now() < giveUp) setTimeout(fallback, 500);
+    else showIntro();
+  };
+  setTimeout(fallback, Math.max(6000, (INTRO_AT + 4.5) * 1000));
 }
 
 // Resizing across the phone breakpoint swaps heroes: stop the one that is hidden, start the other.

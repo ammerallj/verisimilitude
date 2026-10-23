@@ -500,3 +500,4 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .hero video, .p-home .rail-a h1, .rail-a .phonetic, .rail-a .definition, .studio, .rail-b, .fade-sec, .rail, .work .w, .topbar, .menu { transition: none !important; }
 }
+html.arriving body { visibility: hidden; }

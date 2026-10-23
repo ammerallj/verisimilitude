@@ -249,8 +249,10 @@ if (!heroVideo || skipIntro || window.matchMedia("(prefers-reduced-motion: reduc
       else if (window.jumpToSection) window.jumpToSection(document.querySelector(hash));  // the menu's landing, so arriving here lands exactly where choosing from the menu does
       else document.querySelector(hash)?.scrollIntoView({ behavior: "instant" });
     };
-    requestAnimationFrame(go);
-    window.addEventListener("load", () => { if (phoneMQ.matches) go(); }, { once: true });  // late layout (images, video) can shift the section, so land once more
+    const reveal = () => root.classList.remove("arriving");
+    requestAnimationFrame(() => { go(); if (!phoneMQ.matches) requestAnimationFrame(() => requestAnimationFrame(reveal)); });
+    window.addEventListener("load", () => { if (phoneMQ.matches) { go(); setTimeout(reveal, 400); } }, { once: true });
+    setTimeout(reveal, 2000);  // never leave the page hidden  // late layout (images, video) can shift the section, so land once more
     history.replaceState(null, "", location.pathname + location.search);
   }
 } else {

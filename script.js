@@ -123,6 +123,7 @@ const markCurrent = () => {
   });
 };
 // Nav links land their section centred in the viewport (the first work card, for "From the Studio", lands top-aligned with the title).
+let instantNav = false;  // arriving from the Internship page: land on the section with no scroll animation
 if (!window.matchMedia("(max-width: 900px)").matches) {
   links.forEach((a) => a.addEventListener("click", (e) => {
     const target = document.querySelector(a.getAttribute("href"));
@@ -139,7 +140,7 @@ if (!window.matchMedia("(max-width: 900px)").matches) {
       if (art) { top = Math.min(top, art.getBoundingClientRect().top); lift = 60; }  // lands a bit above centre
     }
     const y = window.scrollY + (top + bottom) / 2 - window.innerHeight / 2 + lift;
-    window.scrollTo({ top: Math.max(0, y), behavior: reduceMotion.matches ? "auto" : "smooth" });
+    window.scrollTo({ top: Math.max(0, y), behavior: instantNav ? "instant" : reduceMotion.matches ? "auto" : "smooth" });
     target.setAttribute("tabindex", "-1");        // keyboard and screen-reader focus follows the scroll
     target.focus({ preventScroll: true });
   }));
@@ -244,7 +245,7 @@ if (!heroVideo || skipIntro || window.matchMedia("(prefers-reduced-motion: reduc
     const hash = location.hash;
     const go = () => {
       const link = document.querySelector(`.rail-b .nav a[href="${hash}"]`);
-      if (!phoneMQ.matches && link) link.click();
+      if (!phoneMQ.matches && link) { instantNav = true; link.click(); instantNav = false; }
       else if (window.jumpToSection) window.jumpToSection(document.querySelector(hash));  // the menu's landing, so arriving here lands exactly where choosing from the menu does
       else document.querySelector(hash)?.scrollIntoView({ behavior: "instant" });
     };

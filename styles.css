@@ -55,7 +55,31 @@ em { font-style: italic; }
   margin-top: 100px;
 }
 .foot em { font-family: var(--display); }
+.foot-text { display: flex; flex: 1; justify-content: space-between; align-items: center; gap: 24px; order: 1; }
+.foot-def { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }  /* definition with the contact email under it */
+.foot-legal { display: flex; align-items: center; gap: 24px; }
+.foot-top { display: contents; }  /* desktop: one row: mark, definition, copyright, social */
+.foot-mark { display: block; width: 18px; height: 18px; flex: none; opacity: .75; order: 0; }  /* the dandelion seed mark */
+.foot-social { display: flex; gap: 20px; order: 2; }
+.foot-social a { display: block; width: 18px; height: 18px; color: #555; }
+.foot-social svg { display: block; width: 100%; height: 100%; }
+.foot-social a:hover { color: #000; }
 .foot a:hover { text-decoration: underline; }
+/* Desktop footer: a grid like a store footer. Two lockups: the seed mark with the definition and the studio line on the left, and the social icons over the copyright
+   on the right, flush with the right margin. The contact email is not repeated here. */
+@media (min-width: 901px) {
+  .foot { display: grid; grid-template-columns: 40px 300px 1fr; grid-template-areas: "mark def social" ". legal ."; column-gap: 20px; row-gap: 24px; align-items: start; justify-content: start; margin-top: 100px; }
+  .foot-top, .foot-text { display: contents; }
+  .foot-mark { grid-area: mark; width: 40px; height: 40px; opacity: .85; align-self: start; }
+  .foot-social { grid-area: social; gap: 22px; justify-self: end; align-self: start; }
+  .foot-social a { width: 20px; height: 20px; }
+  .foot-def { grid-area: def; align-self: start; font-size: 15px; line-height: 1.45; }  /* a lockup: the mark with the definition right beside it, top aligned */
+  .foot-def .foot-mail { display: none; }
+  .foot-legal { display: contents; }
+  .copyright { grid-area: legal; align-self: end; }  /* the copyright moves into the left lockup, under the definition and in line with it */
+}
+
+.foot .foot-mail { text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
 
 /* Home / work */
 .work { position: relative; width: 100%; aspect-ratio: 1102 / 1760; }
@@ -155,7 +179,7 @@ em { font-style: italic; }
 .copy a { text-decoration: underline; text-decoration-thickness: from-font; text-decoration-skip-ink: none; text-underline-position: from-font; }
 .sec-services { font-size: 18px; }  /* same body size as About */
 .services { list-style: none; display: flex; flex-direction: column; gap: 56px; width: 100%; }
-.services li { display: flex; align-items: flex-start; gap: 24px; }
+.services li { display: flex; align-items: baseline; gap: 24px; }  /* each service name shares a baseline with its first offering */
 .services li > span { flex: 0 0 50%; }
 .services em { flex: 1; text-align: left; font-size: 14px; line-height: 1.7; color: #555; }  /* same as the note under the intro */
 html { scroll-behavior: smooth; }
@@ -174,7 +198,14 @@ html { scroll-behavior: smooth; }
   .sec, .sec-services { min-height: 0; padding-top: 100px; }
   .p-home .foot { margin-top: 80px; }
   .work figcaption, .work .w2 figcaption, .work .w4 figcaption { top: 100%; left: 0; right: auto; width: 240px; margin-top: 16px; text-align: left; }
-  .foot { flex-direction: column; align-items: flex-start; font-size: 14px; }
+  /* Phone footer: mark left and LinkedIn / X right on top, then the definition, then the copyright, all left-aligned */
+  .foot { flex-direction: column; align-items: stretch; gap: var(--gutter); font-size: 14px; }  /* top row sits close to the definition */
+  .foot-top { display: flex; justify-content: space-between; align-items: center; }
+  .foot-mark { width: 26px; height: 26px; }
+  .foot .foot-social a { display: block; width: 20px; height: 20px; padding: 0; }  /* beats the 10px tap padding on .foot a */
+  .foot-text { flex-direction: column; align-items: flex-start; gap: 56px; flex: none; }  /* 56px below the email, matching the gap above it */
+  .foot-def { gap: 56px; }  /* the email breathes: 56px, the row gap used in the Services list */
+  .foot-legal { flex-direction: column; align-items: flex-start; gap: var(--gutter); }  /* tagline sits right under the copyright */
   .landing > * { width: 100%; }
 }
 
@@ -221,7 +252,7 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
    "Scroll down" cue at the bottom; the studio intro follows below it. The rail and page
    wrappers dissolve (display: contents) so their children can be ordered in one column. */
 .scroll-cue, .wash, .c-mob, .m-br { display: none; }
-.topbar { display: none; }
+.topbar, .menu { display: none; }
 @keyframes cue-nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
 @media (max-width: 900px) {
   .hero .hero-full { display: none; }
@@ -285,21 +316,91 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   .rail-b .nav { display: none; }            /* the top bar carries About and Services */
   .rail-b .nav a { pointer-events: auto; }
   .p-home .stage { order: 3; margin: 0 var(--gutter); width: auto; }
-  .p-home .foot { order: 4; margin: 0 var(--gutter) 24px; }
+  .p-home .foot { order: 4; margin: 0 var(--gutter) calc(var(--gutter) + env(safe-area-inset-bottom, 0px)); }
   .p-home .work { margin-top: 0; }
   /* Top bar: slides in once you scroll past the hero, title top left, section links right */
   .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; position: fixed; z-index: 10; top: 0; left: 0; right: 0;
     padding: calc(12px + env(safe-area-inset-top, 0px)) var(--gutter) 12px; background: rgba(255, 255, 255, .88);
     -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0, 0, 0, .08);
-    transform: translateY(-100%); opacity: 0; pointer-events: none; visibility: hidden; transition: transform .45s cubic-bezier(.2, .7, .3, 1), opacity .35s ease, visibility 0s .45s; }  /* hidden from keyboard and screen readers until it slides in */
+    transform: translateY(-100%); opacity: 0; pointer-events: none; visibility: hidden; transition: transform .45s cubic-bezier(.2, .7, .3, 1), opacity .35s ease, visibility 0s .45s, background-color .45s ease, border-color .45s ease; }  /* hidden from keyboard and screen readers until it slides in */
   .topbar-on .topbar { transform: none; opacity: 1; pointer-events: auto; visibility: visible; transition-delay: 0s; }
   .topbar-title { font: 400 20px var(--display); white-space: nowrap; }
-  .topbar-nav { display: flex; gap: 14px; font-size: 16px; white-space: nowrap; }
+  .menu-btn { display: block; font: inherit; font-size: 16px; padding: 8px 0; background: none; border: 0; color: inherit; cursor: pointer; }
   .m-br { display: inline; }  /* the hero text lockup breaks into four set lines on phones */
   .m-hide { display: none; }  /* top bar: "Verisimilitude" and "Studio" only, so the bar fits one line */
-  .topbar-nav a { padding: 8px 0; }
-  .topbar-nav .current { font-style: italic; text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
+  /* Menu: a full-page overlay of large links that blurs and fades in and out. The current page or section is italic. */
+  .menu { container-type: inline-size; display: flex; flex-direction: column; position: fixed; inset: 0; z-index: 20; background: #fff;
+    padding: calc(72px + env(safe-area-inset-top, 0px)) var(--gutter) calc(32px + env(safe-area-inset-bottom, 0px));
+    opacity: 0; filter: blur(14px); visibility: hidden; pointer-events: none; transition: opacity .45s ease, filter .45s ease, visibility 0s .45s; }
+  .menu-open .menu { opacity: 1; filter: none; visibility: visible; pointer-events: auto; transition-delay: 0s; }
+  html.menu-open, html.menu-open body { overflow: hidden; }
+  /* The top bar is the one thing that doesn't fade: it rises above the overlay with its wash cleared, and Menu becomes Close */
+  .menu-open .topbar { z-index: 30; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom-color: transparent; transform: none; opacity: 1; visibility: visible; pointer-events: auto; }
+  .menu-nav { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 24px; flex: 1; padding-bottom: 8vh; }
+  .menu-nav a { font: 400 min(40px, 10.8cqw)/1.2 var(--display); padding: 6px 0; white-space: nowrap; }  /* up to 40px, scaled down so each link stays on one line across the full width */
+  .menu-nav .current { font-style: italic; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .12em; }
+  .menu-seed { display: block; width: 28px; height: 28px; margin: 0 auto; flex: none; }  /* the dandelion seed mark, small and centred at the bottom */
+  .menu-note { font: 400 14px var(--display); color: #555; margin-top: -12px; }  /* the footer text style */
+  .p-intern .topbar { transform: none; opacity: 1; pointer-events: auto; visibility: visible; }  /* no hero here, so the bar is always in */
+  .p-intern .side .nav, .p-intern .side .intern-link { display: none; }  /* the menu carries them */
   .sec, .work { scroll-margin-top: 56px; }
+}
+
+/* Internship: a small note and an italic underlined link, in the rail on the home page and on the internship page itself */
+.intern-link { display: flex; flex-direction: column; gap: 6px; }
+.intern-link .note { font-size: 13px; font-style: italic; color: #555; }
+.intern-link a { font-size: 16px; align-self: flex-start; }
+.intern-link a:hover, .intern-link a[aria-current] { text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }
+.intern-link a[aria-current] { font-style: italic; }  /* selected only on its own page, like the nav's current item */
+.rail-b .intern-link { margin-top: -20px; }  /* sits 80px under the nav, not the 100px gap */
+.rail-b .intern-link a { pointer-events: none; }
+.p-home.rail-on .rail-b .intern-link a { pointer-events: auto; }
+@media (max-width: 900px) {
+  .rail-b .intern-link { display: none; }  /* phones: the menu carries the link */
+}
+
+/* Internship page */
+.p-intern .page { padding-top: 66px; }  /* desktop: the rail starts where the home page rail does (its top is the gutter minus 14px) */
+.p-intern .side { gap: 100px; }
+/* Desktop and phone read slightly differently: desktop keeps the studio name and statement as the left lockup and puts "Verisimilitude Studio
+   Internship Program" in the description; phones put it in the headline instead. */
+.m-only { display: none; }
+.m-sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }  /* still in the page for screen readers */
+@media (max-width: 900px) {
+  .m-only { display: inline; }
+  .d-only { display: none; }
+  .m-sr { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
+}
+@media (min-width: 901px) {
+  .p-intern .desc { width: 336px; }  /* the home page's fixed measure, so it breaks after "Seattle" */
+  /* The left rail sits exactly where it does on the home page, so it doesn't shift between pages: the name and statement are the home page's, and the Internship link sits 80px under the nav like the home rail's */
+  .p-intern .side .intern-link { margin-top: -20px; }
+}
+.p-intern .nav .current { font-style: italic; }
+.intern-main { width: calc((100% - var(--grid-gap)) / 2); flex: none; display: flex; flex-direction: column; gap: 100px; font-size: 18px; }
+.intern-main .copy { max-width: 500px; }
+.intern-main .copy p { text-wrap: pretty; }
+.intern-main .copy p + p { margin-top: 1lh; }
+.roles { list-style: none; display: flex; flex-direction: column; gap: 28px; max-width: 500px; margin-top: auto; }
+.roles li { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+.roles a { font-style: italic; white-space: nowrap; }
+.roles .apply { text-decoration: underline; text-decoration-thickness: from-font; text-underline-position: from-font; }  /* the word is underlined, the arrow is not */
+@media (max-width: 900px) {
+  .p-intern .page { display: flex; padding-top: calc(233px + env(safe-area-inset-top, 0px)); min-height: 100svh; padding-bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px)); }  /* 80px of clear space between the top bar and the top of the pink wash (the wash starts 93px above the headline); footer sits close to the bottom edge, as on the home page */  /* the home page dissolves .page on phones; here it stays the frame */
+  /* The contact email's soft oblong, in pink (from the opening's cheek), behind the headline */
+  .p-intern .intro { position: relative; }
+  .p-intern .intro::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: 72vw; height: 190px; margin-left: -36vw; transform: translateY(-66%);
+    border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
+    background: linear-gradient(to top, rgba(240, 150, 150, .5) 0%, rgba(236, 178, 160, .42) 30%, rgba(214, 224, 172, .3) 62%, rgba(234, 240, 208, .16) 100%);
+    filter: blur(28px); opacity: .85; }  /* built exactly like the contact wash (.sec-services::before): same size, shape, blur, opacity, alphas and bottom-heavy linear ramp, with pink in place of blue-grey. The headline sits on the middle of its visible color: the ramp is heaviest at the bottom, so the oval is raised (-66%) rather than box-centered */
+  .p-intern h1.name { text-align: center; font-size: 26px; line-height: 1.25; text-wrap: pretty; }  /* the same as the home page statement on phones */
+  .p-intern .side { position: static; gap: 48px; }  /* the desktop sticky rail would pin under the top bar */
+  .p-intern .nav { gap: 0; }
+  .intern-main { width: 100%; gap: 80px; }  /* intro text to the roles */
+  .p-intern .cols { gap: 80px; }  /* title to intro: the text sits below the pink wash */
+  .intern-main, .roles { font-size: 16px; }
+  .roles { gap: 56px; max-width: none; }  /* the same 56px between rows as the Services list, full column width */
+  .roles li { padding: 0; }
 }
 
 /* Dandelion seeds (see script.js) float over the whole page */
@@ -361,6 +462,7 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .nav { gap: 0; }
   .nav a { display: block; padding: 10px 0; }
   .foot a { display: inline-block; padding: 10px 0; }
+  .foot .foot-mail { margin-block: -10px; }  /* keeps the tap padding but the visual gap equal to the other footer lines */
   /* About dandelion, blown up: instead of scaling the whole 3:1 clip (which wasted space above it), crop
      it to a taller box and slide the clip so the bulb sits in the middle */
   .sec-about .copy { align-self: center; }  /* wider phones and small tablets: the 500px text column sits in the middle under the centred dandelion */
@@ -371,16 +473,17 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
      (script.js sets --foot-h), its content centred with generous space around it, and the footer
      sitting on the bottom edge. */
   .sec-services { min-height: calc(100vh - var(--foot-h, 180px)); min-height: calc(100svh - var(--foot-h, 180px));
-    justify-content: flex-start; padding: 215px 0 0; margin-top: 0; }  /* contact lockup near the top; the services centre in the space below it */
+    justify-content: flex-start; padding: 215px 0 80px; margin-top: 0; }  /* 80px clear of the footer, the same gap as above the work cards' footer rule */  /* contact lockup near the top; the services centre in the space below it */
   .services em { line-height: 2.2; }  /* a clear gap between each listed service */
   /* The same soft green oblong as behind the hero cue, now behind the contact lockup */
   .sec-services { position: relative; }
-  .sec-services::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 163px; width: 72vw; height: 190px; margin-left: -36vw;
+  .sec-services .contact { position: relative; }
+  .sec-services .contact::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: 72vw; height: 190px; margin-left: -36vw; transform: translateY(-66%);
     border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%; pointer-events: none;
     background: linear-gradient(to top, rgba(128, 154, 170, .5) 0%, rgba(158, 188, 156, .42) 30%, rgba(208, 222, 178, .3) 62%, rgba(234, 240, 208, .16) 100%);
-    filter: blur(28px); opacity: .7; }  /* softened: pale enough that black text stays well above 4.5:1 (see the contrast check in the notes) */
+    filter: blur(28px); opacity: .85; }  /* softened: pale enough that black text stays well above 4.5:1. Anchored to the email lockup and raised (-66%) so the lockup sits on the middle of the visible color: the ramp is heaviest at the bottom */
   .sec-services { gap: 0; }
-  .sec-services .services { margin-block: auto; padding-block: 24px; }  /* centred between the contact lockup and the footer */
+  .sec-services .services { margin-block: auto; padding-block: 100px 24px; }  /* centred between the contact lockup and the footer */
   /* Contact: the email is the big line, as wide as the column allows on one line (script.js sizes it),
      with the sentence below it */
   .c-desk { display: none; }
@@ -395,5 +498,5 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero video, .p-home .rail-a h1, .rail-a .phonetic, .rail-a .definition, .studio, .rail-b, .fade-sec, .rail, .work .w, .topbar { transition: none !important; }
+  .hero video, .p-home .rail-a h1, .rail-a .phonetic, .rail-a .definition, .studio, .rail-b, .fade-sec, .rail, .work .w, .topbar, .menu { transition: none !important; }
 }

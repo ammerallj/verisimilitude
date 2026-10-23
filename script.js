@@ -7,6 +7,7 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let motionPaused = false;  // the About dandelion loop can be paused (button, or click the animation). The opening plays once and needs no control.
 // The opening always starts from the top: phones restore the last scroll position on reload, which skipped the opening.
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+const skipIntro = root.classList.contains("skip-intro"); // arrived from the Internship page: no opening, straight to the section
 if (!location.hash) window.scrollTo(0, 0);
 const clamp = (n) => Math.min(1, Math.max(0, n));
 const railBEl = document.querySelector(".rail-b");
@@ -108,7 +109,7 @@ window.addEventListener("resize", update);
 update();
 
 // Mark the nav link for the section currently on screen.
-const links = [...document.querySelectorAll(".nav a[data-sec], .topbar a[data-sec]")];
+const links = [...document.querySelectorAll(".nav a[data-sec], .menu a[data-sec]")];
 const sections = [work, ...document.querySelectorAll(".sec")];
 const markCurrent = () => {
   const mid = window.innerHeight * 0.5;
@@ -234,9 +235,23 @@ const showIntro = () => {
 };
 // The page ships with the text hidden and scroll locked (no flash). Skip the beat when the
 // page opens scrolled down or the person prefers reduced motion.
-if (!heroVideo || window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.scrollY >= 50) {
+if (!heroVideo || skipIntro || window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.scrollY >= 50) {
   body.classList.remove("intro-wait");
   unlockScroll();
+  if (heroVideo && skipIntro && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) heroVideo.play().catch(() => {});
+  // Go straight to the section: desktop the way the nav does (centred), phones with an instant jump under the top bar.
+  if (skipIntro && location.hash) {
+    const hash = location.hash;
+    const go = () => {
+      const link = document.querySelector(`.rail-b .nav a[href="${hash}"]`);
+      if (!phoneMQ.matches && link) link.click();
+      else if (window.jumpToSection) window.jumpToSection(document.querySelector(hash));  // the menu's landing, so arriving here lands exactly where choosing from the menu does
+      else document.querySelector(hash)?.scrollIntoView({ behavior: "instant" });
+    };
+    requestAnimationFrame(go);
+    window.addEventListener("load", () => { if (phoneMQ.matches) go(); }, { once: true });  // late layout (images, video) can shift the section, so land once more
+    history.replaceState(null, "", location.pathname + location.search);
+  }
 } else {
   const watchBlow = () => {
     if (introShown) return;

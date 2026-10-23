@@ -36,8 +36,10 @@ The green/blue wash behind the phone scroll cue and the contact lockup is built 
 | Style | Size | Notes |
 |---|---|---|
 | Body | 20px | Line-height normal |
-| Lockup title ("Verisimilitude") | 44px Palatino | |
-| Phonetic / definition | 24px | Phonetic is italic |
+| Lockup title ("Verisimilitude") | 32px Palatino | The same size before and after the blow, as in the intro (`.name`); " Studio" is revealed beside it when she lands |
+| Lockup phonetic | 18px | Italic, soft grey `#555`, 10px under the title; fades out when she falls (1.5s) |
+| Lockup definition | 15px | Ink, 8px under the phonetic, same size as the studio line, on a 310px measure so it is as wide as the finished lockup (title 301px, studio line 295px); fades out when she falls (1.5s) |
+| Lockup studio line | 15px | Ink, 336px measure, is revealed when she lands (2.5s), 20px under the title (as `.desc`) |
 | Studio example headline | 24px | Regular weight |
 | Studio example description | 18px | |
 | About and Services text | 18px | About column max 500px, paragraphs 1 line apart |
@@ -54,12 +56,11 @@ The green/blue wash behind the phone scroll cue and the contact lockup is built 
 | Studio example headline | 18px | |
 | Studio example description | 16px italic `#555` | Same look as the Services list; full column width |
 | Lockup title | 34px Palatino | |
-| Phonetic / definition | 20px | |
-| Studio statement ("Design studio based in…") | 26px / 1.25 Palatino | Centred |
+| Lockup phonetic / definition / studio line | 18px / 20px / 20px | Same sequence as the web: phonetic (soft grey `#555`) and definition fade out when she falls, then " Studio" and the studio line (at the phonetic's top, `top: 34px * 1.15 + 4px`) are revealed. The swap eases the registered `--so` and `--sw` properties. The old centred statement below the hero is gone, so the studio line is not repeated |
 | Top bar title | 20px Palatino | |
 | Top bar "Menu" button | 16px | Opens the full-page menu |
 | Menu links | 40px Palatino | Current page or section in italic + underline, 24px between items; the seed mark (`favicon.svg`, 28px) sits centred at the bottom; "*Student community only" note 13px italic `#555` |
-| Scroll cue | 18px italic | |
+| Scroll cue | 18px italic | Also on desktop (18px italic, centred under the left lockup, 384px wide from the page gutter); is revealed (0.8s fade) the moment the opening count reaches 100, the same moment scroll unlocks; gone after ~180px of scroll |
 | Contact email | Fitted by `script.js` (`fitEmail`) | Fills the column on one line, Palatino, 1px underline |
 
 Text uses `text-wrap: pretty` so a single short word never sits alone on the last line.
@@ -81,17 +82,17 @@ Phone landing:
 | `--lh` | Lockup height, kept current by `script.js` (116px default) |
 | `--cue-h` | 112px reserved for the scroll cue |
 | `--group-top` | 0px; the clip starts flush with the top of the screen |
-| `--hero-h` | `max(100svh, art + 20px + lockup + cue)` |
-| `--hero-min` | `art-h * .7`; the hero shrinks to this as you scroll, so the Studio statement rises under the top bar |
+| `--lockup-gap` | 48px from the art to the lockup (was 20px) |
+| `--hero-h` | `max(100svh, art + lockup-gap + lockup + cue)` |
+| `--hero-min` | `art-h * .7`; the hero shrinks to this as you scroll, so the first example rises under the top bar |
 | `--hero-p` | 0 to 1 over one screen of scroll (eased); set by `script.js` |
 
 ### Phone spacing
 
 | Space | Value |
 |---|---|
-| Hero text lockup under the art | 20px |
-| Above the Studio statement | 24px |
-| Below the Studio statement (to first example) | 96px |
+| Hero text lockup under the art | 48px (`--lockup-gap`) |
+| Hero to first example | 24px above and 96px below the (now empty) statement slot |
 | Between Studio examples | 112px |
 | Frame to its headline + description | 36px |
 | Headline to description | 6px |
@@ -108,8 +109,13 @@ Phone: a stacked layout. Top row has the dandelion seed mark (`logo-mark.svg`, 2
 
 ## Components
 
-- **Opening hero.** Two clips: `hero-phone` (portrait, 1080 wide) and `hero-full` (16:9, desktop). The lockup blurs in at `data-intro-at="3.6"` seconds, the first blow. Scroll is locked until the text is mostly in.
+- **Opening hero.** Two clips: `hero-phone` (portrait, 1080 wide) and `hero-full` (16:9, desktop). The title, phonetic and definition are part of the page from the first paint (no script or video needed; `intro-title` is on `<body>` in the HTML) and simply display, with no fade in. When she falls out of the bag (`data-fall-at="1.5"` seconds) the phonetic and definition fade and blur out (0.9s, `--so`); when she has landed (`data-land-at="2.5"` seconds, the same moment the count reaches 100 and scroll unlocks) " Studio" and "Design studio based in San Francisco and Seattle creating honest and simple digital experiences." are revealed together (1s after a 0.15s pause, `--sw`). All at the final lockup's sizes (title 32px, 15px lines), kept vertically centred on the finished lockup, so nothing moves or resizes. If the video never plays, the same change happens when the opening gives up and shows the still. That title and studio line are the resting state of the landing (including on return, and at once when the opening is skipped). Scroll is locked until she has landed: the count reaches 100, scroll unlocks, the scroll cue appears and the final lockup is revealed, all together.
+  - Opening progress: a 13px Palatino `0/100` count centred 44px above a 2px black line running edge to edge along the bottom of the screen. `script.js` drives it from the video's playback toward the first blow (up to 90%), then runs it out to 100 as the text arrives; it fades out when scroll unlocks. Only shown while the opening holds scroll.
+  - Both clips stop at `data-rest-at="14.5"` seconds and rest on the bare dandelion: the regrow at the end of the clip is cut, on the first visit and on every return.
+  - Coming back to the top she just blows again: the clip plays from `data-intro-at` (3.6s) to `RETURN_END` (6.5s, seeds in the air) at normal speed and rests on that frame. Never the whole sequence, and not the bag, the long tail or the regrow.
+  - Coming back to the top, the hero picture fades in at once (no delay) so the landing is never blank.
   - Autoplay fallback (phones): if the video won't play (Low Power Mode, data saver), the still `opening-hero-phone-still.webp` shows and the lockup comes in straight away.
+- **Scroll cue (desktop, mouse).** Once the pointer moves, "Scroll down" with its arrow below (18px italic, as on phones) follows it, centred 26px under the pointer and kept 120px in from the window edges, on the same green-to-blue watercolour wash as the phone cue (76 by 116px, a small tall oval like the phone wash, blurred 22px). It fades out with the same scroll as the fixed cue, and the fixed cue is hidden. Hidden until the count reaches 100. Touch and keyboard visitors keep the fixed cue.
 - **Studio examples.**
   - Desktop: four frames at varied positions and widths; the caption fades in on hover or focus beside each frame.
   - Phone: a single column. Square frames, with the first one narrower (72%, max 300px). Description sits below with no toggle button. Cards scale, fade and blur as they pass the middle of the screen, and slide up 56px as they arrive.
@@ -124,6 +130,7 @@ Phone: a stacked layout. Top row has the dandelion seed mark (`logo-mark.svg`, 2
 |---|---|
 | Intro text blur-in | 1.2s ease, lines staggered .35s |
 | Section blur | 14px at fully out |
+| Lockup swap (desktop) | Fade out .9s when she falls; reveal 1s `cubic-bezier(.65, 0, .35, 1)` (`--lk-ease`) after a 0.15s pause when she lands | Light 5px blur and no size or position change. The scroll handover keeps its own quicker, 14px-blur fades |
 | Card arrival | 1s `cubic-bezier(.2, .7, .3, 1)` |
 | Top bar slide | .45s `cubic-bezier(.2, .7, .3, 1)` |
 | Scroll cue nudge | 1.8s ease-in-out, 7px |

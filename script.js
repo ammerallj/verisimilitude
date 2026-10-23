@@ -23,6 +23,7 @@ let workP = 0;
 // Desktop: the first frame settles with its top level with the studio title (the left rail's first line).
 const FRAME_TOP = 92;
 let handedOver = false; // desktop: flips on at HANDOVER_AT and back off only near the top (a gap, so it never flickers)
+const RETURN_END = 6.5; // coming back to the top she just blows again, from the first blow to here (seeds in the air), and the clip rests on that frame: not the whole sequence
 const HANDOVER_AT = 0.12; // desktop: how far the first frame has risen when the handover fires
 // Only the half of the rail you can see is in the tab order: the lockup link at the top, the nav once the handover has played.
 const railLinks = { a: [...document.querySelectorAll(".rail-a a")], b: [...document.querySelectorAll(".rail-b .nav a")] };
@@ -60,8 +61,8 @@ const update = () => {
       handedOver = true;
     } else if (p < HANDOVER_AT / 3 && handedOver) {
       handedOver = false;
-      // Back at the hero: the opening plays again from the first blow (not the whole sequence)
-      if (heroFull && heroFull.ended && !motionPaused && !reduceMotion.matches) { heroFull.currentTime = parseFloat(heroFull.dataset.introAt) || 0; heroFull.play().catch(() => {}); }
+      // Back at the hero: it plays the blow again (not the whole sequence), however far the video had got, then rests on its still
+      if (heroFull && !motionPaused && !reduceMotion.matches) playReturn(heroFull);
     }
   }
   root.classList.toggle("handed-over", handedOver);
@@ -223,21 +224,57 @@ requestAnimationFrame(drift);
 // bag sequence sets its own, e.g. data-intro-at="3.6" (as the first blow begins).
 const INTRO_LOCK_AFTER = 1200; // scrolling stays locked until the text is mostly in
 const heroVideo = heroVideoEl;
+// Each hero stops at data-rest-at, once the blow is done, and rests on the bare dandelion; the regrow at the end of the clip is never shown.
+// v.rested stands in for "ended" wherever the code asks whether the clip has finished.
+// A return to the top sets v.returnStop, so the clip rests at RETURN_END instead of running on to data-rest-at.
+const restAt = (v) => v.returnStop || parseFloat(v.dataset.restAt) || Infinity;
+const playReturn = (v) => { v.returnStop = RETURN_END; v.rested = false; v.playbackRate = 1; v.currentTime = parseFloat(v.dataset.introAt) || 0; v.play().catch(() => {}); };
+[heroPhone, heroFull].forEach((v) => {
+  if (!v) return;
+  const check = () => { if (!v.paused && v.currentTime >= restAt(v)) { v.pause(); v.rested = true; } };
+  v.addEventListener("timeupdate", check);
+  if (v.requestVideoFrameCallback) { const loop = () => { check(); v.requestVideoFrameCallback(loop); }; v.requestVideoFrameCallback(loop); }
+  v.addEventListener("seeking", () => { if (v.currentTime < restAt(v)) v.rested = false; });
+});
 const INTRO_AT = parseFloat(heroVideo?.dataset.introAt ?? "") || 1.5;
+const LAND_AT = parseFloat(heroVideo?.dataset.landAt ?? "") || INTRO_AT;  // when she has landed and settled: scroll unlocks
+const FALL_AT = parseFloat(heroVideo?.dataset.fallAt ?? "") || LAND_AT;  // when she falls out of the bag: the starting lockup fades out
 let introShown = false;
-const unlockScroll = () => root.classList.remove("scroll-lock");
+const loaderEl = document.querySelector(".intro-loader");
+const countEl = document.querySelector(".intro-count");
+// Scroll unlocks, the progress fades and "Scroll down" is revealed together, the moment the count reaches 100 (or at once when the opening is skipped).
+const unlockScroll = () => { root.classList.remove("scroll-lock"); loaderEl?.classList.add("done"); body.classList.add("cue-on"); root.classList.add("lockup-offer"); };  // reveals the final lockup too
+// The counter follows the video itself (so a slow download holds it honestly), easing toward 90% until she has landed
+// (data-land-at), then running out to 100: that is the moment scroll unlocks. The definition still waits for the blow.
+let loadShown = 0;
+const loadTick = () => {
+  if (!loaderEl || loaderEl.classList.contains("done")) return;
+  const t = heroVideo?.currentTime || 0;
+  if (t >= FALL_AT) root.classList.add("lockup-out");  // she has fallen out of the bag: the phonetic and definition fade out
+  const landed = introShown || t >= LAND_AT;
+  const target = landed ? 1 : Math.min(0.9, (t / LAND_AT) * 0.9);
+  loadShown = Math.max(loadShown, loadShown + (target - loadShown) * (landed ? 0.35 : 0.15));
+  if (loadShown > 0.995) loadShown = 1;
+  if (loadShown === 1) unlockScroll();
+  loaderEl.style.setProperty("--load", loadShown.toFixed(3));
+  countEl.textContent = `${Math.round(loadShown * 100)}/100`;
+  requestAnimationFrame(loadTick);
+};
+requestAnimationFrame(loadTick);
 const showIntro = () => {
   if (introShown) return;
   introShown = true;
+  root.classList.add("lockup-out", "lockup-offer");  // however the video went, the lockup has moved on by the blow
   body.classList.remove("intro-wait");
   body.classList.add("intro-play");
   setTimeout(unlockScroll, INTRO_LOCK_AFTER);
-  setTimeout(() => body.classList.remove("intro-play"), 2600);
+  setTimeout(() => body.classList.remove("intro-play", "intro-title"), 3000);
 };
 // The page ships with the text hidden and scroll locked (no flash). Skip the beat when the
 // page opens scrolled down or the person prefers reduced motion.
 if (!heroVideo || skipIntro || window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.scrollY >= 50) {
   body.classList.remove("intro-wait");
+  root.classList.add("lockup-out", "lockup-offer");  // no opening to sit through: straight to the studio line
   unlockScroll();
   if (heroVideo && skipIntro && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) heroVideo.play().catch(() => {});
   // Go straight to the section: desktop the way the nav does (centred), phones with an instant jump under the top bar.
@@ -464,6 +501,27 @@ if (aboutLoop && !reduceMotion.matches) {
 // Phones: the hero (now the portrait opening) replays from the first blow when you return to the top; the first full pass is the load-time play above.
 const heroSection = document.querySelector(".hero");
 if (heroSection && !reduceMotion.matches) {
-  new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting && phoneMQ.matches && heroVideoEl.ended) replay(heroVideoEl, parseFloat(heroVideoEl.dataset.introAt) || 0); }), { threshold: 0.6 }).observe(heroSection);
+  // Only a return counts: the hero has to have scrolled out of view first, so the opening itself is never mistaken for one.
+  let heroLeft = false;
+  new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (!e.isIntersecting) { heroLeft = true; return; }
+    if (heroLeft && phoneMQ.matches && !motionPaused && !reduceMotion.matches) { heroLeft = false; playReturn(heroVideoEl); }
+  }), { threshold: 0.6 }).observe(heroSection);
 }
 if (reduceMotion.matches) setPaused(true);
+
+// Mouse users: "Scroll down" follows the pointer over the landing (it fades with --cue-o as you scroll). Until the mouse moves,
+// the fixed cue under the lockup shows, so keyboard and touch visitors still see one.
+const cursorCue = document.querySelector(".cursor-cue");
+if (cursorCue && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  window.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse" || phoneMQ.matches) return;
+    root.classList.add("cue-follow");
+    // Centred under the pointer (clear of its tip), kept inside the window so the wash never runs off the edge.
+    const w = cursorCue.offsetWidth;
+    const x = Math.min(Math.max(e.clientX - w / 2, 120), window.innerWidth - w - 120);
+    cursorCue.style.transform = `translate3d(${x}px, ${e.clientY + 26}px, 0)`;
+    root.style.setProperty("--cur-o", "1");
+  }, { passive: true });
+  document.addEventListener("mouseleave", () => root.style.setProperty("--cur-o", "0"));
+}

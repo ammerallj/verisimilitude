@@ -124,10 +124,12 @@ em { font-style: italic; }
   .work .w4 { --h: calc(80cqw * 298 / 477); width: 80%; aspect-ratio: 477 / 298; margin-left: 12%; }
   /* The handover is a one-off: script.js flips --out / --in and these play it on a timer. The old text
      leaves first, then the studio intro and the work section come in. */
-  .hero video, .p-home .rail-a h1, .rail-a .phonetic, .rail-a .definition { transition: opacity .6s ease .45s, filter .6s ease .45s; }
+  .hero video, .p-home .rail-a h1, .rail-a .phonetic, .rail-a .definition, .rail-a .offer { transition: opacity .6s ease .45s, filter .6s ease .45s; }
+  /* Coming back to the top the picture returns at once, crossfading with the intro leaving, so the landing is never a blank white beat. */
+  .hero video { transition-delay: 0s; }
   .studio, .rail-b, .fade-sec { transition: opacity .6s ease, filter .6s ease; }
   /* Going down the old text leaves first; coming back up the intro leaves first, so the two never overlap. */
-  .handed-over .hero video, .handed-over .p-home .rail-a h1, .handed-over .rail-a .phonetic, .handed-over .rail-a .definition { transition-delay: 0s; }
+  .handed-over .hero video, .handed-over .p-home .rail-a h1, .handed-over .rail-a .phonetic, .handed-over .rail-a .definition, .handed-over .rail-a .offer { transition-delay: 0s; }
   .handed-over .studio, .handed-over .rail-b, .handed-over .fade-sec { transition-delay: .45s; transition-duration: .8s; }
   .p-home .rail-a h1 { opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }  /* the title leaves with the definition */
   .p-home.rail-on .rail-a a { pointer-events: none; }
@@ -135,7 +137,6 @@ em { font-style: italic; }
      the lockup while it is showing, the studio intro once it has taken over. */
   html:not(.handed-over) .rail-a > * { pointer-events: auto; }
   .handed-over .rail-b > :not(.nav) { pointer-events: auto; }
-  .rail-a .studio { display: none; }
   /* Even 150px between work, About and Services */
   .work { padding-bottom: 0; }
   .p-home .sec { padding-top: 150px; }
@@ -171,7 +172,7 @@ em { font-style: italic; }
 .sec-services { min-height: calc(100vh - 72px); }
 .p-home .foot { margin-top: 0; }
 .sec-about .copy p + p { margin-top: 1lh; }
-.sec-about .copy p, .rail-a .definition, .work figcaption { text-wrap: pretty; }  /* no single short word left alone on the last line */
+.sec-about .copy p, .rail-a .definition, .rail-a .offer, .work figcaption { text-wrap: pretty; }  /* no single short word left alone on the last line */
 .about-loop { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: contain; object-position: center; flex: none;
   /* The dandelion sits ~79% across the clip: shift it onto the paragraph's centre, then
      scale up about the stem's base so it grows upward; margin-top reserves that room. */
@@ -225,21 +226,60 @@ html { scroll-behavior: smooth; }
 .rail a { pointer-events: auto; }
 .rail-a, .rail-b { position: absolute; left: 0; width: 100%; will-change: opacity, filter; }
 /* Landing: the lockup sits vertically centred and simply blurs/fades out as the studio intro blurs in */
-.rail-a { top: calc((100vh - var(--lh, 220px)) / 2); width: 384px; display: flex; flex-direction: column; gap: 20px; }
+.rail-a { top: calc((100vh - var(--lh, 220px)) / 2); width: 384px; display: flex; flex-direction: column; gap: 0; }  /* spacing is set per line below: the dictionary entry is one tight group, the offer stands apart */
 /* Opening beat: lines blur in once, then scroll takes over (see script.js) */
-body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !important; }
+body.intro-wait:not(.intro-title) .rail-a > * { opacity: 0 !important; filter: blur(14px) !important; }
 .intro-play .rail-a > * { animation: intro-in 1.2s ease backwards; }
 .intro-play .rail-a > :nth-child(2) { animation-delay: .35s; }
 .intro-play .rail-a > :nth-child(3) { animation-delay: .7s; }
+.intro-play .rail-a > :nth-child(4) { animation-delay: 1.05s; }
+/* The title, phonetic and definition are part of the page from the first paint (body.intro-title is in the HTML, so no script or video is needed) and
+   simply display, with no fade in. When she falls they fade out (--so), then the studio line and " Studio" are revealed (--sw). */
+.intro-play.intro-title .rail-a > * { animation: none; }  /* the swaps are fades between states (--so, --sw), not fresh entrances */
+@property --sw { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --so { syntax: "<number>"; inherits: true; initial-value: 0; }
 @keyframes intro-in { from { opacity: 0; filter: blur(14px); } }
+/* Opening progress: a small 0/100 count centred over an edge-to-edge line at the bottom of the screen. script.js
+   drives --load from the video's progress toward the first blow; it is only shown while the opening is holding scroll. */
+.intro-loader { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; height: 80px; pointer-events: none; transition: opacity .5s ease; }
+body.intro-wait .intro-loader, body.intro-play .intro-loader { display: block; }
+.intro-loader.done { opacity: 0; }
+.intro-count { position: absolute; left: 0; right: 0; bottom: 44px; text-align: center; font: 400 13px/1 var(--display); letter-spacing: .06em; font-variant-numeric: tabular-nums; color: #000; }
+.intro-line { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #000; transform-origin: 0 50%; transform: scaleX(var(--load, 0)); }
 /* "Verisimilitude" shrinks in place to the title size while " Studio" blurs in next to it,
    in step with the intro text blurring in (--in); the definition lines blur out first (--out). */
 .rail-a h1 { font: 400 44px var(--display); white-space: nowrap; }
 .rail-a h1 a { display: inline-block; }
 .studio { display: inline-block; white-space: pre; opacity: var(--in, 0); filter: blur(calc((1 - var(--in, 0)) * 14px)); }
-.rail-a .phonetic, .rail-a .definition { opacity: calc(1 - var(--out, 0)); filter: blur(calc(var(--out, 0) * 14px)); }
-.rail-a .phonetic { font-style: italic; font-size: 24px; }
-.rail-a .definition { font-size: 24px; margin-top: 20px; }
+/* On the landing " Studio" joins the title at the blow, with the studio line (--sw), and stays. */
+.rail-a .studio { opacity: var(--sw, 0); filter: blur(calc((1 - var(--sw, 0)) * 5px)); }
+/* The lockup has two states (script.js adds .lockup-offer to <html> a few seconds after the blow, or at once when the opening is skipped).
+   First the dictionary entry: title, phonetic, and the definition at the same size as the studio line. Then the phonetic and definition
+   fade out and "Design studio based in..." fades in starting where the phonetic was (--sw is 0 for the first state, 1 for the second). */
+.rail-a h1 { line-height: 1.15; }
+.rail-a .phonetic { font-style: italic; font-size: 20px; color: #555; margin-top: 10px; }
+.rail-a .definition { font-size: 24px; line-height: 1.3; margin-top: 14px; }
+.rail-a .offer { position: absolute; left: 0; width: 100%; top: calc(44px * 1.15 + 10px); font-size: 24px; line-height: 1.3; }
+html.lockup-out { --so: 1; }    /* she has fallen: the phonetic and definition fade out */
+html.lockup-offer { --sw: 1; }  /* she has landed: the studio line and " Studio" are revealed */
+.rail-a .phonetic, .rail-a .definition { opacity: calc((1 - var(--out, 0)) * (1 - var(--so, 0))); filter: blur(calc(var(--out, 0) * 14px + var(--so, 0) * 5px)); }  /* the swap is only a light 5px blur; the handover keeps its 14px */
+.rail-a .offer { opacity: calc((1 - var(--out, 0)) * var(--sw, 0)); filter: blur(calc((1 - var(--sw, 0)) * 5px + var(--out, 0) * 14px)); }
+.lockup-out .rail-a .phonetic, .lockup-out .rail-a .definition { pointer-events: none; }
+/* Desktop: the lockup uses the intro's type from the start (title 32px, 15px lines, see .name and .desc), so nothing resizes or moves; at the blow the
+   phonetic and definition just fade out and " Studio" and the studio line fade in. It is centred on the finished lockup: title, 20px, two 15px lines. */
+@media (min-width: 901px) {
+  .rail-a { top: calc((100vh - (32px * 1.15 + 20px + 2 * 15px * 1.35)) / 2); }
+  .rail-a h1 { font-size: 32px; }
+  .rail-a .phonetic { font-size: 18px; margin-top: 10px; }
+  .rail-a .definition { font-size: 15px; line-height: 1.35; margin-top: 8px; width: 310px; }  /* about the finished lockup's visible width (title 301px, studio line 295px), so it is the same width before and after */
+  .rail-a .definition br { display: none; }
+  .rail-a .offer { top: calc(32px * 1.15 + 20px); font-size: 15px; line-height: 1.35; width: 336px; }
+  /* One curve and one length for the swap so it reads as a single soft crossfade after a short pause. Only the lockup's own swap:
+     the scroll handover (.handed-over) keeps its own quicker fades. */
+  html:not(.handed-over) .rail-a .phonetic, html:not(.handed-over) .rail-a .definition { transition: opacity .9s var(--lk-ease), filter .9s var(--lk-ease); }
+  html:not(.handed-over) .rail-a .offer, html:not(.handed-over) .rail-a .studio { transition: opacity 1s var(--lk-ease) .15s, filter 1s var(--lk-ease) .15s; }
+}
+:root { --lk-ease: cubic-bezier(.65, 0, .35, 1); }
 .rail-b { top: calc(var(--gutter) - 14px); position: absolute; opacity: var(--in, 0); filter: blur(calc((1 - var(--in, 0)) * 14px)); }
 .rail-b .nav a { pointer-events: none; }
 .p-home.rail-on .rail-b .nav a { pointer-events: auto; }
@@ -251,8 +291,29 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
 /* Phones: the hero is one screen, text at the top, the animation in the middle and a
    "Scroll down" cue at the bottom; the studio intro follows below it. The rail and page
    wrappers dissolve (display: contents) so their children can be ordered in one column. */
-.scroll-cue, .wash, .c-mob, .m-br { display: none; }
+.wash, .c-mob, .m-br { display: none; }
 .topbar, .menu { display: none; }
+/* "Scroll down" cue under the opening, on every screen size: it comes in after the progress line has cleared and is gone after ~180px of scroll. */
+.scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; z-index: 4; left: 0; right: 0; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  font-style: italic; font-size: 18px; color: #000; pointer-events: none; opacity: var(--cue-o, 1); }
+@media (min-width: 901px) { .scroll-cue { left: var(--gutter); right: auto; width: 384px; } }  /* desktop: centred under the left lockup (same column and width as .rail-a) */
+body:not(.cue-on) .scroll-cue { opacity: 0; }
+.scroll-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .scroll-cue span:last-child { animation: none; } }
+.cue-on .scroll-cue { animation: intro-in .8s ease backwards; }
+/* Mouse users: once the pointer moves, "Scroll down" follows it (script.js) and the fixed cue steps aside. */
+.cursor-cue { display: none; }
+@media (min-width: 901px) and (hover: hover) and (pointer: fine) {
+  html.cue-follow .scroll-cue { visibility: hidden; }
+  .cursor-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; position: fixed; left: 0; top: 0; z-index: 70; pointer-events: none; white-space: nowrap;
+    font-style: italic; font-size: 18px; color: #000; opacity: 0; transition: opacity .3s ease; will-change: transform; }
+  /* The same watercolour wash as the phone cue (.wash): heaviest at the bottom, thinning up, blurred, behind the words. */
+  .cursor-cue::before { content: ""; position: absolute; z-index: -1; left: 50%; bottom: -34px; width: 76px; height: 116px; margin-left: -38px; border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%;
+    background: linear-gradient(to top, rgba(86, 114, 132, .95) 0%, rgba(118, 152, 118, .8) 28%, rgba(190, 208, 150, .5) 60%, rgba(226, 232, 190, .38) 100%); filter: blur(22px); opacity: .78; }
+  body.cue-on .cursor-cue { opacity: calc(var(--cue-o, 1) * var(--cur-o, 0)); }
+  .cursor-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .cursor-cue span:last-child { animation: none; } }
+}
 @keyframes cue-nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
 @media (max-width: 900px) {
   .hero .hero-full { display: none; }
@@ -272,20 +333,26 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   /* Any screen height: the art + lockup group sits centred in the space above the scroll cue (--cue-h reserves the cue and a
      breathing gap), and the hero grows past one screen when the group plus cue would not fit, so they never overlap. */
   :root { --lh: 116px; --art-h: 92.593vw; --cue-h: 112px;
-    --group-h: calc(var(--art-h) + 20px + var(--lh));
+    --lockup-gap: 48px;  /* art to lockup (was 20px) */
+    --group-h: calc(var(--art-h) + var(--lockup-gap) + var(--lh));
     --hero-h: max(100svh, calc(var(--group-h) + var(--cue-h)));
     --group-top: 0px;  /* the clip starts flush with the top of the screen (its opening frames are full-height green) */
     --hero-min: calc(var(--art-h) * .7); }  /* where the hero stops shrinking: the faded art is mostly gone by then, so the Studio statement rises close under the top bar */
   .hero video { inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: 50% 0; transform: translateY(var(--group-top)); }
   .hero video { opacity: calc((1 - var(--out, 0)) * var(--vo, 1)); filter: blur(calc(var(--out, 0) * 14px + var(--vb, 0px))); }  /* plus its own near-the-top fade (--vo, --vb) */
-  .rail-a { position: absolute; z-index: 3; top: calc(var(--group-top) + var(--art-h) + 20px); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
+  .rail-a { position: absolute; z-index: 3; top: calc(var(--group-top) + var(--art-h) + var(--lockup-gap)); left: var(--gutter); right: var(--gutter); width: auto; gap: 4px; }
   .rail-a h1 { font-size: 34px; }
-  .rail-a .phonetic, .rail-a .definition { font-size: 20px; margin-top: 0; }
-  .rail-a .studio { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .rail-a h1 { line-height: 1.15; }
+  .rail-a .phonetic { font-size: 18px; margin-top: 0; }
+  .rail-a .definition { font-size: 20px; margin-top: 0; }
+  .rail-a .offer { font-size: 20px; top: calc(34px * 1.15 + 4px); }
+  html { transition: --sw .9s ease .15s, --so .9s ease; }  /* phones have no per-line transitions, so the swaps ease the registered --so and --sw themselves */
   /* Once the intro has played, each lockup line blurs and fades by its own height on the screen (--lo and
      --lb are set per line in script.js as the line nears the top). */
   body:not(.intro-play):not(.intro-wait) .rail-a > * { opacity: var(--lo, 1) !important; filter: blur(var(--lb, 0px)) !important; }
+  body:not(.intro-play):not(.intro-wait) .rail-a .phonetic, body:not(.intro-play):not(.intro-wait) .rail-a .definition { opacity: calc(var(--lo, 1) * (1 - var(--so, 0))) !important; }
+  body:not(.intro-play):not(.intro-wait) .rail-a .offer { opacity: calc(var(--lo, 1) * var(--sw, 0)) !important; }
   /* Watercolour wash behind the scroll cue: pale yellow-green into stem green into dandelion blue-grey,
      drawn from the animation's palette. It sits faint at the bottom and, as you scroll, stretches
      upward like a brush stroke whose tip is drawn up past the "Design studio" block and ends with that section
@@ -299,19 +366,13 @@ body.intro-wait .rail-a > * { opacity: 0 !important; filter: blur(14px) !importa
   body.intro-wait .wash { opacity: 0; }
   .intro-play .wash { animation: intro-in 1.4s ease .9s backwards; }
   @media (prefers-reduced-motion: reduce) { .wash { transform: none; } }
-  .scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; z-index: 4; left: 0; right: 0; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
-    font-style: italic; font-size: 18px; color: #000; pointer-events: none; opacity: var(--cue-o, 1); }
-  body.intro-wait .scroll-cue { opacity: 0; }
-  .scroll-cue span:last-child { display: inline-block; animation: cue-nudge 1.8s ease-in-out infinite; }
-  @media (prefers-reduced-motion: reduce) { .scroll-cue span:last-child { animation: none; } }
-  .intro-play .scroll-cue { animation: intro-in 1.2s ease .9s backwards; }
   .rail-b { order: 2; position: static; width: auto; margin: 24px var(--gutter) 96px;
     opacity: 1 !important; transform: none !important; filter: none !important; }
   /* Studio intro: no repeated title; the description is the centred hero statement */
   .rail-b { text-align: center; align-self: stretch; }  /* full width, so the centred text sits in the middle of the screen; 24px above, and 96px below before the first work card */
   .rail-b .name { display: none; }
   .rail-b .intro { align-items: center; gap: 24px; }
-  .rail-b .desc { font: 400 26px/1.25 var(--display); text-wrap: pretty; }  /* centred, natural line lengths */
+  .rail-b .desc { display: none; }  /* the landing lockup now ends on "Verisimilitude Studio" over this line, so it is not repeated below the hero */
   .rail-b .note { max-width: none; text-wrap: balance; font-size: 16px; }  /* same size as the example descriptions */
   .rail-b .nav { display: none; }            /* the top bar carries About and Services */
   .rail-b .nav a { pointer-events: auto; }
@@ -498,6 +559,6 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero video, .p-home .rail-a h1, .rail-a .phonetic, .rail-a .definition, .studio, .rail-b, .fade-sec, .rail, .work .w, .topbar, .menu { transition: none !important; }
+  .hero video, .p-home .rail-a h1, .rail-a .phonetic, .rail-a .definition, .rail-a .offer, .studio, .rail-b, .fade-sec, .rail, .work .w, .topbar, .menu { transition: none !important; }
 }
 html.arriving body { visibility: hidden; }

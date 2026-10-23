@@ -7,7 +7,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Verisimilitude Studio">
   <meta property="og:title" content="Verisimilitude Studio">
-  <meta property="og:description" content="Design studio based in San Francisco and Seattle creating humor and simple digital experiences.">
+  <meta property="og:description" content="Design studio based in San Francisco and Seattle creating honest and simple digital experiences.">
   <meta property="og:url" content="https://veris.design/">
   <meta property="og:image" content="https://veris.design/images/link-preview.jpg">
   <meta property="og:image:width" content="1200">
@@ -31,12 +31,14 @@
   </script>
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
-  <noscript><style>.intro-wait .rail-a > * { opacity: 1 !important; filter: none !important; } html.scroll-lock, html.scroll-lock body { overflow: auto; }</style></noscript>
+  <noscript><style>.intro-wait .rail-a > * { opacity: 1 !important; filter: none !important; } html.scroll-lock, html.scroll-lock body { overflow: auto; } .intro-loader { display: none !important; } .rail-a .offer { display: none; }</style></noscript>
 </head>
-<body class="p-home intro-wait" id="top">
+<body class="p-home intro-wait intro-title" id="top">
   <a class="skip-link" href="#from-the-studio">Skip to the work</a>
   <button class="skip-link motion-toggle" type="button">Pause dandelion animation</button>
   <div class="wash" aria-hidden="true"></div>
+  <div class="cursor-cue" aria-hidden="true"><span>Scroll down</span><span>↓</span></div>
+  <div class="intro-loader" aria-hidden="true"><span class="intro-count">0/100</span><span class="intro-line"></span></div>
   <header class="topbar">
     <a class="topbar-title" href="#top">Verisimilitude<span class="m-hide"> Studio</span></a>
     <button class="menu-btn menu-open" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
@@ -55,7 +57,8 @@
     <div class="rail-a">
       <h1><a class="title-link" href="#top">Verisimilitude<span class="studio"> Studio</span></a></h1>
       <p class="phonetic">/ˌverəsəˈmiləˌto͞od/</p>
-      <p class="definition"><em>noun</em> — How much a story, artwork,<br>or idea looks like the truth.</p>
+      <p class="definition"><em>noun</em> — How much a story, artwork, <br>or idea looks like the truth.</p>
+      <p class="offer">Design studio based in San Francisco and Seattle creating honest and simple digital experiences.</p>
     </div>
     <aside class="side rail-b" aria-label="About the studio">
       <div class="intro">
@@ -77,12 +80,12 @@
     <section class="hero" aria-hidden="true">
       <!-- Two heroes, the same opening (the bag sequence, then the blow): a 16:9 one filling the screen on
            larger screens, and a near-square one framed for phones, with the lockup beneath it. Only the one for the current screen is
-           loaded and played (script.js). data-intro-at is when the text lockup comes in: the first blow. -->
-      <video class="hero-phone" muted playsinline preload="none" poster="images/opening-hero-phone-tall.webp" data-intro-at="3.6">
+           loaded and played (script.js). data-intro-at is when the text lockup comes in: the first blow. data-fall-at is when she falls out of the bag: the starting text fades out. data-land-at is when she has landed and settled: scroll unlocks and the final lockup is revealed. data-rest-at is where the clip stops, on the bare dandelion (the regrow at the end is cut). -->
+      <video class="hero-phone" muted playsinline preload="none" poster="images/opening-hero-phone-tall.webp" data-fall-at="1.5" data-land-at="2.5" data-intro-at="3.6" data-rest-at="14.5">
         <source src="images/opening-hero-phone-tall.webm" type="video/webm">
         <source src="images/opening-hero-phone-tall.mp4" type="video/mp4">
       </video>
-      <video class="hero-full" muted playsinline preload="none" poster="images/opening-hero-first.webp" data-intro-at="3.6">
+      <video class="hero-full" muted playsinline preload="none" poster="images/opening-hero-first.webp" data-fall-at="1.5" data-land-at="2.5" data-intro-at="3.6" data-rest-at="14.5">
         <source src="images/opening-hero.webm" type="video/webm">
         <source src="images/opening-hero.mp4" type="video/mp4">
       </video>
@@ -153,6 +156,6 @@
   </main>
   <script src="script.js"></script>
   <script src="menu.js"></script>
-  <script>setTimeout(function () { document.documentElement.classList.remove("scroll-lock"); document.body.classList.remove("intro-wait"); }, 30000); // failsafe: never leave the page locked or the text hidden</script>
+  <script>setTimeout(function () { document.documentElement.classList.remove("scroll-lock"); document.body.classList.remove("intro-wait"); document.body.classList.add("cue-on"); }, 30000); // failsafe: never leave the page locked or the text hidden</script>
 </body>
 </html>

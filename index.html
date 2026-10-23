@@ -10,6 +10,8 @@
     try {
       var from = document.referrer && new URL(document.referrer);
       if (from && from.origin === location.origin && /\/internship(\.html)?$/.test(from.pathname)) document.documentElement.classList.add("skip-intro");
+      // Hold the page invisible until script.js has jumped to the section, so the landing never flashes on the way.
+      if (document.documentElement.classList.contains("skip-intro") && /^#(from-the-studio|about|services)$/.test(location.hash)) document.documentElement.classList.add("arriving");
     } catch (e) {}
     // Otherwise always open on the landing screen: no restored scroll position, no anchor jump.
     history.scrollRestoration = "manual";

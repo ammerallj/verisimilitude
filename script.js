@@ -82,8 +82,11 @@ const update = () => {
   const lockupKids = lockupEl ? [...lockupEl.children] : [];
   const topFade = (bottom) => clamp((vh * 0.30 - bottom) / (vh * 0.20));
   if (window.matchMedia("(max-width: 900px)").matches) {
+    // Whatever the screen height, a line is also gone before the first work card reaches it: it fades as the gap closes from 100px to 16px.
+    const cardTop = document.querySelector(".work .w")?.getBoundingClientRect().top ?? Infinity;
     lockupKids.forEach((el) => {
-      const g = topFade(el.getBoundingClientRect().bottom);
+      const bottom = el.getBoundingClientRect().bottom;
+      const g = Math.max(topFade(bottom), clamp((100 - (cardTop - bottom)) / 84));
       el.style.setProperty("--lb", `${(g * 12).toFixed(1)}px`);
       el.style.setProperty("--lo", (1 - g).toFixed(3));
     });
@@ -238,19 +241,17 @@ const playReturn = (v) => { v.returnStop = RETURN_END; v.rested = false; v.playb
 });
 const INTRO_AT = parseFloat(heroVideo?.dataset.introAt ?? "") || 1.5;
 const LAND_AT = parseFloat(heroVideo?.dataset.landAt ?? "") || INTRO_AT;  // when she has landed and settled: scroll unlocks
-const FALL_AT = parseFloat(heroVideo?.dataset.fallAt ?? "") || LAND_AT;  // when she falls out of the bag: the starting lockup fades out
 let introShown = false;
 const loaderEl = document.querySelector(".intro-loader");
 const countEl = document.querySelector(".intro-count");
 // Scroll unlocks, the progress fades and "Scroll down" is revealed together, the moment the count reaches 100 (or at once when the opening is skipped).
 const unlockScroll = () => { root.classList.remove("scroll-lock"); loaderEl?.classList.add("done"); body.classList.add("cue-on"); root.classList.add("lockup-offer"); };  // reveals the final lockup too
 // The counter follows the video itself (so a slow download holds it honestly), easing toward 90% until she has landed
-// (data-land-at), then running out to 100: that is the moment scroll unlocks. The definition still waits for the blow.
+// (data-land-at), then running out to 100: that is the moment scroll unlocks.
 let loadShown = 0;
 const loadTick = () => {
   if (!loaderEl || loaderEl.classList.contains("done")) return;
   const t = heroVideo?.currentTime || 0;
-  if (t >= FALL_AT) root.classList.add("lockup-out");  // she has fallen out of the bag: the phonetic and definition fade out
   const landed = introShown || t >= LAND_AT;
   const target = landed ? 1 : Math.min(0.9, (t / LAND_AT) * 0.9);
   loadShown = Math.max(loadShown, loadShown + (target - loadShown) * (landed ? 0.35 : 0.15));
@@ -264,7 +265,7 @@ requestAnimationFrame(loadTick);
 const showIntro = () => {
   if (introShown) return;
   introShown = true;
-  root.classList.add("lockup-out", "lockup-offer");  // however the video went, the lockup has moved on by the blow
+  root.classList.add("lockup-offer");  // however the video went, the lockup is shown by the blow
   body.classList.remove("intro-wait");
   body.classList.add("intro-play");
   setTimeout(unlockScroll, INTRO_LOCK_AFTER);
@@ -274,7 +275,7 @@ const showIntro = () => {
 // page opens scrolled down or the person prefers reduced motion.
 if (!heroVideo || skipIntro || window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.scrollY >= 50) {
   body.classList.remove("intro-wait");
-  root.classList.add("lockup-out", "lockup-offer");  // no opening to sit through: straight to the studio line
+  root.classList.add("lockup-offer");  // no opening to sit through: straight to the lockup
   unlockScroll();
   if (heroVideo && skipIntro && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) heroVideo.play().catch(() => {});
   // Go straight to the section: desktop the way the nav does (centred), phones with an instant jump under the top bar.

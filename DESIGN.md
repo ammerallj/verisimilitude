@@ -37,8 +37,6 @@ The green/blue wash behind the phone scroll cue and the contact lockup is built 
 |---|---|---|
 | Body | 20px | Line-height normal |
 | Lockup title ("Verisimilitude") | 32px Palatino | The same size before and after the blow, as in the intro (`.name`); " Studio" is revealed beside it when she lands |
-| Lockup phonetic | 18px | Italic, soft grey `#555`, 10px under the title; fades out when she falls (1.5s) |
-| Lockup definition | 15px | Ink, 8px under the phonetic, same size as the studio line, on a 310px measure so it is as wide as the finished lockup (title 301px, studio line 295px); fades out when she falls (1.5s) |
 | Lockup studio line | 15px | Ink, 336px measure, is revealed when she lands (2.5s), 20px under the title (as `.desc`) |
 | Studio example headline | 24px | Regular weight |
 | Studio example description | 18px | |
@@ -56,7 +54,7 @@ The green/blue wash behind the phone scroll cue and the contact lockup is built 
 | Studio example headline | 18px | |
 | Studio example description | 16px italic `#555` | Same look as the Services list; full column width |
 | Lockup title | 34px Palatino | |
-| Lockup phonetic / definition / studio line | 18px / 20px / 20px | Same sequence as the web: phonetic (soft grey `#555`) and definition fade out when she falls, then " Studio" and the studio line (at the phonetic's top, `top: 34px * 1.15 + 4px`) are revealed. The swap eases the registered `--so` and `--sw` properties. The old centred statement below the hero is gone, so the studio line is not repeated |
+| Lockup title / studio line | 34px / 20px | Both are hidden until she has landed, then fade and blur in together (the registered `--sw` eases on phones). The studio line sits under the title (`top: 34px * 1.15 + 4px`). There is no dictionary entry (phonetic, definition) any more |
 | Top bar title | 20px Palatino | |
 | Top bar "Menu" button | 16px | Opens the full-page menu |
 | Menu links | 40px Palatino | Current page or section in italic + underline, 24px between items; the seed mark (`favicon.svg`, 28px) sits centred at the bottom; "*Student community only" note 13px italic `#555` |
@@ -109,7 +107,7 @@ Phone: a stacked layout. Top row has the dandelion seed mark (`logo-mark.svg`, 2
 
 ## Components
 
-- **Opening hero.** Two clips: `hero-phone` (portrait, 1080 wide) and `hero-full` (16:9, desktop). The title, phonetic and definition are part of the page from the first paint (no script or video needed; `intro-title` is on `<body>` in the HTML) and simply display, with no fade in. When she falls out of the bag (`data-fall-at="1.5"` seconds) the phonetic and definition fade and blur out (0.9s, `--so`); when she has landed (`data-land-at="2.5"` seconds, the same moment the count reaches 100 and scroll unlocks) " Studio" and "Design studio based in San Francisco and Seattle creating honest and simple digital experiences." are revealed together (1s after a 0.15s pause, `--sw`). All at the final lockup's sizes (title 32px, 15px lines), kept vertically centred on the finished lockup, so nothing moves or resizes. If the video never plays, the same change happens when the opening gives up and shows the still. That title and studio line are the resting state of the landing (including on return, and at once when the opening is skipped). Scroll is locked until she has landed: the count reaches 100, scroll unlocks, the scroll cue appears and the final lockup is revealed, all together.
+- **Opening hero.** Two clips: `hero-phone` (portrait, 1080 wide) and `hero-full` (16:9, desktop). The whole lockup is hidden from the first paint (`intro-title` stays on `<body>` in the HTML so no script or video is needed to keep it hidden). When she has landed (`data-land-at="2.5"` seconds, the same moment the count reaches 100 and scroll unlocks) the title "Verisimilitude Studio" and "Design studio based in San Francisco and Seattle creating honest and simple digital experiences." fade and blur in together (1s after a 0.15s pause, `--sw`), at the final lockup's sizes (title 32px, 15px lines), centred on the finished lockup so nothing moves or resizes. That title and studio line are the resting state of the landing (including on return, and at once when the opening is skipped). Scroll is locked until she has landed: the count reaches 100, scroll unlocks, the scroll cue appears and the final lockup is revealed, all together.
   - Opening progress: a 13px Palatino `0/100` count centred 44px above a 2px black line running edge to edge along the bottom of the screen. `script.js` drives it from the video's playback toward the first blow (up to 90%), then runs it out to 100 as the text arrives; it fades out when scroll unlocks. Only shown while the opening holds scroll.
   - Both clips stop at `data-rest-at="14.5"` seconds and rest on the bare dandelion: the regrow at the end of the clip is cut, on the first visit and on every return.
   - Coming back to the top she just blows again: the clip plays from `data-intro-at` (3.6s) to `RETURN_END` (6.5s, seeds in the air) at normal speed and rests on that frame. Never the whole sequence, and not the bag, the long tail or the regrow.

@@ -47,6 +47,7 @@ const update = () => {
     const c = work.querySelector(".w").getBoundingClientRect();
     p = clamp((vh * 0.95 - c.top) / Math.max(vh * 0.95 - FRAME_TOP, 1));
   }
+  if (!work.offsetParent) p = 0;  // coming-soon page: the work section is hidden, so the lockup never hands over
   workP = p;
   // Phones scrub the handover with scroll. Desktop fires it once as the first frame nears: --out / --in
   // flip between 0 and 1 and CSS plays the fade and blur on a timer.
@@ -83,7 +84,8 @@ const update = () => {
   const topFade = (bottom) => clamp((vh * 0.30 - bottom) / (vh * 0.20));
   if (window.matchMedia("(max-width: 900px)").matches) {
     // Whatever the screen height, a line is also gone before the first work card reaches it: it fades as the gap closes from 100px to 16px.
-    const cardTop = document.querySelector(".work .w")?.getBoundingClientRect().top ?? Infinity;
+    const cardEl = document.querySelector(".work .w");
+    const cardTop = cardEl?.offsetParent ? cardEl.getBoundingClientRect().top : Infinity;  // hidden (coming-soon page): nothing to clear
     lockupKids.forEach((el) => {
       const bottom = el.getBoundingClientRect().bottom;
       const g = Math.max(topFade(bottom), clamp((100 - (cardTop - bottom)) / 84));

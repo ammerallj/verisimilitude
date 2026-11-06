@@ -550,3 +550,16 @@ html.scroll-lock, html.scroll-lock body { overflow: hidden; }
   .hero video, .p-home .rail-a h1, .rail-a .offer, .studio, .rail-b, .fade-sec, .rail, .work .w, .topbar, .menu { transition: none !important; }
 }
 html.arriving body { visibility: hidden; }
+
+/* Coming-soon holding page: only the opening (the blowing dandelion) and the hero lockup show. Everything else stays in the markup, hidden for now.
+   To bring the site back, delete this block and the .soon line in index.html. */
+.stage, .foot, .topbar, .menu, .rail-b, .scroll-cue, .cursor-cue, .wash { display: none !important; }
+html, html body { overflow: hidden; }
+.rail-a .soon { position: absolute; left: 0; width: 100%; font-style: italic; font-size: 15px; line-height: 1.35; top: calc(32px * 1.15 + 20px + 2 * 15px * 1.35 + 14px);
+  opacity: calc((1 - var(--out, 0)) * var(--sw, 0)); filter: blur(calc((1 - var(--sw, 0)) * 5px)); transition: opacity 1s var(--lk-ease, ease) .15s, filter 1s var(--lk-ease, ease) .15s; }
+@media (max-width: 900px) {
+  .rail-a .offer, .rail-a .soon { position: static; }  /* flow, so the line sits under the studio line however many lines it wraps to */
+  .rail-a .soon { font-size: 18px; margin-top: 8px; }
+  .rail-a { min-height: 0; }
+  body:not(.intro-play):not(.intro-wait) .rail-a .soon { opacity: calc(var(--lo, 1) * var(--sw, 0)) !important; }
+}
